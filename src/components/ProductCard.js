@@ -16,27 +16,25 @@ const ProductCard = (props) => {
 
   return (
     <>
-      <div
-        className={` ${location.pathname === "/product" ? `gr-${grid}` : "col-3"
-          } `}
-      >
-        <Link
-          to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}
-          className="product-card position-relative"
-        >
+      <div className={` ${location.pathname === "/product" ? `gr-${grid}` : "col-lg-3 col-md-4 col-sm-6 col-12 p-2"} `}>
+        <div className="product-card position-relative">
           <div className="wishlist-icon position-absolute">
             <button className="border-0 bg-transparent">
               <img src={wish} alt="wishlist" />
             </button>
           </div>
           <div className="product-image">
-            <img src={watch} className="img-fluid" alt="product image1" />
-            <img src={watch2} className="img-fluid" alt="product image2" />
+            <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
+              <img src={watch} className="img-fluid" alt="product image1" />
+              <img src={watch2} className="img-fluid" alt="product image2" />
+            </Link>
           </div>
           <div className="product-details">
             <h6 className="brand">Havels</h6>
             <h5 className="product-title">
-              Kids headphones bulk 10 pack multi colored for students
+              <Link className="title" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
+                Kids headphones bulk 10 pack multi colored for students
+              </Link>
             </h5>
             <ReactStars
               count={5}
@@ -66,34 +64,27 @@ const ProductCard = (props) => {
               </button>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
-      <div
-        className={` ${location.pathname === "/product" ? `gr-${grid}` : "col-3"
-          } `}
-      >
-        <Link
-          to={`${location.pathname === "/"
-            ? "/product/:id"
-            : location.pathname === "/product/:id"
-              ? "/product/:id"
-              : ":id"
-            }`}
-          className="product-card position-relative"
-        >
+      <div className={` ${location.pathname === "/product" ? `gr-${grid}` : "col-lg-3 col-md-4 col-sm-6 col-12 p-2"} `}>
+        <div className="product-card position-relative">
           <div className="wishlist-icon position-absolute">
             <button className="border-0 bg-transparent">
               <img className="phu" src={wish} alt="wishlist" />
             </button>
           </div>
           <div className="product-image">
-            <img src={watch} className="img-fluid" alt="product image1" />
-            <img src={watch2} className="img-fluid" alt="product image2" />
+            <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
+              <img src={watch} className="img-fluid" alt="product image1" />
+              <img src={watch2} className="img-fluid" alt="product image2" />
+            </Link>
           </div>
           <div className="product-details">
             <h6 className="brand">Havels</h6>
             <h5 className="product-title">
-              Kids headphones bulk 10 pack multi colored for students
+              <Link className="title" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
+                Kids headphones bulk 10 pack multi colored for students
+              </Link>
             </h5>
             <ReactStars
               count={5}
@@ -123,7 +114,7 @@ const ProductCard = (props) => {
               </button>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
     </>
   );

@@ -15,7 +15,7 @@ const Home = () => {
 
       <Container class1="home-wrapper-1 py-4">
         <div className="row">
-          <div className="col-6">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
             <div className="main-banner position-relative ">
               <img
                 src="images/main-banner-1.jpg"
@@ -30,9 +30,9 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="col-6">
-            <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
-              <div className="small-banner position-relative">
+          <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+            <div className="row gap-10">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
                   src="images/catbanner-01.jpg"
                   className="img-fluid rounded-3"
@@ -46,7 +46,7 @@ const Home = () => {
                   </p>
                 </div>
               </div>
-              <div className="small-banner position-relative">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
                   src="images/catbanner-02.jpg"
                   className="img-fluid rounded-3"
@@ -60,7 +60,7 @@ const Home = () => {
                   </p>
                 </div>
               </div>
-              <div className="small-banner position-relative ">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
                   src="images/catbanner-03.jpg"
                   className="img-fluid rounded-3"
@@ -74,7 +74,7 @@ const Home = () => {
                   </p>
                 </div>
               </div>
-              <div className="small-banner position-relative ">
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
                   src="images/catbanner-04.jpg"
                   className="img-fluid rounded-3"
@@ -115,57 +115,65 @@ const Home = () => {
       <Container class1="home-wrapper-2 py-4">
         <div className="row">
           <div className="col-12">
-            <div className="categories d-flex justify-content-between flex-wrap align-items-center">
-              <div className="d-flex gap align-items-center">
+            <div className="row categories d-flex justify-content-between flex-wrap align-items-center">
+              
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Music & Gaming</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/camera.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Cameras</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/camera.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Smart Tv</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/tv.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Smart Watches</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/headphone.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Music & Gaming</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/camera.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Cameras</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/camera.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Smart Tv</h6>
                   <p>10 Items</p>
                 </div>
                 <img src="images/tv.jpg" alt="camera" />
               </div>
-              <div className="d-flex gap align-items-center">
+
+              <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Smart Watches</h6>
                   <p>10 Items</p>
@@ -190,7 +198,7 @@ const Home = () => {
 
       <Container class1="famous-wrapper py-4 home-wrapper-2">
         <div className="row">
-          <div className="col-3">
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
                 src="images/famous-1.webp"
@@ -204,7 +212,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
                 src="images/famous-2.webp"
@@ -218,7 +226,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
                 src="images/famous-3.webp"
@@ -234,7 +242,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
                 src="images/famous-3.webp"
@@ -321,18 +329,10 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
-            <BlogCard />
-          </div>
-          <div className="col-3">
-            <BlogCard />
-          </div>
+          <BlogCard />
+          <BlogCard />
+          <BlogCard />
+          <BlogCard />
         </div>
       </Container>
     </>
