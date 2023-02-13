@@ -19,10 +19,9 @@ const OurStore = () => {
               <h3 className="filter-title">Shop By Categories</h3>
               <div>
                 <ul className="ps-0">
-                  <li>Watch</li>
-                  <li>Tv</li>
-                  <li>Camera</li>
-                  <li>Laptop</li>
+                  <li>Men</li>
+                  <li>Women</li>
+                  <li>Kids</li>
                 </ul>
               </div>
             </div>
@@ -111,16 +110,16 @@ const OurStore = () => {
               <div>
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
                   <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Headphone
+                    T-Shirt
                   </span>
                   <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Laptop
+                    Skurt
                   </span>
                   <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Mobile
+                    Shirt
                   </span>
                   <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Wire
+                    Jacket
                   </span>
                 </div>
               </div>

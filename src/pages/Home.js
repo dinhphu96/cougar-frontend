@@ -116,7 +116,7 @@ const Home = () => {
         <div className="row">
           <div className="col-12">
             <div className="row categories d-flex justify-content-between flex-wrap align-items-center">
-              
+
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Music & Gaming</h6>
@@ -329,10 +329,18 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <BlogCard />
-          <BlogCard />
-          <BlogCard />
-          <BlogCard />
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
+            <BlogCard />
+          </div>
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
+            <BlogCard />
+          </div>
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
+            <BlogCard />
+          </div>
+          <div className="col-lg-3 col-md-4 col-sm-6 col-12">
+            <BlogCard />
+          </div>
         </div>
       </Container>
     </>
