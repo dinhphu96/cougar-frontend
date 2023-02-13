@@ -18,7 +18,7 @@
   font-size: 26px;
   line-height: 32px;
   font-weight: 500;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .card-wrapper {
   background-color: white;
@@ -278,20 +278,34 @@ footer .input-group-text {
   width: 100%;
 }
 .product-card .product-image {
-  height: 270px;
+  height: 290px;
+  position: relative;
 }
 .product-card .product-image .p img {
   object-fit: contain;
 }
+
+.product-card .product-image .p > img:nth-child(1) {
+  position: absolute;
+  transition: 1s;
+}
+
 .product-card .product-image .p > img:last-child {
-  display: none;
+  transform: scale(1.1);
+  opacity: 0;
+  transition: 1s;
 }
+
 .product-card:hover .product-image .p > img:nth-child(1) {
-  display: none;
+  transform: scale(1.2);
+  opacity: 0;
 }
+
 .product-card:hover .product-image .p > img:last-child {
-  display: block;
+  transform: scale(1);
+  opacity: 1;
 }
+
 .product-card:hover .action-bar {
   right: 15px;
 }
