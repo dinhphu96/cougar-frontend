@@ -466,7 +466,7 @@
   .gr-6 .product-image {
     width: 100%;
   }
-  .gr-6 .product-image img {
+  .gr-6 .product-image .p img {
     margin: auto;
     display: block;
   }
