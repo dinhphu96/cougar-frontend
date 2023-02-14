@@ -23,12 +23,12 @@ const Cart = () => {
             <div className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center">
               <div className="cart-col-1 gap-15 d-flex align-items-center">
                 <div className="w-25">
-                  <img src={watch} className="img-fluid" alt="product image" />
+                  <img src={watch} className="img-fluid" alt="product image1" />
                 </div>
                 <div className="w-75">
-                  <p>GDffdhg</p>
-                  <p>Size: hgf</p>
-                  <p>Color: gfd</p>
+                  <p>Watch</p>
+                  <p>Size: XL</p>
+                  <p>Color: Black</p>
                 </div>
               </div>
               <div className="cart-col-2">
@@ -45,9 +45,9 @@ const Cart = () => {
                     id=""
                   />
                 </div>
-                <div>
-                  <AiFillDelete className="text-danger " />
-                </div>
+                <Link to={''}>
+                  <AiFillDelete className="text-danger fs-3" />
+                </Link>
               </div>
               <div className="cart-col-4">
                 <h5 className="price">$ 100</h5>

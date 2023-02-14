@@ -6,7 +6,7 @@ import ProductCard from "../components/ProductCard";
 import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
 import Meta from "../components/Meta";
-// import { services } from "../utils/Data";
+import shipping from "../untils/sevices";
 
 const Home = () => {
   return (
@@ -95,9 +95,8 @@ const Home = () => {
       <Container class1="home-wrapper-2 py-4">
         <div className="row">
           <div className="col-12">
-            <div className="servies d-flex align-items-center justify-content-between">
-              Shipping - database
-              {/* {services?.map((i, j) => {
+            <div className="row row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2 servies d-flex align-items-center justify-content-between">
+              {shipping.map((i, j) => {
                 return (
                   <div className="d-flex align-items-center gap-15" key={j}>
                     <img src={i.image} alt="services" />
@@ -107,7 +106,7 @@ const Home = () => {
                     </div>
                   </div>
                 );
-              })} */}
+              })}
             </div>
           </div>
         </div>
