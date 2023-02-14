@@ -7,6 +7,7 @@ import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
 import Meta from "../components/Meta";
 import shipping from "../untils/sevices";
+import ImageSlider, { Slide } from "react-auto-image-slider";
 
 const Home = () => {
   return (
@@ -16,19 +17,38 @@ const Home = () => {
       <Container class1="home-wrapper-1 py-4">
         <div className="row">
           <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-            <div className="main-banner position-relative ">
-              <img
-                src="images/main-banner-1.jpg"
-                className="img-fluid rounded-3"
-                alt="main banner"
-              />
-              <div className="main-banner-content position-absolute">
-                <h4>SUPERCHARGED FOR PROS.</h4>
-                <h5>iPad S13+ Pro.</h5>
-                <p>From $999.00 or $41.62/mo.</p>
-                <Link className="button">BUY NOW</Link>
-              </div>
-            </div>
+            <ImageSlider effectDelay={1000} autoPlayDelay={1000}>
+              <Slide>
+                <div className="main-banner position-relative ">
+                  <img
+                    src="images/main-banner-1.jpg"
+                    className="img-fluid rounded-3"
+                    alt="main banner"
+                  />
+                  <div className="main-banner-content position-absolute">
+                    <h4>SUPERCHARGED FOR PROS.</h4>
+                    <h5>iPad S13+ Pro.</h5>
+                    <p>From $999.00 or $41.62/mo.</p>
+                    <Link className="button">BUY NOW</Link>
+                  </div>
+                </div>
+              </Slide>
+              <Slide>
+                <div className="main-banner position-relative ">
+                  <img
+                    src="images/main-banner.jpg"
+                    className="img-fluid rounded-3"
+                    alt="main banner"
+                  />
+                  <div className="main-banner-content position-absolute">
+                    <h4>SUPERCHARGED FOR PROS.</h4>
+                    <h5>iPad S13+ Pro.</h5>
+                    <p>From $999.00 or $41.62/mo.</p>
+                    <Link className="button">BUY NOW</Link>
+                  </div>
+                </div>
+              </Slide>
+            </ImageSlider>
           </div>
           <div className="col-12 col-sm-12 col-md-6 col-lg-6">
             <div className="row gap-10">

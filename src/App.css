@@ -59,7 +59,7 @@
     color: #131921;
   }
   /* Header Part */
-  
+
   .header-top-strip {
     border-bottom: 1px solid var(--color-3b4149);
     background-color: var(--color-131921);
@@ -122,6 +122,20 @@
   /* Footer Part Ends Here */
   
   /* Start Home Page */
+
+  .hOQiSy{
+    width: 100%!important;
+    height: 100%!important;
+  }
+
+  .dGkqmp{
+   display: none !important;
+  }
+
+  .epKbGN{
+   display: none !important;
+  }
+
   .main-banner-content {
     top: 15%;
     left: 5%;
