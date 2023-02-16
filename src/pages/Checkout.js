@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
-import watch from "../images/watch.jpg";
 import Container from "../components/Container";
+
+import product01 from "../images/product/product-01.png";
 
 const Checkout = () => {
   return (
@@ -128,15 +129,15 @@ const Checkout = () => {
                   <div className="w-25 position-relative">
                     <span
                       style={{ top: "-10px", right: "2px" }}
-                      className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
+                      className="badge bg-info text-white rounded-circle p-2 position-absolute"
                     >
-                      1
+                      10
                     </span>
-                    <img className="img-fluid" src={watch} alt="product" />
+                    <img className="img-fluid" src={product01} alt="product" />
                   </div>
                   <div>
-                    <h5 className="total-price">gfdhgf</h5>
-                    <p className="total-price">s / #agfgfd</p>
+                    <h5 className="total-price">T-Shirt</h5>
+                    <p className="total-price">XL / #Color</p>
                   </div>
                 </div>
                 <div className="flex-grow-1">

@@ -6,6 +6,9 @@ import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import Container from "../components/Container";
 
+import product05 from '../images/product/product-05.png'
+import product06 from '../images/product/product-06.png'
+
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
   return (
@@ -130,7 +133,7 @@ const OurStore = () => {
                 <div className="random-products mb-3 d-flex">
                   <div className="w-50">
                     <img
-                      src="images/watch.jpg"
+                      src={product05}
                       className="img-fluid"
                       alt="watch"
                     />
@@ -152,7 +155,7 @@ const OurStore = () => {
                 <div className="random-products d-flex">
                   <div className="w-50">
                     <img
-                      src="images/watch.jpg"
+                      src={product06}
                       className="img-fluid"
                       alt="watch"
                     />

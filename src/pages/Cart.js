@@ -1,10 +1,11 @@
 import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import watch from "../images/watch.jpg";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
+
+import product01 from "../images/product/product-01.png";
 
 const Cart = () => {
   return (
@@ -15,18 +16,18 @@ const Cart = () => {
         <div className="row">
           <div className="col-12">
             <div className="cart-header py-3 d-flex justify-content-between align-items-center">
-              <h4 className="cart-col-1">Product</h4>
+              <h4 className="cart-col-1 ps-5">Product</h4>
               <h4 className="cart-col-2">Price</h4>
               <h4 className="cart-col-3">Quantity</h4>
               <h4 className="cart-col-4">Total</h4>
             </div>
             <div className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center">
               <div className="cart-col-1 gap-15 d-flex align-items-center">
-                <div className="w-25">
-                  <img src={watch} className="img-fluid" alt="product image1" />
+                <div className="w-25 bg-white">
+                  <img src={product01} className="img-fluid" alt="product image1" />
                 </div>
                 <div className="w-75">
-                  <p>Watch</p>
+                  <p>T-Shirt</p>
                   <p>Size: XL</p>
                   <p>Color: Black</p>
                 </div>

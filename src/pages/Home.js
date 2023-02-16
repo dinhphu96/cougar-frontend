@@ -3,11 +3,41 @@ import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
-import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
 import Meta from "../components/Meta";
 import shipping from "../untils/sevices";
 import ImageSlider, { Slide } from "react-auto-image-slider";
+
+import brand01 from '../images/brands/brand-01.png'
+import brand02 from '../images/brands/brand-02.png'
+import brand03 from '../images/brands/brand-03.png'
+import brand04 from '../images/brands/brand-04.png'
+import brand05 from '../images/brands/brand-05.png'
+
+import famous01 from '../images/product/famous/famous-01.png'
+import famous02 from '../images/product/famous/famous-02.png'
+import famous03 from '../images/product/famous/famous-03.png'
+import famous04 from '../images/product/famous/famous-04.png'
+
+import catbanner01 from '../images/banner/catbanner-01.png'
+import catbanner02 from '../images/banner/catbanner-02.jpg'
+import catbanner03 from '../images/banner/catbanner-03.jpg'
+import catbanner04 from '../images/banner/catbanner-04.jpg'
+
+import banner01 from '../images/banner/banner-01.jpg'
+import banner02 from '../images/banner/banner-02.jpg'
+import banner03 from '../images/banner/banner-03.jpg'
+import banner04 from '../images/banner/banner-04.png'
+import banner05 from '../images/banner/banner-05.jpg'
+
+import cate01 from '../images/categories/cate01.png'
+import cate02 from '../images/categories/cate02.png'
+import cate03 from '../images/categories/cate03.png'
+import cate04 from '../images/categories/cate04.png'
+import cate05 from '../images/categories/cate05.png'
+import cate06 from '../images/categories/cate06.png'
+import cate07 from '../images/categories/cate07.png'
+import cate08 from '../images/categories/cate08.png'
 
 const Home = () => {
   return (
@@ -21,14 +51,14 @@ const Home = () => {
               <Slide>
                 <div className="main-banner position-relative ">
                   <img
-                    src="images/main-banner-1.jpg"
+                    src={banner01}
                     className="img-fluid rounded-3"
                     alt="main banner"
                   />
                   <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
+                    <h4>Vintage Womens Tops</h4>
+                    <h5>Boollili Real Silk Shirt Blouse Men</h5>
+                    <p>From $88.00 to $90.00</p>
                     <Link className="button">BUY NOW</Link>
                   </div>
                 </div>
@@ -36,14 +66,14 @@ const Home = () => {
               <Slide>
                 <div className="main-banner position-relative ">
                   <img
-                    src="images/main-banner.jpg"
+                    src={banner02}
                     className="img-fluid rounded-3"
                     alt="main banner"
                   />
                   <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
+                    <h4>Autumn Winter T Shirt Solid Warm</h4>
+                    <h5>Tops Slim Men's Turtleneck Black T-shirts</h5>
+                    <p>From $199.00 to $200.00</p>
                     <Link className="button">BUY NOW</Link>
                   </div>
                 </div>
@@ -51,59 +81,44 @@ const Home = () => {
               <Slide>
                 <div className="main-banner position-relative ">
                   <img
-                    src="images/main-banner-1.jpg"
+                    src={banner03}
                     className="img-fluid rounded-3"
                     alt="main banner"
                   />
                   <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
+                    <h4>Selling New Hot Fashion 2023</h4>
+                    <h5>Men's Winter Duck Down Coat Long Jacket</h5>
+                    <p>From $50.00 to $100.62</p>
                     <Link className="button">BUY NOW</Link>
                   </div>
                 </div>
               </Slide>
               <Slide>
-                <div className="main-banner position-relative ">
+                <div className="main-banner position-relative">
                   <img
-                    src="images/main-banner.jpg"
+                    src={banner04}
                     className="img-fluid rounded-3"
                     alt="main banner"
                   />
                   <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
+                    <h4>Femme Boollili Autumn Winter T Shirt</h4>
+                    <h5>Cotton Tshirts Women Summer</h5>
+                    <p>From $30.00 to $41.62</p>
                     <Link className="button">BUY NOW</Link>
                   </div>
                 </div>
               </Slide>
               <Slide>
-                <div className="main-banner position-relative ">
+                <div className="main-banner position-relative">
                   <img
-                    src="images/main-banner-1.jpg"
+                    src={banner05}
                     className="img-fluid rounded-3"
                     alt="main banner"
                   />
                   <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
-                    <Link className="button">BUY NOW</Link>
-                  </div>
-                </div>
-              </Slide>
-              <Slide>
-                <div className="main-banner position-relative ">
-                  <img
-                    src="images/main-banner.jpg"
-                    className="img-fluid rounded-3"
-                    alt="main banner"
-                  />
-                  <div className="main-banner-content position-absolute">
-                    <h4>SUPERCHARGED FOR PROS.</h4>
-                    <h5>iPad S13+ Pro.</h5>
-                    <p>From $999.00 or $41.62/mo.</p>
+                    <h4>Femme Boollili Autumn Winter T Shirt</h4>
+                    <h5>Cotton Tshirts Women Summer</h5>
+                    <p>From $30.00 to $41.62</p>
                     <Link className="button">BUY NOW</Link>
                   </div>
                 </div>
@@ -114,13 +129,27 @@ const Home = () => {
             <div className="row gap-10">
               <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
-                  src="images/catbanner-01.jpg"
+                  src={catbanner01}
                   className="img-fluid rounded-3"
                   alt="main banner"
                 />
                 <div className="small-banner-content position-absolute">
-                  <h4>Best Sake</h4>
-                  <h5>iPad S13+ Pro.</h5>
+                  <h4>Best Bag</h4>
+                  <h5>Louis Vuitton</h5>
+                  <p>
+                    From $999.00 <br /> to $1000.
+                  </p>
+                </div>
+              </div>
+              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
+                <img
+                  src={catbanner02}
+                  className="img-fluid rounded-3"
+                  alt="main banner"
+                />
+                <div className="small-banner-content position-absolute">
+                  <h4>NEW ARRIVAL</h4>
+                  <h5>Uniqlo Denim Trucker Jacket</h5>
                   <p>
                     From $999.00 <br /> or $41.62/mo.
                   </p>
@@ -128,13 +157,13 @@ const Home = () => {
               </div>
               <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
-                  src="images/catbanner-02.jpg"
+                  src={catbanner03}
                   className="img-fluid rounded-3"
                   alt="main banner"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>NEW ARRIVAL</h4>
-                  <h5>But IPad Air</h5>
+                  <h5>Croptop</h5>
                   <p>
                     From $999.00 <br /> or $41.62/mo.
                   </p>
@@ -142,27 +171,13 @@ const Home = () => {
               </div>
               <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
-                  src="images/catbanner-03.jpg"
+                  src={catbanner04}
                   className="img-fluid rounded-3"
                   alt="main banner"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>NEW ARRIVAL</h4>
-                  <h5>But IPad Air</h5>
-                  <p>
-                    From $999.00 <br /> or $41.62/mo.
-                  </p>
-                </div>
-              </div>
-              <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
-                <img
-                  src="images/catbanner-04.jpg"
-                  className="img-fluid rounded-3"
-                  alt="main banner"
-                />
-                <div className="small-banner-content position-absolute">
-                  <h4>NEW ARRIVAL</h4>
-                  <h5>But IPad Air</h5>
+                  <h5>Leather Jacket</h5>
                   <p>
                     From $999.00 <br /> or $41.62/mo.
                   </p>
@@ -198,66 +213,66 @@ const Home = () => {
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Music & Gaming</h6>
-                  <p>10 Items</p>
+                  <h6>Skirt</h6>
+                  <p>657 Items</p>
                 </div>
-                <img src="images/camera.jpg" alt="camera" />
+                <img src={cate01} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Cameras</h6>
-                  <p>10 Items</p>
+                  <h6>Jacket</h6>
+                  <p>1004 Items</p>
                 </div>
-                <img src="images/camera.jpg" alt="camera" />
+                <img src={cate02} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
+                  <h6>T-Shirt</h6>
+                  <p>309 Items</p>
                 </div>
-                <img src="images/tv.jpg" alt="camera" />
+                <img src={cate03} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Smart Watches</h6>
-                  <p>10 Items</p>
+                  <h6>Jeans</h6>
+                  <p>453 Items</p>
                 </div>
-                <img src="images/headphone.jpg" alt="camera" />
+                <img src={cate04} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Music & Gaming</h6>
-                  <p>10 Items</p>
+                  <h6>Shoes</h6>
+                  <p>180 Items</p>
                 </div>
-                <img src="images/camera.jpg" alt="camera" />
+                <img src={cate05} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Cameras</h6>
-                  <p>10 Items</p>
+                  <h6>Watch</h6>
+                  <p>65 Items</p>
                 </div>
-                <img src="images/camera.jpg" alt="camera" />
+                <img src={cate06} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
+                  <h6>Hat</h6>
+                  <p>671 Items</p>
                 </div>
-                <img src="images/tv.jpg" alt="camera" />
+                <img src={cate07} alt="cate" />
               </div>
 
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
-                  <h6>Smart Watches</h6>
-                  <p>10 Items</p>
+                  <h6>Jeans</h6>
+                  <p>453 Items</p>
                 </div>
-                <img src="images/headphone.jpg" alt="camera" />
+                <img src={cate08} alt="cate" />
               </div>
             </div>
           </div>
@@ -276,45 +291,50 @@ const Home = () => {
       </Container>
 
       <Container class1="famous-wrapper py-4 home-wrapper-2">
+      <div className="row">
+          <div className="col-12">
+            <h3 className="section-heading">Famous Products</h3>
+          </div>
+        </div>
         <div className="row">
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
-                src="images/famous-1.webp"
+                src={famous01}
                 className="img-fluid"
                 alt="famous"
               />
               <div className="famous-content position-absolute">
-                <h5>Big Screen</h5>
-                <h6>Smart Watch Series 7</h6>
-                <p>From $399or $16.62/mo. for 24 mo.*</p>
+                <h5>Big Jean</h5>
+                <h6>Kane Brown Trending Shirt</h6>
+                <p>From $199 to $400</p>
               </div>
             </div>
           </div>
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
-                src="images/famous-2.webp"
+                src={famous02}
                 className="img-fluid"
                 alt="famous"
               />
               <div className="famous-content position-absolute">
-                <h5 className="text-dark">Studio Display</h5>
-                <h6 className="text-dark">600 nits of brightness.</h6>
-                <p className="text-dark">27-inch 5K Retina display</p>
+                <h5 className="text-dark"> Our Fashion Passion</h5>
+                <h6 className="text-dark">Runway Luxury famous</h6>
+                <p className="text-dark">Cotton</p>
               </div>
             </div>
           </div>
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
-                src="images/famous-3.webp"
+                src={famous03}
                 className="img-fluid"
                 alt="famous"
               />
               <div className="famous-content position-absolute">
-                <h5 className="text-dark">smartphones</h5>
-                <h6 className="text-dark">Smartphone 13 Pro.</h6>
+                <h5 className="text-dark">Watch</h5>
+                <h6 className="text-dark">Watch Famous Luxury Brands Elegant</h6>
                 <p className="text-dark">
                   Now in Green. From $999.00 or $41.62/mo. for 24 mo. Footnote*
                 </p>
@@ -324,15 +344,15 @@ const Home = () => {
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
               <img
-                src="images/famous-3.webp"
+                src={famous04}
                 className="img-fluid"
                 alt="famous"
               />
               <div className="famous-content position-absolute">
-                <h5 className="text-dark">home speakers</h5>
-                <h6 className="text-dark">Room-filling sound.</h6>
+                <h5 className="text-dark">Vest Sexy Sleeveless V-neck Pullover Tank Summer</h5>
+                <h6 className="text-dark">Top Clothes for Women's Satin T-shirt</h6>
                 <p className="text-dark">
-                  From $699 or $116.58/mo. for 12 mo.*
+                  From $699 to $500*
                 </p>
               </div>
             </div>
@@ -340,19 +360,6 @@ const Home = () => {
         </div>
       </Container>
 
-      <Container class1="special-wrapper py-4 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Special Products</h3>
-          </div>
-        </div>
-        <div className="row">
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
-          <SpecialProduct />
-        </div>
-      </Container>
       <Container class1="popular-wrapper py-4 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -372,28 +379,19 @@ const Home = () => {
             <div className="marquee-inner-wrapper card-wrapper">
               <Marquee className="d-flex">
                 <div className="mx-4 w-25">
-                  <img src="images/brand-01.png" alt="brand" />
+                  <img src={brand01} alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-02.png" alt="brand" />
+                  <img src={brand02} alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-03.png" alt="brand" />
+                  <img src={brand03} alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-04.png" alt="brand" />
+                  <img src={brand04} alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-05.png" alt="brand" />
-                </div>
-                <div className="mx-4 w-25">
-                  <img src="images/brand-06.png" alt="brand" />
-                </div>
-                <div className="mx-4 w-25">
-                  <img src="images/brand-07.png" alt="brand" />
-                </div>
-                <div className="mx-4 w-25">
-                  <img src="images/brand-08.png" alt="brand" />
+                  <img src={brand05} alt="brand" />
                 </div>
               </Marquee>
             </div>

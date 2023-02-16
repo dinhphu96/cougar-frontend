@@ -4,8 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 import prodcompare from "../images/prodcompare.svg";
 import wish from "../images/wish.svg";
 // import wishlist from "../images/wishlist.svg";
-import watch from "../images/watch.jpg";
-import watch2 from "../images/watch-1.avif";
+import product01 from "../images/product/product-01.png";
+import product02 from "../images/product/product-02.png";
+import product03 from "../images/product/product-03.png";
+import product04 from "../images/product/product-04.png";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 
@@ -25,15 +27,15 @@ const ProductCard = (props) => {
           </div>
           <div className="product-image">
             <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
-              <img src={watch} className="img-fluid" alt="product image1" />
-              <img src={watch2} className="img-fluid" alt="product image2" />
+              <img src={product01} className="img-fluid" alt="product image1" />
+              <img src={product02} className="img-fluid" alt="product image2" />
             </Link>
           </div>
           <div className="product-details">
-            <h6 className="brand">Havels</h6>
+            <h6 className="brand">Kappa</h6>
             <h5 className="product-title">
               <Link className="title" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
-                Kids headphones bulk 10 pack multi colored for students
+              Cotton Tshirts Women 2023 Summer
               </Link>
             </h5>
             <ReactStars
@@ -75,15 +77,15 @@ const ProductCard = (props) => {
           </div>
           <div className="product-image">
             <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
-              <img src={watch} className="img-fluid" alt="product image1" />
-              <img src={watch2} className="img-fluid" alt="product image2" />
+              <img src={product03} className="img-fluid" alt="product image1" />
+              <img src={product04} className="img-fluid" alt="product image2" />
             </Link>
           </div>
           <div className="product-details">
-            <h6 className="brand">Havels</h6>
+            <h6 className="brand">Zefit</h6>
             <h5 className="product-title">
               <Link className="title" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
-                Kids headphones bulk 10 pack multi colored for students
+              Fashional Wearing Baseball Cap
               </Link>
             </h5>
             <ReactStars
