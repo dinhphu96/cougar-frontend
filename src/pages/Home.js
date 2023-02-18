@@ -291,7 +291,7 @@ const Home = () => {
       </Container>
 
       <Container class1="famous-wrapper py-4 home-wrapper-2">
-      <div className="row">
+        <div className="row">
           <div className="col-12">
             <h3 className="section-heading">Famous Products</h3>
           </div>

@@ -13,7 +13,7 @@ import view from "../images/view.svg";
 
 const ProductCard = (props) => {
   const { grid } = props;
-  console.log(grid);
+  // console.log(grid);
   let location = useLocation();
 
   return (

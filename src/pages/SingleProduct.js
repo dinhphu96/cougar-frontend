@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -10,7 +10,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
-import phuong from "../images/phuong.jpg";
+import imageLink from "../images/phuong.jpg";
 import product01 from "../images/product/product-01.png";
 import product02 from "../images/product/product-02.png";
 
@@ -20,10 +20,10 @@ const SingleProduct = () => {
     width: 594,
     height: 600,
     zoomWidth: 600,
-    img: phuong,
+    img: imageLink,
   };
 
-  const [orderedProduct, setorderedProduct] = useState(true);
+  // const [orderedProduct, setorderedProduct] = useState(true); //Write a Review
   const copyToClipboard = (text) => {
     console.log("text", text);
     var textField = document.createElement("textarea");
@@ -157,14 +157,14 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex align-items-center gap-15">
                   <div>
-                    <a href="">
+                    <Link>
                       <TbGitCompare className="fs-5 me-2" /> Add to Compare
-                    </a>
+                    </Link>
                   </div>
                   <div>
-                    <a href="">
+                    <Link>
                       <AiOutlineHeart className="fs-5 me-2" /> Add to Wishlist
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="d-flex gap-10 flex-column  my-3">
@@ -177,16 +177,16 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex gap-10 align-items-center my-3">
                   <h3 className="product-heading">Product Link:</h3>
-                  <a
-                    href="javascript:void(0);"
-                    onClick={() => {
+                  <Link
+                    onClick={(e) => {
+                      e.preventDefault()
                       copyToClipboard(
                         "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
                       );
                     }}
                   >
                     Copy Product Link
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -227,11 +227,11 @@ const SingleProduct = () => {
                     <p className="mb-0">Based on 2 Reviews</p>
                   </div>
                 </div>
-                {orderedProduct && (
+                {true && (
                   <div>
-                    <a className="text-dark text-decoration-underline" href="">
+                    <Link className="text-dark text-decoration-underline">
                       Write a Review
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -303,7 +303,7 @@ const SingleProduct = () => {
         id="staticBackdrop"
         data-bs-backdrop="static"
         data-bs-keyboard="false"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
       >
