@@ -3,25 +3,16 @@ import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
-import ReactImageZoom from "react-image-zoom";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
-import imageLink from "../images/phuong.jpg";
+import product07 from "../images/product/BlocktechParka-women-pink.png";
 import product01 from "../images/product/product-01.png";
-import product02 from "../images/product/product-02.png";
 
 const SingleProduct = () => {
-
-  const props = {
-    width: 594,
-    height: 600,
-    zoomWidth: 600,
-    img: imageLink,
-  };
 
   // const [orderedProduct, setorderedProduct] = useState(true); //Write a Review
   const copyToClipboard = (text) => {
@@ -45,7 +36,7 @@ const SingleProduct = () => {
           <div className="col-6">
             <div className="main-product-image">
               <div>
-                <ReactImageZoom {...props} />
+                <img src={product07}/>
               </div>
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
@@ -58,7 +49,7 @@ const SingleProduct = () => {
               </div>
               <div>
                 <img
-                  src={product02}
+                  src={product01}
                   className="img-fluid"
                   alt=""
                 />

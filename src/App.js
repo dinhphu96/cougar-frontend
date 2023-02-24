@@ -14,9 +14,7 @@ import Forgotpassword from "./pages/Forgotpassword";
 import Signup from "./pages/Signup";
 import Resetpassword from "./pages/Resetpassword";
 import About from "./pages/About";
-import CompareProduct from "./pages/CompareProduct";
 import Checkout from "./pages/Checkout";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SingleProduct from "./pages/SingleProduct";
 
 function App() {
@@ -38,9 +36,7 @@ function App() {
             <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
-            <Route path="compare-product" element={<CompareProduct />} />
             <Route path="checkout" element={<Checkout />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
           </Route>
         </Routes>
       </BrowserRouter>

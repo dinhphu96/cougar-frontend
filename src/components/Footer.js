@@ -38,32 +38,25 @@ const Footer = () => {
               <h4 className="text-white mb-4">Contact Us</h4>
               <div>
                 <address className="text-white fs-6">
-                  Address : Quang Trung software area, <br /> District 12, HCM City <br />
+                  Address : Quang Trung software area, <br /> District 12, HCM
+                  City <br />
                   PinCode: 700000
                 </address>
-                <a
-                  href="tel:+84 399 797979"
-                  className="mt-3 d-block mb-1 text-white"
-                >
-                  +84 399 797979
-                </a>
-                <a
-                  href="cougarshop@gmail.com"
-                  className="mt-2 d-block mb-0 text-white"
-                >
+                <p className="mt-3 d-block mb-1 text-white">+84 399 797979</p>
+                <p className="mt-2 d-block mb-0 text-white">
                   cougarshop@gmail.com
-                </a>
+                </p>
                 <div className="social_icons d-flex align-items-center gap-30 mt-4">
-                  <Link className="text-white" to={'/'}>
+                  <Link className="text-white" to={"/"}>
                     <BsLinkedin className="fs-4" />
                   </Link>
-                  <Link className="text-white" to={'/'}>
+                  <Link className="text-white" to={"/"}>
                     <BsInstagram className="fs-4" />
                   </Link>
-                  <Link className="text-white" to={'/'}>
+                  <Link className="text-white" to={"/"}>
                     <BsGithub className="fs-4" />
                   </Link>
-                  <Link className="text-white" to={'/'}>
+                  <Link className="text-white" to={"/"}>
                     <BsYoutube className="fs-4" />
                   </Link>
                 </div>
@@ -72,36 +65,28 @@ const Footer = () => {
             <div className="col-3">
               <h4 className="text-white mb-4">Information</h4>
               <div className="footer-link d-flex flex-column">
-                <Link to="/privacy-policy" className="text-white py-2 mb-1">
-                  Privacy Policy
-                </Link>
-                <Link to="/refund-policy" className="text-white py-2 mb-1">
-                  Refund Policy
-                </Link>
-                <Link to="/shipping-policy" className="text-white py-2 mb-1">
-                  Shipping Policy
-                </Link>
-                <Link to="/term-conditions" className="text-white py-2 mb-1">
-                  Terms & Conditions
-                </Link>
-                <Link className="text-white py-2 mb-1">Blogs</Link>
+                <p className="text-white py-2 mb-1">Privacy Policy</p>
+                <p className="text-white py-2 mb-1">Refund Policy</p>
+                <p className="text-white py-2 mb-1">Shipping Policy</p>
+                <p className="text-white py-2 mb-1">Terms & Conditions</p>
+                <p className="text-white py-2 mb-1">Blogs</p>
               </div>
             </div>
             <div className="col-3">
               <h4 className="text-white mb-4">Account</h4>
               <div className="footer-link d-flex flex-column">
-                <Link className="text-white py-2 mb-1">About Us</Link>
-                <Link className="text-white py-2 mb-1">Faq</Link>
-                <Link className="text-white py-2 mb-1">Contact</Link>
+                <p className="text-white py-2 mb-1">About Us</p>
+                <p className="text-white py-2 mb-1">Faq</p>
+                <p className="text-white py-2 mb-1">Contact</p>
               </div>
             </div>
             <div className="col-2">
               <h4 className="text-white mb-4">Quick Links</h4>
               <div className="footer-link d-flex flex-column">
-                <Link className="text-white py-2 mb-1">Men</Link>
-                <Link className="text-white py-2 mb-1">Women</Link>
-                <Link className="text-white py-2 mb-1">Kids</Link>
-                <Link className="text-white py-2 mb-1">Accessories</Link>
+                <p className="text-white py-2 mb-1">Men</p>
+                <p className="text-white py-2 mb-1">Women</p>
+                <p className="text-white py-2 mb-1">Kids</p>
+                <p className="text-white py-2 mb-1">Accessories</p>
               </div>
             </div>
           </div>
@@ -112,7 +97,8 @@ const Footer = () => {
           <div className="row">
             <div className="col-12">
               <p className="text-center mb-0 text-white">
-                &copy; {new Date().getFullYear()}; Code by Team 3 from FPT Polytechnic
+                &copy; {new Date().getFullYear()}; Code by Cougar Team from FPT
+                Polytechnic
               </p>
             </div>
           </div>

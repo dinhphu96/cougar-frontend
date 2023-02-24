@@ -4,10 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import prodcompare from "../images/prodcompare.svg";
 import wish from "../images/wish.svg";
 // import wishlist from "../images/wishlist.svg";
-import product01 from "../images/product/product-01.png";
-import product02 from "../images/product/product-02.png";
+import product01 from "../images/product/BlocktechParka-women-pink.png";
 import product03 from "../images/product/product-03.png";
-import product04 from "../images/product/product-04.png";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 
@@ -28,7 +26,6 @@ const ProductCard = (props) => {
           <div className="product-image">
             <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
               <img src={product01} className="img-fluid" alt="product image1" />
-              <img src={product02} className="img-fluid" alt="product image2" />
             </Link>
           </div>
           <div className="product-details">
@@ -78,7 +75,6 @@ const ProductCard = (props) => {
           <div className="product-image">
             <Link className="p" to={`${location.pathname === "/" ? "/product/:id" : location.pathname === "/product/:id" ? "/product/:id" : ":id"}`}>
               <img src={product03} className="img-fluid" alt="product image1" />
-              <img src={product04} className="img-fluid" alt="product image2" />
             </Link>
           </div>
           <div className="product-details">
