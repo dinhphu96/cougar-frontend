@@ -6,8 +6,8 @@ import Container from "../components/Container";
 import cross from "../images/cross.svg";
 
 import product02 from "../images/product/product-02.png";
-import product03 from "../images/product/product-03.png";
-import product04 from "../images/product/product-04.png";
+import product03 from "../images/product/BlocktechParka-red.png";
+import product04 from "../images/product/AirSense Jacket-beige.png";
 
 const Wishlist = () => {
   return (

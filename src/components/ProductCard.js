@@ -5,7 +5,7 @@ import prodcompare from "../images/prodcompare.svg";
 import wish from "../images/wish.svg";
 // import wishlist from "../images/wishlist.svg";
 import product01 from "../images/product/BlocktechParka-women-pink.png";
-import product03 from "../images/product/product-03.png";
+import product03 from "../images/product/aothun-hacker3.png";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 

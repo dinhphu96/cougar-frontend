@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import Container from "../components/Container";
 
-import product01 from "../images/product/product-01.png";
+import product01 from "../images/product/BlocktechParka-red.png";
 
 const Checkout = () => {
   return (

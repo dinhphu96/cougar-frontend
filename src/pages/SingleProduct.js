@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
 import product07 from "../images/product/BlocktechParka-women-pink.png";
-import product01 from "../images/product/product-01.png";
+import product01 from "../images/product/aothun-hacker1.png";
 
 const SingleProduct = () => {
 
