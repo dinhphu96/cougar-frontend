@@ -1,11 +1,12 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
-import compare from "../images/compare.svg";
 import wishlist from "../images/wishlist.svg";
 import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
+import logo from "../images/cougar-logo.png";
+
 const Header = () => {
   return (
     <>
@@ -20,9 +21,7 @@ const Header = () => {
             <div className="col-6">
               <p className="text-end text-white mb-0">
                 Hotline:
-                <span className="text-white">
-                +84 399 797979
-                </span>
+                <span className="text-white">+84 399 797979</span>
               </p>
             </div>
           </div>
@@ -31,12 +30,17 @@ const Header = () => {
       <header className="header-upper py-3">
         <div className="container-xxl">
           <div className="row align-items-center">
-            <div className="col-2">
-              <h2>
-                <Link to="/" className="text-white">Cougar Shop</Link>
-              </h2>
+            <div className="col-4">
+              <Link to="/" className="text-white d-flex align-items-center">
+                <img
+                  style={{ width: "20%", marginRight: "10px" }}
+                  src={logo}
+                  alt="logo"
+                />
+                <h2>Cougar Shop</h2>
+              </Link>
             </div>
-            <div className="col-5">
+            <div className="col-4">
               <div className="input-group">
                 <input
                   type="text"
@@ -45,24 +49,17 @@ const Header = () => {
                   aria-label="Search Product Here..."
                   aria-describedby="basic-addon2"
                 />
-                <Link to={'/'} className="input-group-text p-3" id="basic-addon2">
+                <Link
+                  to={"/"}
+                  className="input-group-text p-3"
+                  id="basic-addon2"
+                >
                   <BsSearch className="fs-6" />
                 </Link>
               </div>
             </div>
-            <div className="col-5">
+            <div className="col-4">
               <div className="header-upper-links d-flex align-items-center justify-content-between">
-                <div>
-                  <Link
-                    to="/compare-product"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
-                    <img src={compare} alt="compare" />
-                    <p className="mb-0">
-                      Compare <br /> Products
-                    </p>
-                  </Link>
-                </div>
                 <div>
                   <Link
                     to="/wishlist"
