@@ -9,10 +9,27 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
-import product07 from "../images/product/BlocktechParka-women-pink.png";
+// import product07 from "../images/product/BlocktechParka-women-pink.png";
 import product01 from "../images/product/aothun-hacker1.png";
 
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux/es/exports";
+import { getPrISelector } from "../store/productItem/selectors";
+
 const SingleProduct = () => {
+  const { id } = useParams();
+
+  const singleProduct = useSelector(getPrISelector).find((pr) => pr.id == id);
+
+  if (singleProduct) {
+    var image = singleProduct.image;
+    var brand = singleProduct.product.brand.name;
+    var description = singleProduct.product.description;
+    var name = singleProduct.product.name;
+    var price = singleProduct.price;
+    var categoryName = singleProduct.product.subcategory.name;
+    var inStock = singleProduct.qtyInStock !== 0 ? "In Stock" : "Out of Stock";
+  }
 
   // const [orderedProduct, setorderedProduct] = useState(true); //Write a Review
   const copyToClipboard = (text) => {
@@ -24,47 +41,45 @@ const SingleProduct = () => {
     document.execCommand("copy");
     textField.remove();
   };
-  const closeModal = () => {};
+  const handleAddToCart = () => {
+    
+  };
 
-  
   return (
     <>
       <Meta title={"Product Name"} />
       <BreadCrumb title="Product Name" />
-      <Container class1="main-product-wrapper py-5 home-wrapper-2">
+      <Container class1="main-product-wrapper py-3 home-wrapper-2">
         <div className="row">
           <div className="col-6">
             <div className="main-product-image">
               <div>
-                <img src={product07}/>
+                <img
+                  src={
+                    singleProduct
+                      ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${image}`
+                      : `logo192.png`
+                  }
+                  alt="ima"
+                />
               </div>
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
               <div>
-                <img
-                  src={product01}
-                  className="img-fluid"
-                  alt=""
-                />
+                <img src={product01} className="img-fluid" alt="" />
               </div>
               <div>
-                <img
-                  src={product01}
-                  className="img-fluid"
-                  alt=""
-                />
+                <img src={product01} className="img-fluid" alt="" />
               </div>
             </div>
           </div>
           <div className="col-6">
             <div className="main-product-details">
               <div className="border-bottom">
-                <h3 className="title">
-                Cotton Tshirts Women 2023 Summer
-                </h3>
+                <h3 className="title">{name}</h3>
               </div>
               <div className="border-bottom py-3">
-                <p className="price">$ 100</p>
+                <p className="price">{`$${price}`}</p>
                 <div className="d-flex align-items-center gap-10">
                   <ReactStars
                     count={5}
@@ -81,24 +96,16 @@ const SingleProduct = () => {
               </div>
               <div className=" py-3">
                 <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Type :</h3>
-                  <p className="product-data">Clothes</p>
-                </div>
-                <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Brand :</h3>
-                  <p className="product-data">Zefit</p>
+                  <p className="product-data">{brand}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Category :</h3>
-                  <p className="product-data">Jacket</p>
-                </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Tags :</h3>
-                  <p className="product-data">Jean</p>
+                  <p className="product-data">{categoryName}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Availablity :</h3>
-                  <p className="product-data">In Stock</p>
+                  <p className="product-data">{inStock}</p>
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Size :</h3>
@@ -135,10 +142,8 @@ const SingleProduct = () => {
                     />
                   </div>
                   <div className="d-flex align-items-center gap-30 ms-5">
-                    <button
+                    <button onClick={handleAddToCart}
                       className="button border-0"
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop"
                       type="button"
                     >
                       Add to Cart
@@ -170,7 +175,7 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Product Link:</h3>
                   <Link
                     onClick={(e) => {
-                      e.preventDefault()
+                      e.preventDefault();
                       copyToClipboard(
                         "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
                       );
@@ -184,17 +189,12 @@ const SingleProduct = () => {
           </div>
         </div>
       </Container>
-      <Container class1="description-wrapper py-5 home-wrapper-2">
+      <Container class1="description-wrapper py3 home-wrapper-2">
         <div className="row">
           <div className="col-12">
             <h4>Description</h4>
             <div className="bg-white p-3">
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Tenetur nisi similique illum aut perferendis voluptas, quisquam
-                obcaecati qui nobis officia. Voluptatibus in harum deleniti
-                labore maxime officia esse eos? Repellat?
-              </p>
+              <p>{description}</p>
             </div>
           </div>
         </div>
@@ -278,71 +278,6 @@ const SingleProduct = () => {
           </div>
         </div>
       </Container>
-      <Container class1="popular-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Our Popular Products</h3>
-          </div>
-        </div>
-        <div className="row">
-          <ProductCard />
-        </div>
-      </Container>
-
-      <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered ">
-          <div className="modal-content">
-            <div className="modal-header border-0">
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body py-0">
-              <div className="d-flex align-items-center">
-                <div className="flex-grow-1 w-50">
-                  <img src={product01} className="img-fluid" alt="product imgae" />
-                </div>
-                <div className="d-flex flex-column flex-grow-1 w-50">
-                  <h6 className="mb-3">Shirt</h6>
-                  <p className="mb-1">Quantity: 12</p>
-                  <p className="mb-1">Color: Red</p>
-                  <p className="mb-1">Size: XL</p>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer border-0 py-0 justify-content-center gap-30">
-              <button type="button" className="button" data-bs-dismiss="modal">
-                View My Cart
-              </button>
-              <button type="button" className="button signup">
-                Checkout
-              </button>
-            </div>
-            <div className="d-flex justify-content-center py-3">
-              <Link
-                className="text-dark"
-                to="/product"
-                onClick={() => {
-                  closeModal();
-                }}
-              >
-                Continue To Shopping
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

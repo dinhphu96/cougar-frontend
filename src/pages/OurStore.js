@@ -6,10 +6,15 @@ import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import Container from "../components/Container";
 
-import product05 from '../images/product/product-05.png'
-import product06 from '../images/product/product-06.png'
+import product05 from "../images/product/product-05.png";
+import product06 from "../images/product/product-06.png";
+
+import { getPrISelector } from "../store/productItem/selectors";
+import { useSelector } from "react-redux";
 
 const OurStore = () => {
+  const productItems = useSelector(getPrISelector);
+
   const [grid, setGrid] = useState(4);
   return (
     <>
@@ -132,11 +137,7 @@ const OurStore = () => {
               <div>
                 <div className="random-products mb-3 d-flex">
                   <div className="w-50">
-                    <img
-                      src={product05}
-                      className="img-fluid"
-                      alt="watch"
-                    />
+                    <img src={product05} className="img-fluid" alt="watch" />
                   </div>
                   <div className="w-50">
                     <h5>
@@ -154,11 +155,7 @@ const OurStore = () => {
                 </div>
                 <div className="random-products d-flex">
                   <div className="w-50">
-                    <img
-                      src={product06}
-                      className="img-fluid"
-                      alt="watch"
-                    />
+                    <img src={product06} className="img-fluid" alt="watch" />
                   </div>
                   <div className="w-50">
                     <h5>
@@ -244,10 +241,9 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
-                <ProductCard grid={grid} />
+                {productItems.map((prI) => (
+                  <ProductCard key={prI.id} productItem={prI} grid={grid} />
+                ))}
               </div>
             </div>
           </div>

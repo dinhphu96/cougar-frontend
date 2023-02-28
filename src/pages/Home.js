@@ -8,38 +8,44 @@ import Meta from "../components/Meta";
 import shipping from "../untils/sevices";
 import ImageSlider, { Slide } from "react-auto-image-slider";
 
-import brand01 from '../images/brands/brand-01.png'
-import brand02 from '../images/brands/brand-02.png'
-import brand03 from '../images/brands/brand-03.png'
-import brand04 from '../images/brands/brand-04.png'
-import brand05 from '../images/brands/brand-05.png'
+import brand01 from "../images/brands/brand-01.png";
+import brand02 from "../images/brands/brand-02.png";
+import brand03 from "../images/brands/brand-03.png";
+import brand04 from "../images/brands/brand-04.png";
+import brand05 from "../images/brands/brand-05.png";
 
-import famous01 from '../images/product/famous/famous-01.png'
-import famous02 from '../images/product/famous/famous-02.png'
-import famous03 from '../images/product/famous/famous-03.png'
-import famous04 from '../images/product/famous/famous-04.png'
+import famous01 from "../images/product/famous/famous-01.png";
+import famous02 from "../images/product/famous/famous-02.png";
+import famous03 from "../images/product/famous/famous-03.png";
+import famous04 from "../images/product/famous/famous-04.png";
 
-import catbanner01 from '../images/banner/catbanner-01.png'
-import catbanner02 from '../images/banner/catbanner-02.jpg'
-import catbanner03 from '../images/banner/catbanner-03.jpg'
-import catbanner04 from '../images/banner/catbanner-04.jpg'
+import catbanner01 from "../images/banner/catbanner-01.png";
+import catbanner02 from "../images/banner/catbanner-02.jpg";
+import catbanner03 from "../images/banner/catbanner-03.jpg";
+import catbanner04 from "../images/banner/catbanner-04.jpg";
 
-import banner01 from '../images/banner/banner-01.jpg'
-import banner02 from '../images/banner/banner-02.jpg'
-import banner03 from '../images/banner/banner-03.jpg'
-import banner04 from '../images/banner/banner-04.png'
-import banner05 from '../images/banner/banner-05.jpg'
+import banner01 from "../images/banner/banner-01.jpg";
+import banner02 from "../images/banner/banner-02.jpg";
+import banner03 from "../images/banner/banner-03.jpg";
+import banner04 from "../images/banner/banner-04.png";
+import banner05 from "../images/banner/banner-05.jpg";
 
-import cate01 from '../images/categories/cate01.png'
-import cate02 from '../images/categories/cate02.png'
-import cate03 from '../images/categories/cate03.png'
-import cate04 from '../images/categories/cate04.png'
-import cate05 from '../images/categories/cate05.png'
-import cate06 from '../images/categories/cate06.png'
-import cate07 from '../images/categories/cate07.png'
-import cate08 from '../images/categories/cate08.png'
+import cate01 from "../images/categories/cate01.png";
+import cate02 from "../images/categories/cate02.png";
+import cate03 from "../images/categories/cate03.png";
+import cate04 from "../images/categories/cate04.png";
+import cate05 from "../images/categories/cate05.png";
+import cate06 from "../images/categories/cate06.png";
+import cate07 from "../images/categories/cate07.png";
+import cate08 from "../images/categories/cate08.png";
+
+import { getPrISelectorHome } from "../store/productItem/selectors";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+
+  const productItems = useSelector(getPrISelectorHome);
+
   return (
     <>
       <Meta title={"Cougar Shop"} />
@@ -210,7 +216,6 @@ const Home = () => {
         <div className="row">
           <div className="col-12">
             <div className="row categories d-flex justify-content-between flex-wrap align-items-center">
-
               <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex gap align-items-center">
                 <div>
                   <h6>Skirt</h6>
@@ -283,10 +288,9 @@ const Home = () => {
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
           </div>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {productItems.map((prI) => (
+            <ProductCard key={prI.id} productItem={prI} />
+          ))}
         </div>
       </Container>
 
@@ -299,11 +303,7 @@ const Home = () => {
         <div className="row">
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
-              <img
-                src={famous01}
-                className="img-fluid"
-                alt="famous"
-              />
+              <img src={famous01} className="img-fluid" alt="famous" />
               <div className="famous-content position-absolute">
                 <h5>Big Jean</h5>
                 <h6>Kane Brown Trending Shirt</h6>
@@ -313,11 +313,7 @@ const Home = () => {
           </div>
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
-              <img
-                src={famous02}
-                className="img-fluid"
-                alt="famous"
-              />
+              <img src={famous02} className="img-fluid" alt="famous" />
               <div className="famous-content position-absolute">
                 <h5 className="text-dark"> Our Fashion Passion</h5>
                 <h6 className="text-dark">Runway Luxury famous</h6>
@@ -327,14 +323,12 @@ const Home = () => {
           </div>
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
-              <img
-                src={famous03}
-                className="img-fluid"
-                alt="famous"
-              />
+              <img src={famous03} className="img-fluid" alt="famous" />
               <div className="famous-content position-absolute">
                 <h5 className="text-dark">Watch</h5>
-                <h6 className="text-dark">Watch Famous Luxury Brands Elegant</h6>
+                <h6 className="text-dark">
+                  Watch Famous Luxury Brands Elegant
+                </h6>
                 <p className="text-dark">
                   Now in Green. From $999.00 or $41.62/mo. for 24 mo. Footnote*
                 </p>
@@ -343,17 +337,15 @@ const Home = () => {
           </div>
           <div className="col-lg-3 col-md-4 col-sm-6 col-12">
             <div className="famous-card position-relative">
-              <img
-                src={famous04}
-                className="img-fluid"
-                alt="famous"
-              />
+              <img src={famous04} className="img-fluid" alt="famous" />
               <div className="famous-content position-absolute">
-                <h5 className="text-dark">Vest Sexy Sleeveless V-neck Pullover Tank Summer</h5>
-                <h6 className="text-dark">Top Clothes for Women's Satin T-shirt</h6>
-                <p className="text-dark">
-                  From $699 to $500*
-                </p>
+                <h5 className="text-dark">
+                  Vest Sexy Sleeveless V-neck Pullover Tank Summer
+                </h5>
+                <h6 className="text-dark">
+                  Top Clothes for Women's Satin T-shirt
+                </h6>
+                <p className="text-dark">From $699 to $500*</p>
               </div>
             </div>
           </div>
@@ -367,10 +359,9 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {productItems.map((prI) => (
+            <ProductCard key={prI.id} productItem={prI} />
+          ))}
         </div>
       </Container>
       <Container class1="marque-wrapper home-wrapper-2 py-4">

@@ -17,7 +17,17 @@ import About from "./pages/About";
 import Checkout from "./pages/Checkout";
 import SingleProduct from "./pages/SingleProduct";
 
+import { getProductItem } from "./store/productItem/api";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProductItem());
+  }, [dispatch]);
+
+
   return (
     <>
       <BrowserRouter>
@@ -28,7 +38,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
-            <Route path="product/:id" element={<SingleProduct />} />
+            <Route path="singleProduct/:id" element={<SingleProduct />} />
             <Route path="blogs" element={<Blog />} />
             <Route path="blog/:id" element={<SingleBlog />} />
             <Route path="cart" element={<Cart />} />

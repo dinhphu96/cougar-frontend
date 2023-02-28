@@ -331,14 +331,23 @@
     margin-right: 20px;
   }
   .action-bar {
-    top: 10%;
-    right: -23px;
+    top: 13%;
+    right: -30px;
     transition: 0.3s;
   }
+
+  .action-bar img{
+    width: 27px;
+  }
+
   .wishlist-icon {
     top: 2%;
     right: 15px;
     z-index: 1;
+  }
+
+  .wishlist-icon button img{
+    width: 27px;
   }
   
   /* Product Card ends here */
