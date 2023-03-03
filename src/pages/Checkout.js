@@ -3,9 +3,22 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import Container from "../components/Container";
 
-import product01 from "../images/product/BlocktechParka-red.png";
+import { useSelector } from "react-redux/es/exports";
+import { getCartSelector } from "../store/shop_order/selectors";
+import CheckOutItem from "../components/CheckOutItem";
 
 const Checkout = () => {
+  const listCartItem = useSelector(getCartSelector);
+  const subTotal = listCartItem.reduce((total, init) => {
+    return init.total + total;
+  }, 0);
+
+  const shipping = 10;
+
+  const handleContinueToShipping = (e)=>{
+   
+  }
+
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
@@ -53,8 +66,8 @@ const Checkout = () => {
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
                 <div className="w-100">
-                  <select name="" className="form-control form-select" id="">
-                    <option value="" selected disabled>
+                  <select defaultValue={1} name="" className="form-control form-select" id="">
+                    <option value={4}>
                       Select Country
                     </option>
                   </select>
@@ -95,9 +108,18 @@ const Checkout = () => {
                   />
                 </div>
                 <div className="flex-grow-1">
-                  <select name="" className="form-control form-select" id="">
-                    <option value="" selected disabled>
-                      Select State
+                  <select defaultValue={2} name="" className="form-control form-select" id="">
+                    <option value={1}>
+                      United States
+                    </option>
+                    <option value={2}>
+                      Việt Nam
+                    </option>
+                    <option value={2}>
+                      Japan
+                    </option>
+                    <option value={2}>
+                      ThaiLand
                     </option>
                   </select>
                 </div>
@@ -114,7 +136,7 @@ const Checkout = () => {
                       <BiArrowBack className="me-2" />
                       Return to Cart
                     </Link>
-                    <Link to="/cart" className="button">
+                    <Link to={""} className="button" onClick={handleContinueToShipping}>
                       Continue to Shipping
                     </Link>
                   </div>
@@ -123,41 +145,26 @@ const Checkout = () => {
             </div>
           </div>
           <div className="col-5">
-            <div className="border-bottom py-4">
-              <div className="d-flex gap-10 mb-2 align-align-items-center">
-                <div className="w-75 d-flex gap-10">
-                  <div className="w-25 position-relative">
-                    <span
-                      style={{ top: "-10px", right: "2px" }}
-                      className="badge bg-info text-white rounded-circle p-2 position-absolute"
-                    >
-                      10
-                    </span>
-                    <img className="img-fluid" src={product01} alt="product" />
-                  </div>
-                  <div>
-                    <h5 className="total-price">T-Shirt</h5>
-                    <p className="total-price">XL / #Color</p>
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <h5 className="total">$ 100</h5>
-                </div>
-              </div>
-            </div>
+          
+            {/* list */}
+            {listCartItem.map((item) => (
+              <CheckOutItem key={item.id} item={item}/>
+            ))}
+
+              {/* list end */}
             <div className="border-bottom py-4">
               <div className="d-flex justify-content-between align-items-center">
                 <p className="total">Subtotal</p>
-                <p className="total-price">$ 10000</p>
+                <p className="total-price">$ {subTotal}</p>
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">$ 10000</p>
+                <p className="mb-0 total-price">$ {shipping}</p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">
               <h4 className="total">Total</h4>
-              <h5 className="total-price">$ 10000</h5>
+              <h5 className="total-price">$ {subTotal + shipping}</h5>
             </div>
           </div>
         </div>

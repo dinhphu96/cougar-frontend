@@ -100,6 +100,13 @@ const ShopOrderSlice = createSlice({
         const item = action.payload;
         item.total = item.price * item.qty;
 
+        state.cartItems.forEach((proI) => {
+          if (proI.id === item.productItem.id) {
+            item.color = proI.color;
+            item.size = proI.size;
+          }
+        });
+
         state.cartItems.push(item);
         state.status = "succeeded";
       })
