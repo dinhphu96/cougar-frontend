@@ -25,7 +25,7 @@ import {
   getShopOrderSelector
 } from "../store/shop_order/selectors";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +40,7 @@ const SingleProduct = () => {
     getRelatedProductItemsSelector(singleProduct)
   );
 
-  
+
   if (singleProduct) {
     var image = singleProduct.image;
     var brand = singleProduct.product.brand.name;
@@ -244,7 +244,7 @@ const SingleProduct = () => {
                     >
                       Add to Cart
                     </button>
-                    <ToastContainer />
+                    
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">

@@ -16,7 +16,7 @@ import {
   updateOrderDetail,
   addNewOrder,
 } from "../store/shop_order/api";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
@@ -173,7 +173,6 @@ const ProductCard = (props) => {
               >
                 <img src={addcart} alt="addcart" />
               </button>
-              <ToastContainer />
             </div>
           </div>
         </div>

@@ -30,6 +30,7 @@ import {
   getShopOrderSelector,
   getUserSelector,
 } from "./store/shop_order/selectors";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useDispatch();
@@ -80,6 +81,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </>
   );
 }
