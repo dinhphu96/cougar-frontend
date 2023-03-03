@@ -6,8 +6,20 @@ import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 import logo from "../images/cougar-logo.png";
+import { useSelector } from "react-redux/es/exports";
+import {
+  getCartSelector,
+  getUserSelector,
+} from "../store/shop_order/selectors";
 
 const Header = () => {
+  const userrr = useSelector(getUserSelector);
+  const listCartItem = useSelector(getCartSelector);
+  const subTotal = listCartItem.reduce((total, init) => {
+    return init.total + total;
+  }, 0);
+
+  const amount = listCartItem.length;
   return (
     <>
       <header className="header-top-strip py-3">
@@ -78,7 +90,9 @@ const Header = () => {
                   >
                     <img src={user} alt="user" />
                     <p className="mb-0">
-                      Log in <br /> My Account
+                      {userrr.fullname !== undefined
+                        ? userrr.fullname
+                        : "Log in"}
                     </p>
                   </Link>
                 </div>
@@ -89,8 +103,8 @@ const Header = () => {
                   >
                     <img src={cart} alt="cart" />
                     <div className="d-flex flex-column gap-10">
-                      <span className="badge bg-white text-dark">0</span>
-                      <p className="mb-0">$ 500</p>
+                      <span className="badge bg-white text-dark">{amount}</span>
+                      <p className="mb-0">${subTotal}</p>
                     </div>
                   </Link>
                 </div>

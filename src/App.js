@@ -20,13 +20,41 @@ import SingleProduct from "./pages/SingleProduct";
 import { getProductItem } from "./store/productItem/api";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import {
+  getOrderDetailByShopId,
+  getShopOrderByUserId,
+  getUserByEmail,
+} from "./store/shop_order/api";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import {
+  getShopOrderSelector,
+  getUserSelector,
+} from "./store/shop_order/selectors";
 
 function App() {
   const dispatch = useDispatch();
+  const UserEmail = 5;
   useEffect(() => {
     dispatch(getProductItem());
-  }, [dispatch]);
+    if (UserEmail) {
+      dispatch(getUserByEmail(UserEmail));
+    }
+  }, [UserEmail !== null]);
 
+  const us = useSelector(getUserSelector);
+  useEffect(() => {
+    if (us.id) {
+      dispatch(getShopOrderByUserId(us.id));
+    }
+  }, [us.id != undefined]);
+
+  const so = useSelector(getShopOrderSelector);
+
+  useEffect(() => {
+    if (so) {
+      dispatch(getOrderDetailByShopId(so.id));
+    }
+  }, [so !== null]);
 
   return (
     <>
@@ -38,7 +66,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
-            <Route path="singleProduct/:id" element={<SingleProduct />} />
+            <Route path="product/:id" element={<SingleProduct />} />
             <Route path="blogs" element={<Blog />} />
             <Route path="blog/:id" element={<SingleBlog />} />
             <Route path="cart" element={<Cart />} />

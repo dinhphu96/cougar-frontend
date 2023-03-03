@@ -1,25 +1,48 @@
-// import React, { useState } from "react";
+import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
-import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
-// import product07 from "../images/product/BlocktechParka-women-pink.png";
-import product01 from "../images/product/aothun-hacker1.png";
-
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
-import { getPrISelector } from "../store/productItem/selectors";
+import {
+  getOnePrISelector,
+  getRelatedProductItemsSelector,
+} from "../store/productItem/selectors";
+import { useDispatch } from "react-redux/es/exports";
+import {
+  addNewOrderDetail,
+  updateOrderDetail,
+  addNewOrder,
+} from "../store/shop_order/api";
+import {
+  getCartSelector,
+  getUserSelector,
+  getShopOrderSelector
+} from "../store/shop_order/selectors";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const SingleProduct = () => {
   const { id } = useParams();
+  const [changProductItem, setChangProductItem] = useState(id);
+  
 
-  const singleProduct = useSelector(getPrISelector).find((pr) => pr.id == id);
+
+  const navigate = useNavigate();
+  const singleProduct = useSelector(getOnePrISelector(changProductItem));
+  
+  
+  
+  const listRelatedProductItems = useSelector(
+    getRelatedProductItemsSelector(singleProduct)
+  );
 
   if (singleProduct) {
     var image = singleProduct.image;
@@ -33,7 +56,6 @@ const SingleProduct = () => {
 
   // const [orderedProduct, setorderedProduct] = useState(true); //Write a Review
   const copyToClipboard = (text) => {
-    console.log("text", text);
     var textField = document.createElement("textarea");
     textField.innerText = text;
     document.body.appendChild(textField);
@@ -41,10 +63,81 @@ const SingleProduct = () => {
     document.execCommand("copy");
     textField.remove();
   };
+
+  // const shopOrder = useSelector(getShopOrderSelector);
+  const listCartItem = useSelector(getCartSelector);
+  const userr = useSelector(getUserSelector);
+  const shopOrder = useSelector(getShopOrderSelector);
+  const dispatch = useDispatch();
+  const [quty, setQuty] = useState(1);
+  const setQuantity = (e) => {
+    setQuty(+e.target.value);
+  };
   const handleAddToCart = () => {
-    
+    if (userr.id !== undefined) {
+      const {color, size, ...productAdd} = singleProduct;
+      if (listCartItem.length !== 0) {
+        const cartItem = {
+          qty: quty,
+          price: singleProduct.price,
+          productItem: productAdd,
+          shopOrder: shopOrder,
+        };
+
+        const proExist = listCartItem.find(
+          (ite) => ite.productItem.id === cartItem.productItem.id
+        );
+        if (proExist) {
+          cartItem.id = proExist.id;
+          cartItem.qty += proExist.qty;
+          dispatch(updateOrderDetail(cartItem));
+        } else {
+          dispatch(addNewOrderDetail(cartItem));
+        }
+      } else {
+
+        if (shopOrder) {
+          const cartItem = {
+            qty: quty,
+            price: singleProduct.price,
+            productItem: productAdd,
+            shopOrder: shopOrder,
+          };
+          dispatch(addNewOrderDetail(cartItem));
+        }else{
+          const shopO = {
+            user: userr,
+          };
+  
+          const cartItem = {
+            qty: quty,
+            price: singleProduct.price,
+            productItem: productAdd,
+          };
+  
+          dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+        }
+      }
+
+      toast.success(`Added - (${quty}) ${name}`, {
+        position: "top-right",
+        autoClose: 700,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      navigate("/login");
+    }
   };
 
+
+  const handleClickImage = (pro)=>{
+    setChangProductItem(pro);
+  }
   return (
     <>
       <Meta title={"Product Name"} />
@@ -65,12 +158,15 @@ const SingleProduct = () => {
               </div>
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
-              <div>
-                <img src={product01} className="img-fluid" alt="" />
-              </div>
-              <div>
-                <img src={product01} className="img-fluid" alt="" />
-              </div>
+              {listRelatedProductItems.map((pro) => (
+                <div key={pro.id}>
+                  <img onClick={()=>handleClickImage(pro.id)} style={{cursor: "pointer"}}
+                    src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
+                    className="img-fluid"
+                    alt=""
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="col-6">
@@ -134,6 +230,8 @@ const SingleProduct = () => {
                     <input
                       type="number"
                       name=""
+                      value={quty}
+                      onChange={setQuantity}
                       min={1}
                       max={10}
                       className="form-control"
@@ -142,21 +240,17 @@ const SingleProduct = () => {
                     />
                   </div>
                   <div className="d-flex align-items-center gap-30 ms-5">
-                    <button onClick={handleAddToCart}
+                    <button
+                      onClick={handleAddToCart}
                       className="button border-0"
                       type="button"
                     >
                       Add to Cart
                     </button>
-                    <button className="button signup">Buy It Now</button>
+                    <ToastContainer />
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">
-                  <div>
-                    <Link>
-                      <TbGitCompare className="fs-5 me-2" /> Add to Compare
-                    </Link>
-                  </div>
                   <div>
                     <Link>
                       <AiOutlineHeart className="fs-5 me-2" /> Add to Wishlist
@@ -177,7 +271,7 @@ const SingleProduct = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       copyToClipboard(
-                        "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
+                        `https://res.cloudinary.com/dmjh7imwd/image/upload/${image}`
                       );
                     }}
                   >

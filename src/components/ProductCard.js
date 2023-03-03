@@ -4,10 +4,26 @@ import { Link, useLocation } from "react-router-dom";
 import wish from "../images/wish.svg";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
+import { useDispatch } from "react-redux/es/exports";
+import {
+  getShopOrderSelector,
+  getCartSelector,
+  getUserSelector,
+} from "../store/shop_order/selectors";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import {
+  addNewOrderDetail,
+  updateOrderDetail,
+  addNewOrder,
+} from "../store/shop_order/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
   const { grid, productItem } = props;
-
+  const { color, size, ...productAdd } = productItem;
+  
   const image = productItem.image;
   const brand = productItem.product.brand.name;
   const description = productItem.product.description;
@@ -17,10 +33,70 @@ const ProductCard = (props) => {
 
   let location = useLocation();
 
+  const shopOrder = useSelector(getShopOrderSelector);
+  const listCartItem = useSelector(getCartSelector);
+  const userr = useSelector(getUserSelector);
 
-  const handleAddProdTocart = ()=>{
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const handleAddProdTocart = () => {
+    if (userr.id !== undefined) {
+      if (listCartItem.length !== 0) {
+        const cartItem = {
+          qty: 1,
+          price: price,
+          productItem: productAdd,
+          shopOrder: shopOrder,
+        };
+        const proExist = listCartItem.find(
+          (ite) => ite.productItem.id === cartItem.productItem.id
+        );
+        if (proExist) {
+          cartItem.id = proExist.id;
+          cartItem.qty += proExist.qty;
+          dispatch(updateOrderDetail(cartItem));
+        } else {
+          dispatch(addNewOrderDetail(cartItem));
+        }
+      } else {
+        if (shopOrder) {
+          const cartItem = {
+            qty: 1,
+            price: price,
+            productItem: productAdd,
+            shopOrder: shopOrder,
+          };
+          dispatch(addNewOrderDetail(cartItem));
+        } else {
+          const shopO = {
+            user: userr,
+          };
 
-  }
+          const cartItem = {
+            qty: 1,
+            price: price,
+            productItem: productAdd,
+          };
+
+          dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+        }
+      }
+
+      toast.success(`Added - (1) ${name}`, {
+        position: "top-right",
+        autoClose: 700,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <>
@@ -42,10 +118,10 @@ const ProductCard = (props) => {
               className="p"
               to={`${
                 location.pathname === "/"
-                  ? "SingleProduct/" + idPr
-                  : location.pathname === "SingleProduct/" + idPr
-                  ? "SingleProduct/" + idPr
-                  : idPr
+                  ? "product/" + idPr
+                  : location.pathname === "/product"
+                  ? idPr
+                  : "/"
               }`}
             >
               <img
@@ -62,10 +138,10 @@ const ProductCard = (props) => {
                 className="title"
                 to={`${
                   location.pathname === "/"
-                    ? "SingleProduct/" + idPr
-                    : location.pathname === "SingleProduct/" + idPr
-                    ? "SingleProduct/" + idPr
-                    : idPr
+                    ? "product/" + idPr
+                    : location.pathname === "/product"
+                    ? idPr
+                    : "/"
                 }`}
               >
                 {name}
@@ -82,18 +158,22 @@ const ProductCard = (props) => {
               <Link
                 to={`${
                   location.pathname === "/"
-                    ? "SingleProduct/" + idPr
-                    : location.pathname === "SingleProduct/" + idPr
-                    ? "SingleProduct/" + idPr
-                    : idPr
+                    ? "product/" + idPr
+                    : location.pathname === "/product"
+                    ? idPr
+                    : "/"
                 }`}
                 className="border-0 bg-transparent mb-2"
               >
                 <img src={view} alt="view" />
               </Link>
-              <button onClick={handleAddProdTocart} className="border-0 bg-transparent">
+              <button
+                onClick={handleAddProdTocart}
+                className="border-0 bg-transparent"
+              >
                 <img src={addcart} alt="addcart" />
               </button>
+              <ToastContainer />
             </div>
           </div>
         </div>

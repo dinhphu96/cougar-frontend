@@ -33,7 +33,16 @@ const productItemSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getProductItem.fulfilled, (state, action) => {
-        state.productItems = action.payload;
+        const list = action.payload;
+        list.forEach(pr=>{
+          const {color, size, ...rest} = pr;
+          const newPr = rest.productItem
+          newPr.color = pr.color;
+          newPr.size = pr.size;
+        
+          state.productItems.push(newPr);
+        })
+        
         state.status = "idle";
       })
 
