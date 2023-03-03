@@ -34,27 +34,29 @@ import {
 function App() {
   const dispatch = useDispatch();
   const UserEmail = 5;
+  const checkEmail = UserEmail !== null;
   useEffect(() => {
     dispatch(getProductItem());
     if (UserEmail) {
       dispatch(getUserByEmail(UserEmail));
     }
-  }, [UserEmail !== null]);
+  }, [dispatch, checkEmail]);
 
   const us = useSelector(getUserSelector);
+  const checkUser = us.id !== undefined;
   useEffect(() => {
     if (us.id) {
       dispatch(getShopOrderByUserId(us.id));
     }
-  }, [us.id != undefined]);
+  }, [dispatch, checkUser, us.id]);
 
   const so = useSelector(getShopOrderSelector);
-
+  const checkShopOrder = so !== null;
   useEffect(() => {
-    if (so) {
+    if (checkShopOrder) {
       dispatch(getOrderDetailByShopId(so.id));
     }
-  }, [so !== null]);
+  }, [dispatch, checkShopOrder, so]);
 
   return (
     <>

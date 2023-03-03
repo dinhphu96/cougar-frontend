@@ -33,17 +33,14 @@ const SingleProduct = () => {
   const { id } = useParams();
   const [changProductItem, setChangProductItem] = useState(id);
   
-
-
   const navigate = useNavigate();
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
-  
-  
   
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
   );
 
+  
   if (singleProduct) {
     var image = singleProduct.image;
     var brand = singleProduct.product.brand.name;

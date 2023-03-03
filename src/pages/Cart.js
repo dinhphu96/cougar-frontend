@@ -13,6 +13,15 @@ const Cart = () => {
     return init.total + total;
   }, 0);
 
+
+  const handleClick = (e)=>{
+    if(listCartItem.length < 1){
+      e.preventDefault();
+    }
+    
+  }
+
+
   return (
     <>
       <Meta title={"Cart"} />
@@ -40,7 +49,7 @@ const Cart = () => {
               <div className="d-flex flex-column align-items-end">
                 <h4>SubTotal: $ {subTotal}</h4>
                 <p>Taxes and shipping calculated at checkout</p>
-                <Link to="/checkout" className="button">
+                <Link to="/checkout" className="button" onClick={handleClick}>
                   Checkout
                 </Link>
               </div>
