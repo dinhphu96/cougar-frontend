@@ -62,3 +62,10 @@ export const getAddressesByUsserId = createAsyncThunk('Addess/get', async (userI
   const response = await axios.get(`http://localhost:8080/rest/addresses/${userId}`);
   return response.data;
 });
+
+
+//listProduct
+export const getProductItem = createAsyncThunk('productItem/get', async () => {
+  const response = await axios.get('http://localhost:8080/rest/productItems');
+  return response.data;
+});

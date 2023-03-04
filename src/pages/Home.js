@@ -39,7 +39,7 @@ import cate06 from "../images/categories/cate06.png";
 import cate07 from "../images/categories/cate07.png";
 import cate08 from "../images/categories/cate08.png";
 
-import { getPrISelectorHome } from "../store/productItem/selectors";
+import { getPrISelectorHome } from "../store/shop_order/selectors";
 import { useSelector } from "react-redux";
 
 const Home = () => {

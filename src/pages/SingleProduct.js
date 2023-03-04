@@ -9,10 +9,6 @@ import Container from "../components/Container";
 
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
-import {
-  getOnePrISelector,
-  getRelatedProductItemsSelector,
-} from "../store/productItem/selectors";
 import { useDispatch } from "react-redux/es/exports";
 import {
   addNewOrderDetail,
@@ -22,7 +18,9 @@ import {
 import {
   getCartSelector,
   getUserSelector,
-  getShopOrderSelector
+  getShopOrderSelector,
+  getOnePrISelector,
+  getRelatedProductItemsSelector,
 } from "../store/shop_order/selectors";
 
 import { toast } from "react-toastify";

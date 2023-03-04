@@ -6,25 +6,14 @@ import {
   updateOrderDetail,
   deleteOrderDetaiById,
 } from "../store/shop_order/api";
-import { getPrISelector } from "../store/product/selectors";
-import { useSelector } from "react-redux/es/exports";
 
 function CartItem(props) {
   const { item } = props;
   const dispatch = useDispatch();
+ 
 
-  var size  = "size";
-  var color = "color";
-  
-  const listProductItems = useSelector(getPrISelector);
-  listProductItems.forEach(proI=>{
-    if(proI.id === item.productItem.id){
-      color = proI.color;
-      size = proI.size;
-    }
-  })
-
-  
+  const size  = item.size;
+  const color = item.color;
   const name = item.productItem.product.name;
   const quantity = item.qty;
   const price = item.price;

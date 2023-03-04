@@ -9,7 +9,7 @@ import Container from "../components/Container";
 import product05 from "../images/product/product-05.png";
 import product06 from "../images/product/product-06.png";
 
-import { getPrISelector } from "../store/productItem/selectors";
+import { getPrISelector } from "../store/shop_order/selectors";
 import { useSelector } from "react-redux";
 
 const OurStore = () => {

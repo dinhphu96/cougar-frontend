@@ -17,7 +17,6 @@ import About from "./pages/About";
 import Checkout from "./pages/Checkout";
 import SingleProduct from "./pages/SingleProduct";
 
-import { getProductItem } from "./store/productItem/api";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
@@ -25,6 +24,7 @@ import {
   getShopOrderByUserId,
   getUserByEmail,
   getAddressesByUsserId,
+  getProductItem
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
@@ -35,7 +35,7 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useDispatch();
-  const UserEmail = 2;
+  const UserEmail = 1;
   const checkEmail = UserEmail !== null;
   useEffect(() => {
     dispatch(getProductItem());

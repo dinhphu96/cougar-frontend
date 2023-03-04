@@ -9,12 +9,14 @@ import {
   deleteOrderDetaiById,
   getUserByEmail,
   deleteOrder,
-  getAddressesByUsserId
+  getAddressesByUsserId,
+  getProductItem,
 } from "./api";
 
 const ShopOrderSlice = createSlice({
   name: "ShopOrder",
   initialState: {
+    productItems: [],
     cartItems: [],
     shopOrder: null,
     user: {},
@@ -30,6 +32,25 @@ const ShopOrderSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
+      //get listProduct
+      .addCase(getProductItem.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getProductItem.fulfilled, (state, action) => {
+        const list = action.payload;
+        list.forEach((pr) => {
+          const { color, size, ...rest } = pr;
+          const newPr = rest.productItem;
+          newPr.color = pr.color;
+          newPr.size = pr.size;
+
+          state.productItems.push(newPr);
+        });
+
+        state.status = "idle";
+      })
+
       //get shopOrder By UserId
       .addCase(getShopOrderByUserId.pending, (state) => {
         state.status = "loading";
@@ -44,6 +65,13 @@ const ShopOrderSlice = createSlice({
         const item = action.payload.orderDetail;
         item.total = item.price * item.qty;
 
+        state.productItems.forEach((proI) => {
+          if (proI.id === item.productItem.id) {
+            item.color = proI.color;
+            item.size = proI.size;
+          }
+        });
+
         state.cartItems.push(item);
         state.shopOrder = action.payload.shopOrder;
         state.status = "succeeded";
@@ -54,7 +82,7 @@ const ShopOrderSlice = createSlice({
         state.error = action.error.message;
       })
 
-      //put
+      //put shopOrder
       .addCase(updateOrder.fulfilled, (state, action) => {
         const updatedPrI = action.payload;
         const existing = state.productItems.find(
@@ -91,9 +119,7 @@ const ShopOrderSlice = createSlice({
       .addCase(getOrderDetailByShopId.fulfilled, (state, action) => {
         state.cartItems = action.payload;
         state.cartItems.map((item) => (item.total = item.qty * item.price));
-        // if (state.cartItems[0]) {
-        //   state.shopOrder = state.cartItems[0].shopOrder;
-        // }
+
         state.status = "idle";
       })
 
@@ -102,7 +128,7 @@ const ShopOrderSlice = createSlice({
         const item = action.payload;
         item.total = item.price * item.qty;
 
-        state.cartItems.forEach((proI) => {
+        state.productItems.forEach((proI) => {
           if (proI.id === item.productItem.id) {
             item.color = proI.color;
             item.size = proI.size;
@@ -166,8 +192,6 @@ const ShopOrderSlice = createSlice({
         state.status = "idle";
       })
 
-
-
       //get addesses By UserId
       .addCase(getAddressesByUsserId.pending, (state) => {
         state.status = "loading";
@@ -175,7 +199,7 @@ const ShopOrderSlice = createSlice({
       .addCase(getAddressesByUsserId.fulfilled, (state, action) => {
         state.userAddresses = action.payload;
         state.status = "idle";
-      })
+      });
   },
 });
 export default ShopOrderSlice;

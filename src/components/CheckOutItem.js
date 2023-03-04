@@ -1,22 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux/es/exports";
-import { getPrISelector } from "../store/product/selectors";
 
 function CheckOutItem(props) {
     const { item } = props;
 
-  var size  = "size";
-  var color = "color";
-  
-  const listProductItems = useSelector(getPrISelector);
-  listProductItems.forEach(proI=>{
-    if(proI.id === item.productItem.id){
-      color = proI.color;
-      size = proI.size;
-    }
-  })
-
-  
+  const size  = item.size;
+  const color = item.color;
   const name = item.productItem.product.name;
   const quantity = item.qty;
   const total = item.total;

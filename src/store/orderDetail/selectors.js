@@ -1,1 +1,0 @@
-export const getCart = (state) => state.ShopOrder.cartItems;
