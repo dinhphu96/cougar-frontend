@@ -39,6 +39,7 @@ const ShopOrderSlice = createSlice({
 
       .addCase(getProductItem.fulfilled, (state, action) => {
         const list = action.payload;
+
         list.forEach((pr) => {
           const { color, size, ...rest } = pr;
           const newPr = rest.productItem;
@@ -60,7 +61,7 @@ const ShopOrderSlice = createSlice({
         state.status = "idle";
       })
 
-      //post
+      //add shopOrder + orderDetail started
       .addCase(addNewOrder.fulfilled, (state, action) => {
         const item = action.payload.orderDetail;
         item.total = item.price * item.qty;
@@ -82,33 +83,23 @@ const ShopOrderSlice = createSlice({
         state.error = action.error.message;
       })
 
-      //put shopOrder
-      .addCase(updateOrder.fulfilled, (state, action) => {
-        const updatedPrI = action.payload;
-        const existing = state.productItems.find(
-          (prI) => prI.id === updatedPrI.id
-        );
-        if (existing) {
-          Object.assign(existing, updatedPrI);
-        }
-        state.status = "succeeded";
-      })
+      // //put shopOrder
+      // .addCase(updateOrder.fulfilled, (state, action) => {
+      //   const updatedPrI = action.payload;
+      //   const existing = state.productItems.find(
+      //     (prI) => prI.id === updatedPrI.id
+      //   );
+      //   if (existing) {
+      //     Object.assign(existing, updatedPrI);
+      //   }
+      //   state.status = "succeeded";
+      // })
 
-      .addCase(updateOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
+      // .addCase(updateOrder.rejected, (state, action) => {
+      //   state.status = "failed";
+      //   state.error = action.error.message;
+      // })
 
-      //delete ShopOrder
-      .addCase(deleteOrder.fulfilled, (state) => {
-        state.shopOrder = null;
-        state.status = "succeeded";
-      })
-
-      .addCase(deleteOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
       /*-----------------------------------------------------------------------------*/
 
       //OrderDetail
@@ -120,10 +111,19 @@ const ShopOrderSlice = createSlice({
         state.cartItems = action.payload;
         state.cartItems.map((item) => (item.total = item.qty * item.price));
 
+        state.cartItems.map((item) => {
+          state.productItems.forEach((pro) => {
+            if (item.productItem.id === pro.id) {
+              item.color = pro.color;
+              item.size = pro.size;
+            }
+          });
+        });
+
         state.status = "idle";
       })
 
-      //post orderDetail
+      //post orderDetail if shopID
       .addCase(addNewOrderDetail.fulfilled, (state, action) => {
         const item = action.payload;
         item.total = item.price * item.qty;
@@ -149,13 +149,20 @@ const ShopOrderSlice = createSlice({
         const item = action.payload;
         item.total = item.price * item.qty;
 
-        const exist = state.cartItems.find(
-          (ite) => ite.productItem.id === item.productItem.id
-        );
+        state.productItems.forEach((proI) => {
+          if (proI.id === item.productItem.id) {
+            item.color = proI.color;
+            item.size = proI.size;
+          }
+        });
 
-        if (exist) {
-          Object.assign(exist, item);
+        const existing = state.cartItems.find(
+          (ite) => ite.id === item.id
+        );
+        if (existing) {
+          Object.assign(existing, item);
         }
+
         state.status = "succeeded";
       })
 

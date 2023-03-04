@@ -1,24 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import Container from "../components/Container";
 
 import { useSelector } from "react-redux/es/exports";
-import { getCartSelector } from "../store/shop_order/selectors";
+import {
+  getCartSelector,
+  getUserSelector,
+  getAddressSelector,
+} from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
+import { useEffect } from "react";
 
 const Checkout = () => {
   const listCartItem = useSelector(getCartSelector);
+  const userInfor = useSelector(getUserSelector);
+  const addresses = useSelector(getAddressSelector);
+
+  const [fullname, setFullname] = useState("");
+  const [line, setLine] = useState("");
+  const [district, setDistrict] = useState("");
+  const [province, setprovince] = useState("");
+  const [zipcode, setZipcode] = useState("");
+
+  const [country, setCountry] = useState("");
+  const [changecountry, setchangeCountry] = useState(country);
+
+  useEffect(() => {
+    if (userInfor.id) {
+      setFullname(userInfor.fullname);
+      if (listCartItem.length) {
+        const isDefaultAddress = addresses.find((add) => add.isDefault);
+        setCountry(isDefaultAddress.countryName);
+
+        setchangeCountry(isDefaultAddress);
+
+        // setLine(isDefaultAddress.addressLine);
+        // setDistrict(isDefaultAddress.district);
+        // setprovince(isDefaultAddress.province);
+        // setZipcode(isDefaultAddress.countryName);
+      }
+    }
+  }, [userInfor.id, listCartItem.length > 0]);
+
+  //set SubTotal
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
 
   const shipping = 10;
 
-  const handleContinueToShipping = (e)=>{
-   
-  }
+  //handle click
+  const handelClickCountry = (e) => {
 
+    const address = addresses.find((add) => add.countryName = e.target.value);
+
+    setchangeCountry(address);
+
+    // setCountry(isDefaultAddress.countryName);
+    // setLine(isDefaultAddress.addressLine);
+    // setDistrict(isDefaultAddress.district);
+    // setprovince(isDefaultAddress.province);
+    // setZipcode(isDefaultAddress.countryName);
+  };
+
+  const handleChangeFullname = () => {};
+
+  const handleChangeLine = () => {};
+
+  const handleChangeDistrict = () => {};
+
+  const handleChangeProvince = () => {};
+
+  const handleChangeZipCode = () => {};
+
+  const handleContinueToShipping = (e) => {};
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
@@ -58,7 +114,8 @@ const Checkout = () => {
               </nav>
               <h4 className="title total">Contact Information</h4>
               <p className="user-details total">
-                Navdeep Dahiya (monud0232@gmail.com)
+                <span className="text-danger">{userInfor.fullname}</span> (
+                <Link to={userInfor.email}>{userInfor.email}</Link>)
               </p>
               <h4 className="mb-3">Shipping Address</h4>
               <form
@@ -66,68 +123,66 @@ const Checkout = () => {
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
                 <div className="w-100">
-                  <select defaultValue={1} name="" className="form-control form-select" id="">
-                    <option value={4}>
-                      Select Country
-                    </option>
+                  <select
+                    value={country}
+                    onChange={handelClickCountry}
+                    name=""
+                    className="form-control form-select"
+                    id=""
+                  >
+                    {addresses.map((ad) => (
+                      <option key={ad.id} value={ad.countryName}>
+                        {ad.countryName}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="flex-grow-1">
                   <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Fullname"
                     className="form-control"
+                    value={fullname}
+                    // readOnly
+                    onChange={handleChangeFullname}
                   />
                 </div>
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="form-control"
-                  />
-                </div>
+
                 <div className="w-100">
                   <input
                     type="text"
                     placeholder="Address"
                     className="form-control"
+                    value={line}
+                    onChange={handleChangeLine}
                   />
                 </div>
                 <div className="w-100">
                   <input
                     type="text"
-                    placeholder="Apartment, Suite ,etc"
+                    placeholder="District"
                     className="form-control"
+                    value={district}
+                    onChange={handleChangeDistrict}
                   />
                 </div>
                 <div className="flex-grow-1">
                   <input
                     type="text"
-                    placeholder="City"
+                    placeholder="Province"
                     className="form-control"
+                    value={province}
+                    onChange={handleChangeProvince}
                   />
                 </div>
-                <div className="flex-grow-1">
-                  <select defaultValue={2} name="" className="form-control form-select" id="">
-                    <option value={1}>
-                      United States
-                    </option>
-                    <option value={2}>
-                      Việt Nam
-                    </option>
-                    <option value={2}>
-                      Japan
-                    </option>
-                    <option value={2}>
-                      ThaiLand
-                    </option>
-                  </select>
-                </div>
+
                 <div className="flex-grow-1">
                   <input
                     type="text"
                     placeholder="Zipcode"
                     className="form-control"
+                    value={zipcode}
+                    onChange={handleChangeZipCode}
                   />
                 </div>
                 <div className="w-100">
@@ -136,7 +191,11 @@ const Checkout = () => {
                       <BiArrowBack className="me-2" />
                       Return to Cart
                     </Link>
-                    <Link to={""} className="button" onClick={handleContinueToShipping}>
+                    <Link
+                      to={""}
+                      className="button"
+                      onClick={handleContinueToShipping}
+                    >
                       Continue to Shipping
                     </Link>
                   </div>
@@ -145,13 +204,12 @@ const Checkout = () => {
             </div>
           </div>
           <div className="col-5">
-          
             {/* list */}
             {listCartItem.map((item) => (
-              <CheckOutItem key={item.id} item={item}/>
+              <CheckOutItem key={item.id} item={item} />
             ))}
 
-              {/* list end */}
+            {/* list end */}
             <div className="border-bottom py-4">
               <div className="d-flex justify-content-between align-items-center">
                 <p className="total">Subtotal</p>
