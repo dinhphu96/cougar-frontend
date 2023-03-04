@@ -60,7 +60,7 @@ const ShopOrderSlice = createSlice({
         state.status = "idle";
       })
 
-      //post
+      //add shopOrder
       .addCase(addNewOrder.fulfilled, (state, action) => {
         const item = action.payload.orderDetail;
         item.total = item.price * item.qty;
@@ -83,32 +83,22 @@ const ShopOrderSlice = createSlice({
       })
 
       //put shopOrder
-      .addCase(updateOrder.fulfilled, (state, action) => {
-        const updatedPrI = action.payload;
-        const existing = state.productItems.find(
-          (prI) => prI.id === updatedPrI.id
-        );
-        if (existing) {
-          Object.assign(existing, updatedPrI);
-        }
-        state.status = "succeeded";
-      })
+      // .addCase(updateOrder.fulfilled, (state, action) => {
+      //   const updatedPrI = action.payload;
+      //   const existing = state.productItems.find(
+      //     (prI) => prI.id === updatedPrI.id
+      //   );
+      //   if (existing) {
+      //     Object.assign(existing, updatedPrI);
+      //   }
+      //   state.status = "succeeded";
+      // })
 
-      .addCase(updateOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
+      // .addCase(updateOrder.rejected, (state, action) => {
+      //   state.status = "failed";
+      //   state.error = action.error.message;
+      // })
 
-      //delete ShopOrder
-      .addCase(deleteOrder.fulfilled, (state) => {
-        state.shopOrder = null;
-        state.status = "succeeded";
-      })
-
-      .addCase(deleteOrder.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
       /*-----------------------------------------------------------------------------*/
 
       //OrderDetail
@@ -120,6 +110,14 @@ const ShopOrderSlice = createSlice({
         state.cartItems = action.payload;
         state.cartItems.map((item) => (item.total = item.qty * item.price));
 
+        state.cartItems.map((item) => {
+          state.productItems.forEach((proI) => {
+            if (proI.id === item.productItem.id) {
+              item.color = proI.color;
+              item.size = proI.size;
+            }
+          });
+        });
         state.status = "idle";
       })
 
