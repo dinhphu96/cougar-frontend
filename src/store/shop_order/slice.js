@@ -9,6 +9,7 @@ import {
   deleteOrderDetaiById,
   getUserByEmail,
   deleteOrder,
+  getAddressesByUsserId
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -17,6 +18,7 @@ const ShopOrderSlice = createSlice({
     cartItems: [],
     shopOrder: null,
     user: {},
+    userAddresses: [],
     status: "idle",
     error: null,
   },
@@ -89,9 +91,9 @@ const ShopOrderSlice = createSlice({
       .addCase(getOrderDetailByShopId.fulfilled, (state, action) => {
         state.cartItems = action.payload;
         state.cartItems.map((item) => (item.total = item.qty * item.price));
-        if (state.cartItems[0]) {
-          state.shopOrder = state.cartItems[0].shopOrder;
-        }
+        // if (state.cartItems[0]) {
+        //   state.shopOrder = state.cartItems[0].shopOrder;
+        // }
         state.status = "idle";
       })
 
@@ -162,7 +164,18 @@ const ShopOrderSlice = createSlice({
       .addCase(getUserByEmail.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "idle";
-      });
+      })
+
+
+
+      //get addesses By UserId
+      .addCase(getAddressesByUsserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getAddressesByUsserId.fulfilled, (state, action) => {
+        state.userAddresses = action.payload;
+        state.status = "idle";
+      })
   },
 });
 export default ShopOrderSlice;
