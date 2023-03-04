@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getShopOrderByUserId,
   addNewOrder,
-  updateOrder,
+  // updateOrder,
   addNewOrderDetail,
   getOrderDetailByShopId,
   updateOrderDetail,
   deleteOrderDetaiById,
   getUserByEmail,
-  deleteOrder,
+  // deleteOrder,
   getAddressesByUsserId,
   getProductItem,
 } from "./api";
@@ -111,7 +111,7 @@ const ShopOrderSlice = createSlice({
         state.cartItems = action.payload;
         state.cartItems.map((item) => (item.total = item.qty * item.price));
 
-        state.cartItems.map((item) => {
+        state.cartItems.forEach((item) => {
           state.productItems.forEach((pro) => {
             if (item.productItem.id === pro.id) {
               item.color = pro.color;

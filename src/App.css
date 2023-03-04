@@ -770,3 +770,52 @@
     color: var(--color-777777);
   }
   /* Shipping page ends here */
+
+
+
+/* paymen */
+.payment-card-header-wrapper{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0px 10px 0px;
+}
+
+.payment-card-header-wrapper .payment-card-header-title{
+  font-size: 18px;
+}
+
+.payment-card-header-wrapper .payment-card-header-action{
+  font-size: 14px;
+}
+
+
+.card-main-content{
+  align-items: center;
+  display: flex;
+  border: 1px solid gray;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  width: 100%;
+}
+
+.card-main-content:hover{
+  border: 2px solid #0B99B9;
+}
+
+.card-main-content .card-icon{
+  width: 9%;
+  margin-right: 10px;
+}
+
+.card-main-content .card-title{
+  margin-bottom: 0px;
+  height: 16px;
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #333;
+}
+
+.card-complex-description-head-text{
+  margin-bottom: 0;
+}

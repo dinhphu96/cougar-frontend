@@ -23,7 +23,6 @@ import {
   getOrderDetailByShopId,
   getShopOrderByUserId,
   getUserByEmail,
-  getAddressesByUsserId,
   getProductItem
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
@@ -36,30 +35,27 @@ import { ToastContainer } from "react-toastify";
 function App() {
   const dispatch = useDispatch();
   const UserEmail = 2;
-  const checkEmail = UserEmail !== null;
+
   useEffect(() => {
     dispatch(getProductItem());
     if (UserEmail) {
       dispatch(getUserByEmail(UserEmail));
     }
-  }, [dispatch, checkEmail]);
+  }, [dispatch, UserEmail]);
 
   const us = useSelector(getUserSelector);
-  const checkUser = us.id !== undefined;
   useEffect(() => {
     if (us.id) {
       dispatch(getShopOrderByUserId(us.id));
-      dispatch(getAddressesByUsserId(us.id));
     }
-  }, [dispatch, checkUser, us.id]);
+  }, [dispatch, us.id]);
 
   const so = useSelector(getShopOrderSelector);
-  const checkShopOrder = so !== null;
   useEffect(() => {
     if (so) {
        dispatch(getOrderDetailByShopId(so.id));
     }
-  }, [dispatch, checkShopOrder, so]);
+  }, [dispatch, so]);
 
   return (
     <>

@@ -11,70 +11,102 @@ import {
 } from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
 import { useEffect } from "react";
+import { getAddressesByUsserId } from "../store/shop_order/api";
+import { useDispatch } from "react-redux/es/exports";
+
+import { object } from "yup";
 
 const Checkout = () => {
+  const dispatch = useDispatch();
   const listCartItem = useSelector(getCartSelector);
   const userInfor = useSelector(getUserSelector);
-  const addresses = useSelector(getAddressSelector);
 
-  const [fullname, setFullname] = useState("");
-  const [line, setLine] = useState("");
-  const [district, setDistrict] = useState("");
-  const [province, setprovince] = useState("");
-  const [zipcode, setZipcode] = useState("");
-
-  const [country, setCountry] = useState("");
-  const [changecountry, setchangeCountry] = useState(country);
-
+  //get list Address by User
   useEffect(() => {
     if (userInfor.id) {
-      setFullname(userInfor.fullname);
-      if (listCartItem.length) {
-        const isDefaultAddress = addresses.find((add) => add.isDefault);
-        setCountry(isDefaultAddress.countryName);
-
-        setchangeCountry(isDefaultAddress);
-
-        // setLine(isDefaultAddress.addressLine);
-        // setDistrict(isDefaultAddress.district);
-        // setprovince(isDefaultAddress.province);
-        // setZipcode(isDefaultAddress.countryName);
-      }
+      dispatch(getAddressesByUsserId(userInfor.id));
     }
-  }, [userInfor.id, listCartItem.length > 0]);
+  }, [dispatch, userInfor.id]);
+  const addresses = useSelector(getAddressSelector);
 
   //set SubTotal
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
 
-  const shipping = 10;
+  const [fullname, setFullname] = useState("");
+  const [line, setLine] = useState("");
+  const [district, setDistrict] = useState("");
+  const [province, setprovince] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [country, setCountry] = useState("");
+  const [orderTotal, setOrderTotal] = useState("");
+  const [shipping, setShipping] = useState(1);
+
+  const [addressCheckOut, setAddressCheckOut] = useState();
+
+  useEffect(() => {
+    if (userInfor.id) {
+      setFullname(userInfor.fullname);
+
+      if (addresses.length) {
+        const isDefaultAddress = addresses.find((add) => add.isDefault);
+        setAddressCheckOut(isDefaultAddress);
+        setCountry(isDefaultAddress.countryName);
+
+        setLine(isDefaultAddress.addressLine);
+        setDistrict(isDefaultAddress.district);
+        setprovince(isDefaultAddress.province);
+      }
+    }
+  }, [userInfor.id, listCartItem.length, addresses, userInfor.fullname]);
 
   //handle click
-  const handelClickCountry = (e) => {
+  const handelChooseCountry = (e) => {
+    const value = e.target.value;
 
-    const address = addresses.find((add) => add.countryName = e.target.value);
+    const address = addresses.find((add) => add.countryName === value);
 
-    setchangeCountry(address);
+    setAddressCheckOut(address);
+    setCountry(address.countryName);
 
-    // setCountry(isDefaultAddress.countryName);
-    // setLine(isDefaultAddress.addressLine);
-    // setDistrict(isDefaultAddress.district);
-    // setprovince(isDefaultAddress.province);
-    // setZipcode(isDefaultAddress.countryName);
+    setLine(address.addressLine);
+    setDistrict(address.district);
+    setprovince(address.province);
   };
 
-  const handleChangeFullname = () => {};
+  const handleChangeLine = (e) => {
+    setLine(e.target.value);
+  };
 
-  const handleChangeLine = () => {};
+  const handleChangeDistrict = (e) => {
+    setDistrict(e.target.value);
+  };
 
-  const handleChangeDistrict = () => {};
+  const handleChangeProvince = (e) => {
+    setprovince(e.target.value);
+  };
 
-  const handleChangeProvince = () => {};
+  const handleChangeZipCode = (e) => {
+    setZipcode(e.target.value);
+  };
 
-  const handleChangeZipCode = () => {};
+  const handleContinueToShipping = (e) => {
+    const UpdateShopOrder = {
+      orderTotal: orderTotal + shipping,
+      orderStatus: 0,
+      userPaymentMethod: object,
+      address: addressCheckOut,
+      deliveryMethod: object,
+    };
+  };
 
-  const handleContinueToShipping = (e) => {};
+
+  const handleChoosePayment=(payment)=>{
+    console.log(payment);
+  }
+
+
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
@@ -125,7 +157,7 @@ const Checkout = () => {
                 <div className="w-100">
                   <select
                     value={country}
-                    onChange={handelClickCountry}
+                    onChange={handelChooseCountry}
                     name=""
                     className="form-control form-select"
                     id=""
@@ -143,8 +175,7 @@ const Checkout = () => {
                     placeholder="Fullname"
                     className="form-control"
                     value={fullname}
-                    // readOnly
-                    onChange={handleChangeFullname}
+                    readOnly
                   />
                 </div>
 
@@ -210,6 +241,53 @@ const Checkout = () => {
             ))}
 
             {/* list end */}
+
+            <div className="payment-card-container">
+              <div className="payment-card-header-wrapper">
+                <div className="payment-card-header-title">
+                  Select Payment Method
+                </div>
+                <div className="payment-card-header-action">
+                  <Link>View all methods &gt;</Link>
+                </div>
+              </div>
+
+              <div className="card-list-wrapper">
+                <div className="card-container">
+                  
+                  <Link className="card-main-content" onClick={()=>handleChoosePayment("cash")}>
+                    <img
+                      className="card-icon"
+                      src="https://lzd-img-global.slatic.net/g/tps/tfs/TB1ZP8kM1T2gK0jSZFvXXXnFXXa-96-96.png_2200x2200q80.png_.webp"
+                    />
+                    <div className="card-main-content-text-container">
+                      <p className="card-title">Cash On Delivery</p>
+                    </div>
+                  </Link>
+                 
+                </div>
+
+                <div className="card-container">
+                  <Link className="card-main-content" onClick={()=>handleChoosePayment("zalo")}>
+                    <img
+                      className="card-icon"
+                      src="https://lzd-img-global.slatic.net/g/tps/tfs/TB17BAYE7L0gK0jSZFAXXcA9pXa-80-80.png_2200x2200q80.png_.webp"
+                    />
+                    <div className="card-main-content-text-container">
+                      <p
+                        className="card-title"
+                        data-spm-anchor-id="a2o4n.shipping.0.i0.78935d0aHGGmh5"
+                      >
+                        ZaloPay Wallet
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+
+
+              </div>
+            </div>
+
             <div className="border-bottom py-4">
               <div className="d-flex justify-content-between align-items-center">
                 <p className="total">Subtotal</p>
