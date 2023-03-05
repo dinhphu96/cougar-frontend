@@ -30,14 +30,13 @@ import { useNavigate } from "react-router-dom";
 const SingleProduct = () => {
   const { id } = useParams();
   const [changProductItem, setChangProductItem] = useState(id);
-  
+
   const navigate = useNavigate();
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
-  
+
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
   );
-
 
   if (singleProduct) {
     var image = singleProduct.image;
@@ -70,7 +69,7 @@ const SingleProduct = () => {
   };
   const handleAddToCart = () => {
     if (userr.id !== undefined) {
-      const {color, size, ...productAdd} = singleProduct;
+      const { color, size, ...productAdd } = singleProduct;
       if (listCartItem.length !== 0) {
         const cartItem = {
           qty: quty,
@@ -90,7 +89,6 @@ const SingleProduct = () => {
           dispatch(addNewOrderDetail(cartItem));
         }
       } else {
-
         if (shopOrder) {
           const cartItem = {
             qty: quty,
@@ -99,22 +97,22 @@ const SingleProduct = () => {
             shopOrder: shopOrder,
           };
           dispatch(addNewOrderDetail(cartItem));
-        }else{
+        } else {
           const shopO = {
             user: userr,
           };
-  
+
           const cartItem = {
             qty: quty,
             price: singleProduct.price,
             productItem: productAdd,
           };
-  
+
           dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
         }
       }
 
-      toast.success(`Added - (${quty}) ${name}`, {
+      toast.info(`Added - (${quty}) ${name}`, {
         position: "top-right",
         autoClose: 700,
         hideProgressBar: false,
@@ -129,10 +127,9 @@ const SingleProduct = () => {
     }
   };
 
-
-  const handleClickImage = (pro)=>{
+  const handleClickImage = (pro) => {
     setChangProductItem(pro);
-  }
+  };
   return (
     <>
       <Meta title={"Product Name"} />
@@ -155,7 +152,9 @@ const SingleProduct = () => {
             <div className="other-product-images d-flex flex-wrap gap-15">
               {listRelatedProductItems.map((pro) => (
                 <div key={pro.id}>
-                  <img onClick={()=>handleClickImage(pro.id)} style={{cursor: "pointer"}}
+                  <img
+                    onClick={() => handleClickImage(pro.id)}
+                    style={{ cursor: "pointer" }}
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
                     className="img-fluid"
                     alt=""
@@ -242,7 +241,6 @@ const SingleProduct = () => {
                     >
                       Add to Cart
                     </button>
-                    
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">

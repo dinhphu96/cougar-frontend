@@ -10,26 +10,28 @@ import {
   getAddressSelector,
   getDeliveryMethodSelector,
   getUserPaymenMethodSelector,
-  getShopOrderSelector
+  getShopOrderSelector,
 } from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
 import { useEffect } from "react";
-import { getAddressesByUserId, getDeliveryByUserId,getUserPaymenMethodByUserId, updateOrder } from "../store/shop_order/api";
+import {
+  getAddressesByUserId,
+  getDeliveryByUserId,
+  getUserPaymenMethodByUserId,
+  updateOrder,
+} from "../store/shop_order/api";
 import { useDispatch } from "react-redux/es/exports";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate  } from "react-router-dom";
-
-
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const userInfor = useSelector(getUserSelector);
-  
 
-   //get list Address by User and list DeliveryMethod
-   useEffect(() => {
+  //get list Address by User and list DeliveryMethod
+  useEffect(() => {
     if (userInfor.id) {
       dispatch(getAddressesByUserId(userInfor.id));
       dispatch(getDeliveryByUserId());
@@ -40,7 +42,7 @@ const Checkout = () => {
   const listCartItem = useSelector(getCartSelector);
   const addresses = useSelector(getAddressSelector);
   const listDeliveryMethod = useSelector(getDeliveryMethodSelector);
-  const userPaymenMethod = useSelector(getUserPaymenMethodSelector);//listMaBip
+  const userPaymenMethod = useSelector(getUserPaymenMethodSelector); //listMaBip
   const shopOrder = useSelector(getShopOrderSelector);
 
   const [fullname, setFullname] = useState("");
@@ -54,11 +56,10 @@ const Checkout = () => {
   const [zipcode, setZipcode] = useState("");
   const [orderTotal, setOrderTotal] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
-  const [paymentID, setPaymentID] = useState();
+  const [paymentID, setPaymentID] = useState(2);//bip
   const [delivery, setDelivery] = useState({});
-  
-  const [addressCheckOut, setAddressCheckOut] = useState();
 
+  const [addressCheckOut, setAddressCheckOut] = useState();
 
   //set SubTotal
   useEffect(() => {
@@ -68,20 +69,15 @@ const Checkout = () => {
       }, 0);
 
       setSubTotal(subTotal);
-      const deli = listDeliveryMethod.find(de=>de.name === shipping);
-    
-    if(deli){
-      setShipping(deli.name);
-      setOrderTotal(subTotal + deli.price);
-      setDelivery(deli);
+      const deli = listDeliveryMethod.find((de) => de.name === shipping);
+
+      if (deli) {
+        setShipping(deli.name);
+        setOrderTotal(subTotal + deli.price);
+        setDelivery(deli);
+      }
     }
-
-      
-    }
-  }, [listCartItem.length,shipping,listCartItem,listDeliveryMethod]);
-
-
-
+  }, [listCartItem.length, shipping, listCartItem, listDeliveryMethod]);
 
   useEffect(() => {
     if (userInfor.id) {
@@ -117,31 +113,23 @@ const Checkout = () => {
     setCountry(address.countryName);
   };
 
-  
-
   const handleChoosePayment = (idPaymen) => {
     console.log(idPaymen);
-    setPaymentID(idPaymen);
+    setPaymentID(idPaymen);//bip
   };
 
- 
   const handleChooseShipping = (ShippingName) => {
+    const deli = listDeliveryMethod.find((de) => de.name === ShippingName);
 
-    const deli = listDeliveryMethod.find(de=>de.name === ShippingName);
-    
-    if(deli){
+    if (deli) {
       setOrderTotal(subTotal + deli.price);
       setShipping(deli.name);
       setDelivery(deli);
     }
-   
   };
 
-  
   const navigate = useNavigate();
   const handleContinueToShipping = () => {
-
-    
     const UpdateShopOrder = {
       id: shopOrder.id,
       orderTotal: orderTotal,
@@ -149,22 +137,24 @@ const Checkout = () => {
       userPaymentMethod: userPaymenMethod,
       address: addressCheckOut,
       deliveryMethod: delivery,
-      user: userInfor
+      user: userInfor,
     };
 
     dispatch(updateOrder(UpdateShopOrder));
 
     toast.success(`Order Success!`, {
-      position: "top-right",
-      autoClose: 700,
+      position: "top-center",
+      autoClose: 1500,
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
+      pauseOnHover: false,
       draggable: true,
       progress: undefined,
       theme: "light",
     });
-     navigate("/");
+
+    setTimeout(()=>{navigate("/")}, 1500);
+    
   };
 
   return (
@@ -210,7 +200,7 @@ const Checkout = () => {
                 <Link to={userInfor.email}>{userInfor.email}</Link>)
               </p>
               <h4 className="mb-3">Shipping Address</h4>
-              <form action="" className="gap-15 row">
+              <div className="gap-15 row">
                 <div className="col-12">
                   <span className="text-primary" style={{ fontWeight: "500" }}>
                     Choose Delivery Address:
@@ -319,14 +309,14 @@ const Checkout = () => {
                       Return to Cart
                     </Link>
                     <button
-                      className="button"
+                      className="button border-0"
                       onClick={handleContinueToShipping}
                     >
                       Continue to Shipping
                     </button>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
           <div className="col-5">
@@ -350,7 +340,11 @@ const Checkout = () => {
               <div className="card-list-wrapper">
                 <div className="card-container">
                   <Link
-                    className={`card-main-content ${paymentID === 2? "border border-2 border-primary": "border border-dark"}`}
+                    className={`card-main-content ${
+                      paymentID === 2//bip
+                        ? "border border-2 border-primary"
+                        : "border border-dark"
+                    }`}
                     onClick={() => handleChoosePayment(2)}
                   >
                     <img
@@ -366,7 +360,11 @@ const Checkout = () => {
 
                 <div className="card-container">
                   <Link
-                    className={`card-main-content ${paymentID === 4? "border border-2 border-primary": "border border-dark"}`}
+                    className={`card-main-content ${
+                      paymentID === 4//bip
+                        ? "border border-2 border-primary"
+                        : "border border-dark"
+                    }`}
                     onClick={() => handleChoosePayment(4)}
                   >
                     <img
@@ -395,24 +393,30 @@ const Checkout = () => {
               <div className="card-list-wrapper2">
                 <div className="card-container">
                   <Link
-                     className={`card-title d-flex ${shipping === "Fast"? "text-info": "text-dark"}`}
-                    onClick={()=>handleChooseShipping("Fast")}
+                    className={`card-title d-flex ${
+                      shipping === "Fast" ? "text-info" : "text-dark"
+                    }`}
+                    onClick={() => handleChooseShipping("Fast")}
                   >
-                      <p>Fast</p>
-                      <p className="receive" style={{ fontSize: "12px" }}>Receive from 2 to 3 days</p>
-                      <p>$1</p>
-                  
+                    <p>Fast</p>
+                    <p className="receive" style={{ fontSize: "12px" }}>
+                      Receive from 2 to 3 days
+                    </p>
+                    <p>$1</p>
                   </Link>
                 </div>
                 <div className="card-container">
                   <Link
-                     className={`card-title d-flex ${shipping === "Super speed"? "text-info": "text-dark"}`}
-                     onClick={()=>handleChooseShipping("Super speed")}
+                    className={`card-title d-flex ${
+                      shipping === "Super speed" ? "text-info" : "text-dark"
+                    }`}
+                    onClick={() => handleChooseShipping("Super speed")}
                   >
-                      <p>Supper Speed</p>
-                      <p className="receive" style={{ fontSize: "12px" }}>Receive in 1 day</p>
-                      <p>$2</p>
-                  
+                    <p>Supper Speed</p>
+                    <p className="receive" style={{ fontSize: "12px" }}>
+                      Receive in 1 day
+                    </p>
+                    <p>$2</p>
                   </Link>
                 </div>
               </div>
@@ -425,7 +429,9 @@ const Checkout = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">$ {shipping === "Fast" ? 1 : 2}</p>
+                <p className="mb-0 total-price">
+                  $ {shipping === "Fast" ? 1 : 2}
+                </p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">

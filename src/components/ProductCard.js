@@ -83,7 +83,7 @@ const ProductCard = (props) => {
         }
       }
 
-      toast.success(`Added - (1) ${name}`, {
+      toast.info(`Added - (1) ${name}`, {
         position: "top-right",
         autoClose: 700,
         hideProgressBar: false,
