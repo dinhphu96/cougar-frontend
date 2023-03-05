@@ -58,8 +58,22 @@ export const getUserByEmail = createAsyncThunk('User/getByEmail', async (email) 
 
 
 //addesses
-export const getAddressesByUsserId = createAsyncThunk('Addess/get', async (userId) => {
+export const getAddressesByUserId = createAsyncThunk('Addess/get', async (userId) => {
   const response = await axios.get(`http://localhost:8080/rest/addresses/${userId}`);
+  return response.data;
+});
+
+
+//DeliveryMethod
+export const getDeliveryByUserId = createAsyncThunk('DeliveryMethod/get', async () => {
+  const response = await axios.get(`http://localhost:8080/rest/deliveryMethods`);
+  return response.data;
+});
+
+
+//UserPaymenMethod
+export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymenMethod/get', async (userId) => {
+  const response = await axios.get(`http://localhost:8080/rest/UserPaymenMethods/${userId}`);
   return response.data;
 });
 

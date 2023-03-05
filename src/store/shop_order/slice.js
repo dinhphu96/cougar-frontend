@@ -2,15 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getShopOrderByUserId,
   addNewOrder,
-  // updateOrder,
+  updateOrder,
   addNewOrderDetail,
   getOrderDetailByShopId,
   updateOrderDetail,
   deleteOrderDetaiById,
   getUserByEmail,
-  // deleteOrder,
-  getAddressesByUsserId,
+  getAddressesByUserId,
   getProductItem,
+  getDeliveryByUserId,
+  getUserPaymenMethodByUserId
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -21,6 +22,8 @@ const ShopOrderSlice = createSlice({
     shopOrder: null,
     user: {},
     userAddresses: [],
+    deliverys: [],
+    userPaymenMethod:{},//laListmaBip
     status: "idle",
     error: null,
   },
@@ -83,22 +86,16 @@ const ShopOrderSlice = createSlice({
         state.error = action.error.message;
       })
 
-      // //put shopOrder
-      // .addCase(updateOrder.fulfilled, (state, action) => {
-      //   const updatedPrI = action.payload;
-      //   const existing = state.productItems.find(
-      //     (prI) => prI.id === updatedPrI.id
-      //   );
-      //   if (existing) {
-      //     Object.assign(existing, updatedPrI);
-      //   }
-      //   state.status = "succeeded";
-      // })
+      //put shopOrder
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.shopOrder = null;
+        state.cartItems = [];
+      })
 
-      // .addCase(updateOrder.rejected, (state, action) => {
-      //   state.status = "failed";
-      //   state.error = action.error.message;
-      // })
+      .addCase(updateOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
 
       /*-----------------------------------------------------------------------------*/
 
@@ -200,13 +197,31 @@ const ShopOrderSlice = createSlice({
       })
 
       //get addesses By UserId
-      .addCase(getAddressesByUsserId.pending, (state) => {
+      .addCase(getAddressesByUserId.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getAddressesByUsserId.fulfilled, (state, action) => {
+      .addCase(getAddressesByUserId.fulfilled, (state, action) => {
         state.userAddresses = action.payload;
         state.status = "idle";
-      });
+      })
+
+      //get list deliveryMethod
+      .addCase(getDeliveryByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getDeliveryByUserId.fulfilled, (state, action) => {
+        state.deliverys = action.payload;
+        state.status = "idle";
+      })
+
+      //get UserPaymenMethod by user id
+      .addCase(getUserPaymenMethodByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getUserPaymenMethodByUserId.fulfilled, (state, action) => {
+        state.userPaymenMethod = action.payload[0];//laListmaBip
+        state.status = "idle";
+      })
   },
 });
 export default ShopOrderSlice;

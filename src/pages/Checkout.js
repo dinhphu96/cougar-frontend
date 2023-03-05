@@ -8,28 +8,40 @@ import {
   getCartSelector,
   getUserSelector,
   getAddressSelector,
+  getDeliveryMethodSelector,
+  getUserPaymenMethodSelector,
+  getShopOrderSelector
 } from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
 import { useEffect } from "react";
-import { getAddressesByUsserId } from "../store/shop_order/api";
+import { getAddressesByUserId, getDeliveryByUserId,getUserPaymenMethodByUserId, updateOrder } from "../store/shop_order/api";
 import { useDispatch } from "react-redux/es/exports";
 
-import { object } from "yup";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate  } from "react-router-dom";
+
+
 
 const Checkout = () => {
   const dispatch = useDispatch();
-  const listCartItem = useSelector(getCartSelector);
-  const addresses = useSelector(getAddressSelector);
   const userInfor = useSelector(getUserSelector);
+  
 
-  //get list Address by User
-  useEffect(() => {
+   //get list Address by User and list DeliveryMethod
+   useEffect(() => {
     if (userInfor.id) {
-      dispatch(getAddressesByUsserId(userInfor.id));
+      dispatch(getAddressesByUserId(userInfor.id));
+      dispatch(getDeliveryByUserId());
+      dispatch(getUserPaymenMethodByUserId(userInfor.id));
     }
   }, [dispatch, userInfor.id]);
-  
- 
+
+  const listCartItem = useSelector(getCartSelector);
+  const addresses = useSelector(getAddressSelector);
+  const listDeliveryMethod = useSelector(getDeliveryMethodSelector);
+  const userPaymenMethod = useSelector(getUserPaymenMethodSelector);//listMaBip
+  const shopOrder = useSelector(getShopOrderSelector);
 
   const [fullname, setFullname] = useState("");
   const [number, setNumber] = useState("");
@@ -38,11 +50,12 @@ const Checkout = () => {
   const [province, setprovince] = useState("");
   const [def, setDef] = useState(1);
   const [country, setCountry] = useState("");
-  const [shipping, setShipping] = useState(2);
+  const [shipping, setShipping] = useState("Fast");
   const [zipcode, setZipcode] = useState("");
   const [orderTotal, setOrderTotal] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
-  const [paymentID, setPaymentID] = useState(2);
+  const [paymentID, setPaymentID] = useState();
+  const [delivery, setDelivery] = useState({});
   
   const [addressCheckOut, setAddressCheckOut] = useState();
 
@@ -53,10 +66,19 @@ const Checkout = () => {
       const subTotal = listCartItem.reduce((total, init) => {
         return init.total + total;
       }, 0);
+
       setSubTotal(subTotal);
-      setOrderTotal(subTotal + shipping)
+      const deli = listDeliveryMethod.find(de=>de.name === shipping);
+    
+    if(deli){
+      setShipping(deli.name);
+      setOrderTotal(subTotal + deli.price);
+      setDelivery(deli);
     }
-  }, [listCartItem.length,shipping,listCartItem]);
+
+      
+    }
+  }, [listCartItem.length,shipping,listCartItem,listDeliveryMethod]);
 
 
 
@@ -102,21 +124,47 @@ const Checkout = () => {
     setPaymentID(idPaymen);
   };
 
-  const handleChooseShipping = (Shippingprice) => {
-    setOrderTotal(subTotal + Shippingprice);
-    setShipping(Shippingprice)
-  }
+ 
+  const handleChooseShipping = (ShippingName) => {
 
+    const deli = listDeliveryMethod.find(de=>de.name === ShippingName);
+    
+    if(deli){
+      setOrderTotal(subTotal + deli.price);
+      setShipping(deli.name);
+      setDelivery(deli);
+    }
+   
+  };
 
-  const handleContinueToShipping = (e) => {
-    const payment = paymentID;
+  
+  const navigate = useNavigate();
+  const handleContinueToShipping = () => {
+
+    
     const UpdateShopOrder = {
+      id: shopOrder.id,
       orderTotal: orderTotal,
       orderStatus: 0,
-      userPaymentMethod: payment,
+      userPaymentMethod: userPaymenMethod,
       address: addressCheckOut,
-      deliveryMethod: object,
+      deliveryMethod: delivery,
+      user: userInfor
     };
+
+    dispatch(updateOrder(UpdateShopOrder));
+
+    toast.success(`Order Success!`, {
+      position: "top-right",
+      autoClose: 700,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+     navigate("/");
   };
 
   return (
@@ -270,13 +318,12 @@ const Checkout = () => {
                       <BiArrowBack className="me-2" />
                       Return to Cart
                     </Link>
-                    <Link
-                      to={""}
+                    <button
                       className="button"
                       onClick={handleContinueToShipping}
                     >
                       Continue to Shipping
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </form>
@@ -348,23 +395,23 @@ const Checkout = () => {
               <div className="card-list-wrapper2">
                 <div className="card-container">
                   <Link
-                     className={`card-title d-flex ${shipping === 2? "text-info": "text-dark"}`}
-                    onClick={()=>handleChooseShipping(2)}
+                     className={`card-title d-flex ${shipping === "Fast"? "text-info": "text-dark"}`}
+                    onClick={()=>handleChooseShipping("Fast")}
                   >
                       <p>Fast</p>
                       <p className="receive" style={{ fontSize: "12px" }}>Receive from 2 to 3 days</p>
-                      <p>$2</p>
+                      <p>$1</p>
                   
                   </Link>
                 </div>
                 <div className="card-container">
                   <Link
-                     className={`card-title d-flex ${shipping === 4? "text-info": "text-dark"}`}
-                     onClick={()=>handleChooseShipping(4)}
+                     className={`card-title d-flex ${shipping === "Super speed"? "text-info": "text-dark"}`}
+                     onClick={()=>handleChooseShipping("Super speed")}
                   >
                       <p>Supper Speed</p>
                       <p className="receive" style={{ fontSize: "12px" }}>Receive in 1 day</p>
-                      <p>$4</p>
+                      <p>$2</p>
                   
                   </Link>
                 </div>
@@ -378,7 +425,7 @@ const Checkout = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">$ {shipping}</p>
+                <p className="mb-0 total-price">$ {shipping === "Fast" ? 1 : 2}</p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">

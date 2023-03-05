@@ -23,3 +23,9 @@ export const getRelatedProductItemsSelector = (productItem) => (state) =>
 
 //adress
 export const getAddressSelector = (state) => state.ShopOrder.userAddresses;
+
+//Delivery method
+export const getDeliveryMethodSelector = (state) => state.ShopOrder.deliverys;
+
+//userPaymenMethod
+export const getUserPaymenMethodSelector = (state) => state.ShopOrder.userPaymenMethod;
