@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -27,16 +27,45 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
+
+
+
+
 const SingleProduct = () => {
   const { id } = useParams();
   const [changProductItem, setChangProductItem] = useState(id);
 
+  //cuộn trang
+  useEffect(() => {
+    window.scrollTo(0, 300);
+  }, []);
+
   const navigate = useNavigate();
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
+  const [borderColor, setBorderColor] = useState(0);
+  const [listColor, setListColor] = useState([]);
 
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
   );
+
+  useEffect(() => {
+    if(listRelatedProductItems.length){
+      const listCol = listRelatedProductItems.map((pro=>pro.color))
+
+       setListColor(listCol);
+    }
+  
+  }, [listRelatedProductItems.length]);
+
+  useEffect(()=>{
+    
+    if(singleProduct){
+      setBorderColor(singleProduct.id);
+    }
+
+  },[singleProduct])
+
 
   if (singleProduct) {
     var image = singleProduct.image;
@@ -129,6 +158,7 @@ const SingleProduct = () => {
 
   const handleClickImage = (pro) => {
     setChangProductItem(pro);
+    setBorderColor(pro.id);
   };
   return (
     <>
@@ -151,10 +181,13 @@ const SingleProduct = () => {
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
               {listRelatedProductItems.map((pro) => (
-                <div key={pro.id}>
+                <div
+                  key={pro.id}
+                  className={`${borderColor === pro.id ? "border border-2 border-danger": "border border-dark"}`}
+                  style={{ cursor: "pointer" }}
+                >
                   <img
                     onClick={() => handleClickImage(pro.id)}
-                    style={{ cursor: "pointer" }}
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
                     className="img-fluid"
                     alt=""
@@ -216,7 +249,7 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Color :</h3>
-                  <Color />
+                  <Color listColor={listColor}/>
                 </div>
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <h3 className="product-heading">Quantity :</h3>

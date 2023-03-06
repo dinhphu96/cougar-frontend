@@ -438,7 +438,6 @@ footer .input-group-text {
 .colors li {
   width: 20px;
   height: 20px;
-  background-color: red;
   border-radius: 50%;
 }
 .random-products h5 {
@@ -813,7 +812,6 @@ footer .input-group-text {
 .card-list-wrapper .card-main-content .card-title {
   margin-bottom: 0px;
   height: 16px;
-  font-family: Roboto-Regular;
   font-size: 14px;
   color: #333;
 }
@@ -858,7 +856,6 @@ footer .input-group-text {
 .card-list-wrapper2 .card-container .card-title {
   margin-bottom: 0px;
   height: 16px;
-  font-family: Roboto-Regular;
   font-size: 14px;
   color: #333;
   justify-content: space-between;

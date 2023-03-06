@@ -7,11 +7,12 @@ import {
   getOrderDetailByShopId,
   updateOrderDetail,
   deleteOrderDetaiById,
-  getUserByEmail,
+  getUserById,
   getAddressesByUserId,
   getProductItem,
   getDeliveryByUserId,
-  getUserPaymenMethodByUserId
+  getUserPaymenMethodByUserId,
+  doLogin
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -187,12 +188,13 @@ const ShopOrderSlice = createSlice({
 
       /*------------------------------------------------------------------ */
 
-      //get user By Email
-      .addCase(getUserByEmail.pending, (state) => {
+      //getUserById
+      .addCase(getUserById.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getUserByEmail.fulfilled, (state, action) => {
-        state.user = action.payload;
+      .addCase(getUserById.fulfilled, (state, action) => {
+        const {password, ...userpayload} = action.payload;
+        state.user = userpayload;
         state.status = "idle";
       })
 
@@ -222,6 +224,24 @@ const ShopOrderSlice = createSlice({
         state.userPaymenMethod = action.payload[0];//laListmaBip
         state.status = "idle";
       })
+
+
+       //login
+       .addCase(doLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload;
+        sessionStorage.setItem('user', JSON.stringify(action.payload));
+        state.error = "Successed";
+    })
+
+    .addCase(doLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+        //   state.error = action.payload;
+        state.error = action.error.message;
+    });
   },
 });
 export default ShopOrderSlice;

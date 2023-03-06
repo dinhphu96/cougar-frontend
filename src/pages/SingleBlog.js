@@ -5,8 +5,12 @@ import { HiOutlineArrowLeft } from "react-icons/hi";
 import Meta from "../components/Meta";
 import blog from "../images/blogs/blog-01.jpg";
 import Container from "../components/Container";
+import { useEffect } from "react";
 
 const SingleBlog = () => {
+  useEffect(() => {
+    window.scrollTo(0, 300);
+  }, []);
   return (
     <>
       <Meta title={"Dynamic Blog Name"} />

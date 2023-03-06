@@ -51,8 +51,8 @@ export const deleteOrderDetaiById = createAsyncThunk('OrderDetail/delete', async
 
 
 //user
-export const getUserByEmail = createAsyncThunk('User/getByEmail', async (email) => {
-  const response = await axios.get(`http://localhost:8080/rest/users/${email}`);
+export const getUserById = createAsyncThunk('User/getById', async (id) => {
+  const response = await axios.get(`http://localhost:8080/rest/users/${id}`);
   return response.data;
 });
 
@@ -85,3 +85,8 @@ export const getProductItem = createAsyncThunk('productItem/get', async () => {
 });
 
 
+//logogin
+export const doLogin = createAsyncThunk('auth/signin', async (credentials) => {
+  const response = await axios.post('http://localhost:8080/api/auth/signin', credentials);
+  return response.data;
+});

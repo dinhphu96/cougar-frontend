@@ -1,13 +1,17 @@
 import React from "react";
 
-const Color = () => {
+const Color = (props) => {
+
+  const {listColor} = props;
   return (
     <>
       <ul className="colors ps-0">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        {
+          listColor.map(col=>(
+            <li key={col} style={{backgroundColor: `${col}`}}></li>
+          ))
+        }
+        
       </ul>
     </>
   );

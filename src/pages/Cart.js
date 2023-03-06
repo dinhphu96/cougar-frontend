@@ -6,8 +6,15 @@ import Container from "../components/Container";
 import CartItem from "../components/CartItem";
 import { useSelector } from "react-redux/es/exports";
 import { getCartSelector } from "../store/shop_order/selectors";
+import { useEffect } from "react";
 
 const Cart = () => {
+
+   //cuộn trang
+   useEffect(() => {
+    window.scrollTo(0, 200);
+  }, []);
+
   const listCartItem = useSelector(getCartSelector);
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;

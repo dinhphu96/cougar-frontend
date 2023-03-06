@@ -27,6 +27,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+
+    //cuộn trang
+    useEffect(() => {
+      window.scrollTo(0, 200);
+    }, []);
+
   const dispatch = useDispatch();
   const userInfor = useSelector(getUserSelector);
 
@@ -163,7 +169,7 @@ const Checkout = () => {
         <div className="row">
           <div className="col-7">
             <div className="checkout-left-data">
-              <h3 className="website-name">Dev Corner</h3>
+              <h3 className="website-name">Cougar Shop</h3>
               <nav
                 style={{ "--bs-breadcrumb-divider": ">" }}
                 aria-label="breadcrumb"
