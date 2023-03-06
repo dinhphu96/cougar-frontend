@@ -249,7 +249,13 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Color :</h3>
-                  <Color listColor={listColor}/>
+                  <ul className="colors ps-0">
+                    {
+                      listColor.map(col=>(
+                        <Color key={col} color={col}/>
+                      ))
+                    }
+                  </ul>
                 </div>
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <h3 className="product-heading">Quantity :</h3>

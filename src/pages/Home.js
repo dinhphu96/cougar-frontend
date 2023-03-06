@@ -39,12 +39,12 @@ import cate06 from "../images/categories/cate06.png";
 import cate07 from "../images/categories/cate07.png";
 import cate08 from "../images/categories/cate08.png";
 
-import { getPrISelectorHome } from "../store/shop_order/selectors";
 import { useSelector } from "react-redux";
+import { getProductsSelector } from "../store/shop_order/selector2";
 
 const Home = () => {
 
-  const productItems = useSelector(getPrISelectorHome);
+  const listProducts = useSelector(getProductsSelector);
 
   return (
     <>
@@ -288,7 +288,7 @@ const Home = () => {
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
           </div>
-          {productItems.map((prI) => (
+          {listProducts.map((prI) => (
             <ProductCard key={prI.id} productItem={prI} />
           ))}
         </div>
@@ -359,7 +359,7 @@ const Home = () => {
           </div>
         </div>
         <div className="row">
-          {productItems.map((prI) => (
+          {listProducts.map((prI) => (
             <ProductCard key={prI.id} productItem={prI} />
           ))}
         </div>
