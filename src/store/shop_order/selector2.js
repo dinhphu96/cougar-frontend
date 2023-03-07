@@ -8,3 +8,5 @@ export const getProductsSelector = (state) => state.ShopOrder.productItems.reduc
   }, []);
 
 
+  export const getListWishListSelector = (state)=> state.ShopOrder.wishLists;
+

@@ -3,7 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Color from "../components/Color";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 
@@ -14,6 +14,7 @@ import {
   addNewOrderDetail,
   updateOrderDetail,
   addNewOrder,
+  addWishList
 } from "../store/shop_order/api";
 import {
   getCartSelector,
@@ -26,6 +27,7 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { getListWishListSelector } from "../store/shop_order/selector2";
 
 
 
@@ -34,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 const SingleProduct = () => {
   const { id } = useParams();
   const [changProductItem, setChangProductItem] = useState(id);
+  const listWishList = useSelector(getListWishListSelector);
 
   //cuộn trang
   useEffect(() => {
@@ -48,6 +51,7 @@ const SingleProduct = () => {
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
   );
+
 
   useEffect(() => {
     if(listRelatedProductItems.length){
@@ -158,8 +162,38 @@ const SingleProduct = () => {
 
   const handleClickImage = (pro) => {
     setChangProductItem(pro);
-    setBorderColor(pro.id);
+     setBorderColor(pro.id);
   };
+
+
+  const handleAddtoWishList = ()=>{
+    
+    
+    const exist = listWishList.find(wi=>wi.productItem.id === singleProduct.id)
+
+    if(!exist){
+      const newWishList = {
+          user: userr,
+          productItem: singleProduct
+        }
+
+        dispatch(addWishList(newWishList));
+
+        toast.info(`Added to Wishlist`, {
+          position: "top-right",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    }
+
+  }
+
+
   return (
     <>
       <Meta title={"Product Name"} />
@@ -233,18 +267,15 @@ const SingleProduct = () => {
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Size :</h3>
                   <div className="d-flex flex-wrap gap-15">
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      S
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      M
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XL
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XXL
-                    </span>
+                    {
+                      listRelatedProductItems.map(pro=>(
+                        <span key={pro.id} className={`badge border bg-white text-dark ${borderColor === pro.id ? 'border-2 border-primary': "border-1 border-secondary"}`}>
+                          {pro.size}
+                        </span>
+                      ))
+                    }
+                    
+
                   </div>
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
@@ -284,8 +315,8 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex align-items-center gap-15">
                   <div>
-                    <Link>
-                      <AiOutlineHeart className="fs-5 me-2" /> Add to Wishlist
+                    <Link onClick={handleAddtoWishList}>
+                    <AiFillHeart style={{color: listWishList.some(wi=>wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px"}}/> Add to Wishlist
                     </Link>
                   </div>
                 </div>

@@ -2,29 +2,26 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
+//Shoporder
 export const getShopOrderByUserId = createAsyncThunk('Order/get', async (userId) => {
   const response = await axios.get(`http://localhost:8080/rest/shopOrders/${userId}`);
   return response.data;
 });
+
 
 export const addNewOrder = createAsyncThunk('Order/add', async (orderorderDetail) => {
   const response = await axios.post('http://localhost:8080/rest/shopOrders', orderorderDetail);
   return response.data;
 });
 
+
 export const updateOrder = createAsyncThunk('Order/update', async (Order) => {
   const response = await axios.put(`http://localhost:8080/rest/shopOrders/${Order.id}`, Order);
   return response.data;
 });
 
-export const deleteOrder = createAsyncThunk('Order/delete', async (id) => {
-  console.log("vào api");
-  await axios.delete(`http://localhost:8080/rest/shopOrders/${id}`);
-  
-});
 
-
-
+/*-------------------------------------------------------------------------*/
 
 //orderDetail
 export const addNewOrderDetail = createAsyncThunk('OrderDetail/add', async (orderDetail) => {
@@ -48,7 +45,7 @@ export const deleteOrderDetaiById = createAsyncThunk('OrderDetail/delete', async
   return id;
 });
 
-
+/*-------------------------------------------------------------------------*/
 
 //user
 export const getUserById = createAsyncThunk('User/getById', async (id) => {
@@ -56,6 +53,7 @@ export const getUserById = createAsyncThunk('User/getById', async (id) => {
   return response.data;
 });
 
+/*-------------------------------------------------------------------------*/
 
 //addesses
 export const getAddressesByUserId = createAsyncThunk('Addess/get', async (userId) => {
@@ -63,6 +61,7 @@ export const getAddressesByUserId = createAsyncThunk('Addess/get', async (userId
   return response.data;
 });
 
+/*-------------------------------------------------------------------------*/
 
 //DeliveryMethod
 export const getDeliveryByUserId = createAsyncThunk('DeliveryMethod/get', async () => {
@@ -70,6 +69,7 @@ export const getDeliveryByUserId = createAsyncThunk('DeliveryMethod/get', async 
   return response.data;
 });
 
+/*-------------------------------------------------------------------------*/
 
 //UserPaymenMethod
 export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymenMethod/get', async (userId) => {
@@ -77,6 +77,7 @@ export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymenMethod/ge
   return response.data;
 });
 
+/*-------------------------------------------------------------------------*/
 
 //listProduct
 export const getProductItem = createAsyncThunk('productItem/get', async () => {
@@ -84,9 +85,29 @@ export const getProductItem = createAsyncThunk('productItem/get', async () => {
   return response.data;
 });
 
+/*-------------------------------------------------------------------------*/
 
 //logogin
 export const doLogin = createAsyncThunk('auth/signin', async (credentials) => {
   const response = await axios.post('http://localhost:8080/api/auth/signin', credentials);
   return response.data;
+});
+
+/*-------------------------------------------------------------------------*/
+
+//list wishlist
+export const getWishListByUserId = createAsyncThunk('WishList/get', async (userId) => {
+  const response = await axios.get(`http://localhost:8080/rest/wishLists/${userId}`);
+  return response.data;
+});
+
+
+export const addWishList = createAsyncThunk('WishList/add', async (wishList) => {
+  const response = await axios.post("http://localhost:8080/rest/wishLists", wishList);
+  return response.data;
+});
+
+export const deleteWishListById = createAsyncThunk('WishList/delete', async (id) => {
+  await axios.delete(`http://localhost:8080/rest/wishLists/${id}`);
+  return id;
 });

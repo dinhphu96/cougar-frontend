@@ -23,7 +23,8 @@ import {
   getOrderDetailByShopId,
   getShopOrderByUserId,
   getUserById,
-  getProductItem
+  getProductItem,
+  getWishListByUserId
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
@@ -51,6 +52,7 @@ function App() {
   useEffect(() => {
     if (us.id) {
       dispatch(getShopOrderByUserId(us.id));
+      dispatch(getWishListByUserId(us.id))
     }
   }, [dispatch, us.id]);
 

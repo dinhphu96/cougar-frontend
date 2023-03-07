@@ -12,16 +12,20 @@ import {
   getProductItem,
   getDeliveryByUserId,
   getUserPaymenMethodByUserId,
-  doLogin
+  doLogin,
+  addWishList,
+  getWishListByUserId,
+  deleteWishListById
 } from "./api";
 
 const ShopOrderSlice = createSlice({
   name: "ShopOrder",
   initialState: {
     productItems: [],
+    user: {},
+    wishLists: [],
     cartItems: [],
     shopOrder: null,
-    user: {},
     userAddresses: [],
     deliverys: [],
     userPaymenMethod:{},//laListmaBip
@@ -36,7 +40,7 @@ const ShopOrderSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      //get listProduct
+      //get list,Product
       .addCase(getProductItem.pending, (state) => {
         state.status = "loading";
       })
@@ -238,10 +242,46 @@ const ShopOrderSlice = createSlice({
     .addCase(doLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
-        state.user = null;
+        state.user = {};
         //   state.error = action.payload;
         state.error = action.error.message;
-    });
+    })
+
+
+    //get wishList by user id
+    .addCase(getWishListByUserId.pending, (state) => {
+      state.status = "Loading...";
+    })
+    .addCase(getWishListByUserId.fulfilled, (state, action) => {
+      state.wishLists = action.payload;
+      state.status = "Idle";
+    })
+
+
+    //add wishlist
+    .addCase(addWishList.fulfilled, (state, action)=>{
+      state.wishLists.push(action.payload);
+
+      state.state = "Successed"
+    })
+    .addCase(addWishList.rejected, (state, action)=>{
+      state.error = action.error.message;
+    })
+
+    //delete wishlist
+    .addCase(deleteWishListById.fulfilled, (state, action)=>{
+
+      const exist = state.wishLists.find(wi=>wi.id === action.payload);
+
+      if(exist){
+        state.wishLists= state.wishLists.filter(wi=>wi.id !== action.payload)
+      }
+      
+      state.state = "Successed"
+    })
+    .addCase(deleteWishListById.rejected, (state, action)=>{
+      state.error = action.error.message;
+    })
   },
 });
 export default ShopOrderSlice;

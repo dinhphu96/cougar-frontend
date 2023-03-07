@@ -1,7 +1,6 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation } from "react-router-dom";
-import wish from "../images/wish.svg";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import { useDispatch } from "react-redux/es/exports";
@@ -10,15 +9,19 @@ import {
   getCartSelector,
   getUserSelector,
 } from "../store/shop_order/selectors";
+import { getListWishListSelector } from "../store/shop_order/selector2";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
   addNewOrderDetail,
   updateOrderDetail,
   addNewOrder,
+  addWishList,
 } from "../store/shop_order/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { AiFillHeart } from "react-icons/ai";
+
 
 const ProductCard = (props) => {
   const { grid, productItem } = props;
@@ -36,6 +39,7 @@ const ProductCard = (props) => {
   const shopOrder = useSelector(getShopOrderSelector);
   const listCartItem = useSelector(getCartSelector);
   const userr = useSelector(getUserSelector);
+  const listWishList = useSelector(getListWishListSelector);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -98,6 +102,33 @@ const ProductCard = (props) => {
     }
   };
 
+  const handleAddtoWishList = ()=>{
+    
+    
+    const exist = listWishList.find(wi=>wi.productItem.id === productAdd.id)
+
+    if(!exist){
+      const newWishList = {
+          user: userr,
+          productItem: productAdd
+        }
+
+        dispatch(addWishList(newWishList));
+
+        toast.info(`Added to Wishlist`, {
+          position: "top-right",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    }
+
+  }
+
   return (
     <>
       <div
@@ -109,8 +140,11 @@ const ProductCard = (props) => {
       >
         <div className="product-card position-relative">
           <div className="wishlist-icon position-absolute">
-            <button className="border-0 bg-transparent">
-              <img src={wish} alt="wishlist" />
+            <button
+              className="border-0 bg-transparent"
+              onClick={handleAddtoWishList}
+            >
+              <AiFillHeart style={{color: listWishList.some(wi=>wi.productItem.id === productAdd.id) ? "red" : "grey", fontSize: "30px"}}/>
             </button>
           </div>
           <div className="product-image">
