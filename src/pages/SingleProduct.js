@@ -162,7 +162,7 @@ const SingleProduct = () => {
 
   const handleClickImage = (pro) => {
     setChangProductItem(pro);
-     setBorderColor(pro.id);
+    //  setBorderColor(pro.id);
   };
 
 
