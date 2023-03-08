@@ -70,7 +70,6 @@ const Signup = () => {
                     pattern: /^(0)\d{9}$/
                   })}
                   placeholder="Mobile Number"
-                  required
                 />
                 <span className="errors">
                   {errors.phone?.type === "required" && (
