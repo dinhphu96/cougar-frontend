@@ -88,11 +88,21 @@ export const getProductItem = createAsyncThunk('productItem/get', async () => {
 /*-------------------------------------------------------------------------*/
 
 //logogin
-<<<<<<< Updated upstream
-export const doLogin = createAsyncThunk('auth/signin', async (credentials) => {
-  const response = await axios.post('http://localhost:8080/api/auth/signin', credentials);
-  return response.data;
-});
+export const doLogin = createAsyncThunk(
+  'auth/signin',
+  async (credentials, thunkAPI) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/signin', credentials);
+      return response.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        return thunkAPI.rejectWithValue(error.response.data);
+      } else {
+        return thunkAPI.rejectWithValue("Unexpected error occurred");
+      }
+    }
+  }
+);
 
 /*-------------------------------------------------------------------------*/
 
@@ -112,20 +122,4 @@ export const deleteWishListById = createAsyncThunk('WishList/delete', async (id)
   await axios.delete(`http://localhost:8080/rest/wishLists/${id}`);
   return id;
 });
-=======
-export const doLogin = createAsyncThunk(
-  'auth/signin',
-  async (credentials, thunkAPI) => {
-    try {
-      const response = await axios.post('http://localhost:8080/api/auth/signin', credentials);
-      return response.data;
-    } catch (error) {
-      if (error.response.status === 401) {
-        return thunkAPI.rejectWithValue(error.response.data);
-      } else {
-        return thunkAPI.rejectWithValue("Unexpected error occurred");
-      }
-    }
-  }
-);
->>>>>>> Stashed changes
+
