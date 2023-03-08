@@ -240,6 +240,7 @@ const ShopOrderSlice = createSlice({
     })
 
     .addCase(doLogin.rejected, (state, action) => {
+<<<<<<< Updated upstream
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = {};
@@ -282,6 +283,14 @@ const ShopOrderSlice = createSlice({
     .addCase(deleteWishListById.rejected, (state, action)=>{
       state.error = action.error.message;
     })
+=======
+      state.isLoading = false;
+      state.isAuthenticated = false;
+      state.user = {};
+      state.error = action.payload;
+  });
+
+>>>>>>> Stashed changes
   },
 });
 export default ShopOrderSlice;

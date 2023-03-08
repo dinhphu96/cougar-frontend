@@ -573,9 +573,10 @@ footer .input-group-text {
 .auth-card {
   padding: 20px;
   background-color: white;
-  width: 500px;
+  width: 520px;
   margin: 30px auto;
   border-radius: 10px;
+  box-shadow: 0 0 15px gray;
 }
 .auth-card h3 {
   font-size: 19px;
@@ -861,5 +862,15 @@ footer .input-group-text {
   color: #333;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.errors{
+  height: 12px;
+  margin-top: -13px;
+  margin-left: 10px;
+}
+
+.error{
+  font-size: 12px;
 }
 
