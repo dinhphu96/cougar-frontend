@@ -7,6 +7,8 @@ import { doLogin } from "../store/shop_order/api";
 import { useDispatch } from "react-redux";
 
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const Login = () => {
@@ -18,8 +20,18 @@ const Login = () => {
   const onSubmit = (data) => {
     dispatch(doLogin(data)).then((response) => {
       if (response.type === doLogin.fulfilled.toString()) {
-        alert("Đăng nhập thành công!");
-        navigate(-1);
+        toast.success(`Login successfully!`, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    
+        setTimeout(()=>{navigate("/")}, 1000);
       } else if (response.type === doLogin.rejected.toString()) {
         console.log(response.payload.message);
         alert(response.payload.message);

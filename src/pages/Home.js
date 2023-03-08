@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
@@ -43,7 +43,10 @@ import { useSelector } from "react-redux";
 import { getProductsSelector } from "../store/shop_order/selector2";
 
 const Home = () => {
-
+  //cuộn trang
+  useEffect(() => {
+    window.scrollTo(0, 300);
+  }, []);
   const listProducts = useSelector(getProductsSelector);
 
   return (

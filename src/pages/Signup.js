@@ -29,7 +29,7 @@ const Signup = () => {
 
           toast.success(`User registered successfully!`, {
             position: "top-center",
-            autoClose: 1500,
+            autoClose: 1000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
