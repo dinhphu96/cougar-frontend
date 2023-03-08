@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 import { doSignup } from "../store/signup/api";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Signup = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm({ mode: "onChange" });
@@ -22,9 +25,20 @@ const Signup = () => {
     dispatch(doSignup(signupData))
       .then((response) => {
         console.log(response.payload.message);
-        alert(response.payload.message);
         if (response.payload.message === "User registered successfully!") {
-          navigate("/login");
+
+          toast.success(`User registered successfully!`, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+      
+          setTimeout(()=>{navigate("/login")}, 1500);
         }
       }).catch((error) => {
         console.log(error);

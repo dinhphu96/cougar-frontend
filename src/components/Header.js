@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import wishlist from "../images/wishlist.svg";
-import user from "../images/user.svg";
+import userAv from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 import logo from "../images/cougar-logo.png";
@@ -20,6 +20,17 @@ const Header = () => {
   }, 0);
 
   const amount = listCartItem.length;
+
+  // const [avatar, setAvatar] = useState(userAv);
+
+  // useEffect(()=>{
+  //   if(userSession){
+  //     if(userSession.avatar !== null){
+  //       setAvatar(`https://res.cloudinary.com/dmjh7imwd/image/upload/${userSession.avatar}`);
+  //     }
+  //   }
+  // },[userSession])
+
   return (
     <>
       <header className="header-top-strip py-3">
@@ -88,7 +99,7 @@ const Header = () => {
                     to="/login"
                     className="d-flex align-items-center gap-10 text-white"
                   >
-                    <img src={user} alt="user" />
+                    <img className="img-fluid w-25 rounded-circle ms-2" src={userrr.avatar ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}` : userAv} alt="user" />
                     <p className="mb-0">
                       {userrr.fullname !== undefined
                         ? userrr.fullname

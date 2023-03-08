@@ -22,11 +22,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 
-
 const ProductCard = (props) => {
   const { grid, productItem } = props;
   const { color, size, ...productAdd } = productItem;
-  
+
   const image = productItem.image;
   const brand = productItem.product.brand.name;
   const description = productItem.product.description;
@@ -43,7 +42,7 @@ const ProductCard = (props) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const handleAddProdTocart = () => {
     if (userr.id !== undefined) {
       if (listCartItem.length !== 0) {
@@ -102,16 +101,18 @@ const ProductCard = (props) => {
     }
   };
 
-  const handleAddtoWishList = ()=>{
-    
-    
-    const exist = listWishList.find(wi=>wi.productItem.id === productAdd.id)
+  const handleAddtoWishList = () => {
+    if (userr.id !== undefined) {
+      
+      const exist = listWishList.find(
+        (wi) => wi.productItem.id === productAdd.id
+      );
 
-    if(!exist){
-      const newWishList = {
+      if (!exist) {
+        const newWishList = {
           user: userr,
-          productItem: productAdd
-        }
+          productItem: productAdd,
+        };
 
         dispatch(addWishList(newWishList));
 
@@ -125,9 +126,9 @@ const ProductCard = (props) => {
           progress: undefined,
           theme: "light",
         });
+      }
     }
-
-  }
+  };
 
   return (
     <>
@@ -144,7 +145,16 @@ const ProductCard = (props) => {
               className="border-0 bg-transparent"
               onClick={handleAddtoWishList}
             >
-              <AiFillHeart style={{color: listWishList.some(wi=>wi.productItem.id === productAdd.id) ? "red" : "grey", fontSize: "30px"}}/>
+              <AiFillHeart
+                style={{
+                  color: listWishList.some(
+                    (wi) => wi.productItem.id === productAdd.id
+                  )
+                    ? "red"
+                    : "grey",
+                  fontSize: "30px",
+                }}
+              />
             </button>
           </div>
           <div className="product-image">
