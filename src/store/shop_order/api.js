@@ -123,3 +123,8 @@ export const deleteWishListById = createAsyncThunk('WishList/delete', async (id)
   return id;
 });
 
+
+export const doChangePassword = createAsyncThunk('auth/change-password', async (password) => {
+  const response = await axios.post("http://localhost:8080/api/auth/change-password", password);
+  return response.data;
+});

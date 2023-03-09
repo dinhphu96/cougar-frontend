@@ -15,7 +15,8 @@ import {
   doLogin,
   addWishList,
   getWishListByUserId,
-  deleteWishListById
+  deleteWishListById,
+  doChangePassword
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -286,6 +287,15 @@ state.error = action.payload;;
     .addCase(deleteWishListById.rejected, (state, action)=>{
       state.error = action.error.message;
     })
+
+    //Change-password
+    .addCase(doChangePassword.fulfilled, (state, action) => {
+      state.status= "Successed";
+    })
+    .addCase(doChangePassword.rejected, (state, action)=>{
+      state.status="Failed";
+    })
+
   },
 });
 export default ShopOrderSlice;

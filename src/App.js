@@ -33,6 +33,7 @@ import {
 } from "./store/shop_order/selectors";
 import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -80,10 +81,12 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="forgot-password" element={<Forgotpassword />} />
+            <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="profile" element={<Profile />}/>
+            <Route path="change-password" element={<ChangePassword />} />
           </Route>
         </Routes>
       </BrowserRouter>
