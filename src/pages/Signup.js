@@ -18,7 +18,17 @@ const Signup = () => {
   const onRegister = (data) => {
     const { rePassword, ...signupData } = data;
     if (signupData.password !== rePassword) {
-      alert("Mật khẩu không trùng khớp!");
+      
+      toast.error(`Password does not match!`, {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return
     }
 

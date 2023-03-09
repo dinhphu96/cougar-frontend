@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -34,7 +34,16 @@ const Login = () => {
         setTimeout(()=>{navigate("/")}, 1000);
       } else if (response.type === doLogin.rejected.toString()) {
         console.log(response.payload.message);
-        alert(response.payload.message);
+        toast.error(`Password or Email invalid!`, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     });
   };

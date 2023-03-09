@@ -32,6 +32,7 @@ import {
   getUserSelector,
 } from "./store/shop_order/selectors";
 import { ToastContainer } from "react-toastify";
+import Profile from "./pages/Profile";
 
 function App() {
   const dispatch = useDispatch();
@@ -82,6 +83,7 @@ function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
             <Route path="checkout" element={<Checkout />} />
+            <Route path="profile" element={<Profile />}/>
           </Route>
         </Routes>
       </BrowserRouter>

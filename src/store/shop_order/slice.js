@@ -36,6 +36,10 @@ const ShopOrderSlice = createSlice({
     getCart: (state) => {
       return state.cartItems;
     },
+
+    removeUser: (state)=>{
+      state.user = {};
+    }
   },
   extraReducers: (builder) => {
     builder

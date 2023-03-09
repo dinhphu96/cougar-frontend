@@ -6,11 +6,12 @@ import userAv from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 import logo from "../images/cougar-logo.png";
-import { useSelector } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import {
   getCartSelector,
   getUserSelector,
 } from "../store/shop_order/selectors";
+import ShopOrderSlice from "../store/shop_order/slice";
 
 const Header = () => {
   const userrr = useSelector(getUserSelector);
@@ -21,15 +22,11 @@ const Header = () => {
 
   const amount = listCartItem.length;
 
-  // const [avatar, setAvatar] = useState(userAv);
-
-  // useEffect(()=>{
-  //   if(userSession){
-  //     if(userSession.avatar !== null){
-  //       setAvatar(`https://res.cloudinary.com/dmjh7imwd/image/upload/${userSession.avatar}`);
-  //     }
-  //   }
-  // },[userSession])
+  const dispatch = useDispatch();
+  const handleLogout = ()=>{
+    sessionStorage.removeItem("user");
+    dispatch(ShopOrderSlice.actions.removeUser());
+  }
 
   return (
     <>
@@ -95,17 +92,62 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link
-                    to="/login"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
-                    <img className="img-fluid w-25 rounded-circle ms-2" src={userrr.avatar ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}` : userAv} alt="user" />
-                    <p className="mb-0">
-                      {userrr.fullname !== undefined
-                        ? userrr.fullname
-                        : "Log in"}
-                    </p>
-                  </Link>
+                  {userrr.id ? (
+                    <div className="dropdown">
+                      <Link
+                        className="d-flex align-items-center gap-10 text-white  dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <img
+                          className="img-fluid w-25 rounded-circle ms-2"
+                          src={
+                            userrr.avatar
+                              ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
+                              : userAv
+                          }
+                          alt="user"
+                        />
+                        <p className="mb-0">{userrr.fullname}</p>
+                      </Link>
+                      <ul className="dropdown-menu">
+                        <li>
+                          <Link
+                            className="dropdown-item" href="#"
+                            to={"/profile"}
+                          >
+                            Edit profile
+                          </Link>
+                        </li>
+                        
+                        <li>
+                          <Link className="dropdown-item" href="#">
+                            Change password
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item" href="#"
+                            onClick={handleLogout}
+                          >
+                            Log out
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <Link
+                      to={"/login"}
+                      className="d-flex align-items-center gap-10 text-white"
+                    >
+                      <img
+                        className="img-fluid w-25 rounded-circle ms-2"
+                        src={userAv}
+                        alt="user"
+                      />
+                      <p className="mb-0">Log in</p>
+                    </Link>
+                  )}
                 </div>
                 <div>
                   <Link
