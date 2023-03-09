@@ -39,6 +39,12 @@ const ShopOrderSlice = createSlice({
 
     removeUser: (state)=>{
       state.user = {};
+      state.wishLists = [];
+      state.cartItems = [];
+      state.shopOrder = null;
+      state.userAddresses = [];
+      state.userPaymenMethod = {};
+      state.deliverys = [];
     }
   },
   extraReducers: (builder) => {
@@ -266,7 +272,7 @@ state.error = action.payload;;
     .addCase(addWishList.fulfilled, (state, action)=>{
       state.wishLists.push(action.payload);
 
-      state.state = "Successed"
+      state.status = "Successed"
     })
     .addCase(addWishList.rejected, (state, action)=>{
       state.error = action.error.message;

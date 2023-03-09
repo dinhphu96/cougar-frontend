@@ -127,6 +127,7 @@ const Header = () => {
                         </li>
                         <li>
                           <Link
+                          to={"/"}
                             className="dropdown-item" href="#"
                             onClick={handleLogout}
                           >
