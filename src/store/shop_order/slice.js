@@ -15,7 +15,8 @@ import {
   doLogin,
   addWishList,
   getWishListByUserId,
-  deleteWishListById
+  deleteWishListById,
+  addNewAddress
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -219,6 +220,14 @@ const ShopOrderSlice = createSlice({
       .addCase(getAddressesByUserId.fulfilled, (state, action) => {
         state.userAddresses = action.payload;
         state.status = "idle";
+      })
+
+      .addCase(addNewAddress.fulfilled, (state, action)=>{
+        state.userAddresses.push(action.payload);
+        state.status = "Successed"
+      })
+      .addCase(addNewAddress.rejected, (state, action)=>{
+        state.error = "Error"
       })
 
       //get list deliveryMethod

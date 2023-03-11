@@ -39,8 +39,9 @@ import cate06 from "../images/categories/cate06.png";
 import cate07 from "../images/categories/cate07.png";
 import cate08 from "../images/categories/cate08.png";
 
+
 import { useSelector } from "react-redux";
-import { getProductsSelector } from "../store/shop_order/selector2";
+import { getProductsSelector } from "../store/shop_order/selectors";
 
 const Home = () => {
   //cuộn trang

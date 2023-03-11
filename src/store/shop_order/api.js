@@ -61,6 +61,11 @@ export const getAddressesByUserId = createAsyncThunk('Addess/get', async (userId
   return response.data;
 });
 
+export const addNewAddress = createAsyncThunk('Address/add', async (address) => {
+  const response = await axios.post("http://localhost:8080/rest/addresses", address);
+  return response.data;
+});
+
 /*-------------------------------------------------------------------------*/
 
 //DeliveryMethod

@@ -17,7 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AiOutlinePlus } from "react-icons/ai";
-import { getAddressesByUserId } from "../store/shop_order/api";
+import { getAddressesByUserId, addNewAddress } from "../store/shop_order/api";
 
 export default function Profile() {
   const userrr = useSelector(getUserSelector);
@@ -26,6 +26,11 @@ export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [number, setNumber] = useState("");
+  const [line, setLine] = useState("");
+  const [district, setDistrict] = useState("");
+  const [province, setprovince] = useState("");
+  const [country, setCountry] = useState("");
 
   useEffect(() => {
     if (userrr.id) {
@@ -54,15 +59,41 @@ export default function Profile() {
   };
 
   const handleNewAddress = () => {
-    const newAddress = {
-      unitNumber: "",
-      addressLine: "",
-      district: "",
-      province: "",
-      countryName: "",
-      isDefault: false,
-      user: userrr,
-    };
+    if (
+      number !== "" &&
+      line !== "" &&
+      district !== "" &&
+      province !== "" &&
+      country !== ""
+    ) {
+      const newAddress = {
+        unitNumber: number,
+        addressLine: line,
+        district: district,
+        province: province,
+        countryName: country,
+        isDefault: false,
+        user: userrr,
+      };
+
+      dispatch(addNewAddress(newAddress));
+    }
+  };
+
+  const handleChangeNumber = (e) => {
+    setNumber(e.target.value);
+  };
+  const handleChangeLine = (e) => {
+    setLine(e.target.value);
+  };
+  const handleChangeDistrict = (e) => {
+    setDistrict(e.target.value);
+  };
+  const handleChangeProvice = (e) => {
+    setprovince(e.target.value);
+  };
+  const handleChangeCountry = (e) => {
+    setCountry(e.target.value);
   };
 
   const handleSubmit = () => {};
@@ -77,7 +108,11 @@ export default function Profile() {
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src={userrr.avatar ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}` :"https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"}
+                  src={
+                    userrr.avatar
+                      ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
+                      : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                  }
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: "150px" }}
@@ -147,11 +182,104 @@ export default function Profile() {
                         borderRadius: "3px",
                       }}
                       className="w-100"
-                      onClick={handleNewAddress}
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
                     >
                       <AiOutlinePlus className="me-2" />
                       Add New Address
                     </Link>
+
+                    {/* Modal */}
+                    <div
+                      className="modal fade"
+                      id="exampleModal"
+                      tabIndex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h1
+                              className="modal-title fs-5"
+                              id="exampleModalLabel"
+                            >
+                              New Address
+                            </h1>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <div className="gap-15 row">
+                              <div className="row pe-0">
+                                <div className="col-6">
+                                  <input
+                                    type="text"
+                                    placeholder="UnitNumber"
+                                    className="form-control"
+                                    value={number}
+                                    onChange={handleChangeNumber}
+                                  />
+                                </div>
+
+                                <div className="col-6 pe-0">
+                                  <input
+                                    type="text"
+                                    placeholder="Address"
+                                    className="form-control"
+                                    value={line}
+                                    onChange={handleChangeLine}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="row pe-0">
+                                <div className="col-6">
+                                  <input
+                                    type="text"
+                                    placeholder="District"
+                                    className="form-control"
+                                    value={district}
+                                    onChange={handleChangeDistrict}
+                                  />
+                                </div>
+                                <div className="col-6 pe-0">
+                                  <input
+                                    type="text"
+                                    placeholder="Province"
+                                    className="form-control"
+                                    value={province}
+                                    onChange={handleChangeProvice}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-12">
+                                <input
+                                  type="text"
+                                  placeholder="Country"
+                                  className="form-control"
+                                  value={country}
+                                  onChange={handleChangeCountry}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={handleNewAddress}
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </MDBCol>
                 </MDBRow>
                 <hr />

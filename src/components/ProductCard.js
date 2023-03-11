@@ -8,8 +8,8 @@ import {
   getShopOrderSelector,
   getCartSelector,
   getUserSelector,
+  getListWishListSelector
 } from "../store/shop_order/selectors";
-import { getListWishListSelector } from "../store/shop_order/selector2";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
   addNewOrderDetail,

@@ -22,12 +22,12 @@ import {
   getShopOrderSelector,
   getOnePrISelector,
   getRelatedProductItemsSelector,
+  getListWishListSelector
 } from "../store/shop_order/selectors";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { getListWishListSelector } from "../store/shop_order/selector2";
 
 
 
