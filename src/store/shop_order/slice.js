@@ -16,7 +16,8 @@ import {
   addWishList,
   getWishListByUserId,
   deleteWishListById,
-  doChangePassword
+  addNewAddress,
+  doChangePassword,
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -29,7 +30,7 @@ const ShopOrderSlice = createSlice({
     shopOrder: null,
     userAddresses: [],
     deliverys: [],
-    userPaymenMethod:{},//laListmaBip
+    userPaymenMethod: {}, //laListmaBip
     status: "idle",
     error: null,
   },
@@ -38,9 +39,15 @@ const ShopOrderSlice = createSlice({
       return state.cartItems;
     },
 
-    removeUser: (state)=>{
+    removeUser: (state) => {
       state.user = {};
-    }
+      state.wishLists = [];
+      state.cartItems = [];
+      state.shopOrder = null;
+      state.userAddresses = [];
+      state.userPaymenMethod = {};
+      state.deliverys = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -163,9 +170,7 @@ const ShopOrderSlice = createSlice({
           }
         });
 
-        const existing = state.cartItems.find(
-          (ite) => ite.id === item.id
-        );
+        const existing = state.cartItems.find((ite) => ite.id === item.id);
         if (existing) {
           Object.assign(existing, item);
         }
@@ -202,7 +207,7 @@ const ShopOrderSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUserById.fulfilled, (state, action) => {
-        const {password, ...userpayload} = action.payload;
+        const { password, ...userpayload } = action.payload;
         state.user = userpayload;
         state.status = "idle";
       })
@@ -214,6 +219,14 @@ const ShopOrderSlice = createSlice({
       .addCase(getAddressesByUserId.fulfilled, (state, action) => {
         state.userAddresses = action.payload;
         state.status = "idle";
+      })
+
+      .addCase(addNewAddress.fulfilled, (state, action) => {
+        state.userAddresses.push(action.payload);
+        state.status = "Successed";
+      })
+      .addCase(addNewAddress.rejected, (state, action) => {
+        state.error = "Error";
       })
 
       //get list deliveryMethod
@@ -230,72 +243,68 @@ const ShopOrderSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUserPaymenMethodByUserId.fulfilled, (state, action) => {
-        state.userPaymenMethod = action.payload[0];//laListmaBip
+        state.userPaymenMethod = action.payload[0]; //laListmaBip
         state.status = "idle";
       })
 
-
-       //login
-       .addCase(doLogin.fulfilled, (state, action) => {
+      //login
+      .addCase(doLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload;
-        sessionStorage.setItem('user', JSON.stringify(action.payload));
+        sessionStorage.setItem("user", JSON.stringify(action.payload));
         state.error = "Successed";
-    })
+      })
 
-    .addCase(doLogin.rejected, (state, action) => {
+      .addCase(doLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = {};
+        state.error = action.payload;
+      })
 
-state.isLoading = false;
-state.isAuthenticated = false;
-state.user = {};
-state.error = action.payload;;
-    })
+      //get wishList by user id
+      .addCase(getWishListByUserId.pending, (state) => {
+        state.status = "Loading...";
+      })
+      .addCase(getWishListByUserId.fulfilled, (state, action) => {
+        state.wishLists = action.payload;
+        state.status = "Idle";
+      })
 
+      //add wishlist
+      .addCase(addWishList.fulfilled, (state, action) => {
+        state.wishLists.push(action.payload);
 
-    //get wishList by user id
-    .addCase(getWishListByUserId.pending, (state) => {
-      state.status = "Loading...";
-    })
-    .addCase(getWishListByUserId.fulfilled, (state, action) => {
-      state.wishLists = action.payload;
-      state.status = "Idle";
-    })
+        state.status = "Successed";
+      })
+      .addCase(addWishList.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
 
+      //delete wishlist
+      .addCase(deleteWishListById.fulfilled, (state, action) => {
+        const exist = state.wishLists.find((wi) => wi.id === action.payload);
 
-    //add wishlist
-    .addCase(addWishList.fulfilled, (state, action)=>{
-      state.wishLists.push(action.payload);
+        if (exist) {
+          state.wishLists = state.wishLists.filter(
+            (wi) => wi.id !== action.payload
+          );
+        }
 
-      state.state = "Successed"
-    })
-    .addCase(addWishList.rejected, (state, action)=>{
-      state.error = action.error.message;
-    })
+        state.state = "Successed";
+      })
+      .addCase(deleteWishListById.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
 
-    //delete wishlist
-    .addCase(deleteWishListById.fulfilled, (state, action)=>{
-
-      const exist = state.wishLists.find(wi=>wi.id === action.payload);
-
-      if(exist){
-        state.wishLists= state.wishLists.filter(wi=>wi.id !== action.payload)
-      }
-      
-      state.state = "Successed"
-    })
-    .addCase(deleteWishListById.rejected, (state, action)=>{
-      state.error = action.error.message;
-    })
-
-    //Change-password
-    .addCase(doChangePassword.fulfilled, (state, action) => {
-      state.status= "Successed";
-    })
-    .addCase(doChangePassword.rejected, (state, action)=>{
-      state.status="Failed";
-    })
-
+      //Change-password
+      .addCase(doChangePassword.fulfilled, (state, action) => {
+        state.status = "Successed";
+      })
+      .addCase(doChangePassword.rejected, (state, action) => {
+        state.status = "Failed";
+      });
   },
 });
 export default ShopOrderSlice;

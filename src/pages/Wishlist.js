@@ -4,7 +4,7 @@ import Meta from "../components/Meta";
 import Container from "../components/Container";
 import cross from "../images/cross.svg";
 import { useSelector } from "react-redux";
-import { getListWishListSelector } from "../store/shop_order/selector2";
+import { getListWishListSelector } from "../store/shop_order/selectors";
 import { useDispatch } from "react-redux";
 import { deleteWishListById } from "../store/shop_order/api";
 const Wishlist = () => {

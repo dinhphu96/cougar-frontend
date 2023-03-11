@@ -296,18 +296,6 @@ const Checkout = () => {
                     onChange={() => {}}
                   />
                 </div>
-
-                <div className="col-12">
-                  <input
-                    type="text"
-                    placeholder="Zipcode"
-                    className="form-control"
-                    value={zipcode}
-                    onChange={(e) => {
-                      setZipcode(e.target.value);
-                    }}
-                  />
-                </div>
                 <div className="w-100">
                   <div className="d-flex justify-content-between align-items-center">
                     <Link to="/cart" className="text-dark">

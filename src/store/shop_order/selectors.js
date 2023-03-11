@@ -9,8 +9,17 @@ export const getUserSelector = (state) => state.ShopOrder.user;
 //product
 export const getPrISelector = (state) => state.ShopOrder.productItems;
 
-export const getPrISelectorHome = (state) =>
-  state.ShopOrder.productItems.filter((pr, index) => index < 8);
+//product show home
+export const getProductsSelector = (state) => state.ShopOrder.productItems.reduce((accumulator, currentValue) => {
+    
+  if (!accumulator.some(item => item.product.id === currentValue.product.id)) {
+    accumulator.push(currentValue);
+  }
+  return accumulator;
+}, []);
+
+
+export const getListWishListSelector = (state)=> state.ShopOrder.wishLists;
 
 export const getOnePrISelector = (id) => (state) =>
   state.ShopOrder.productItems.find((pr) => pr.id == id);
