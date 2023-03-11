@@ -222,7 +222,6 @@ const SingleProduct = () => {
                   onClick={() => handleClickImage(pro.id)}
                 >
                   <img
-                    
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
                     className="img-fluid"
                     alt=""

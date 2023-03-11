@@ -58,6 +58,7 @@ const ShopOrderSlice = createSlice({
       })
 
       .addCase(getProductItem.fulfilled, (state, action) => {
+        state.productItems = [];
         const list = action.payload;
 
         list.forEach((pr) => {
