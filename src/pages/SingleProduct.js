@@ -219,9 +219,10 @@ const SingleProduct = () => {
                   key={pro.id}
                   className={`${borderColor === pro.id ? "border border-2 border-danger": "border border-dark"}`}
                   style={{ cursor: "pointer" }}
+                  onClick={() => handleClickImage(pro.id)}
                 >
                   <img
-                    onClick={() => handleClickImage(pro.id)}
+                    
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
                     className="img-fluid"
                     alt=""

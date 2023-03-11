@@ -22,7 +22,7 @@ export const getProductsSelector = (state) => state.ShopOrder.productItems.reduc
 export const getListWishListSelector = (state)=> state.ShopOrder.wishLists;
 
 export const getOnePrISelector = (id) => (state) =>
-  state.ShopOrder.productItems.find((pr) => pr.id == id);
+  state.ShopOrder.productItems.find((pr) => pr.id === +id);
 
 export const getRelatedProductItemsSelector = (productItem) => (state) =>
   state.ShopOrder.productItems.filter((pr) => pr.product.id === productItem.product.id);
