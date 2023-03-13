@@ -18,6 +18,10 @@ import {
   deleteWishListById,
   addNewAddress,
   doChangePassword,
+  updateUser,
+  deleteAddress,
+  updateAddress,
+  setAsDefaultAddress
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -30,7 +34,7 @@ const ShopOrderSlice = createSlice({
     shopOrder: null,
     userAddresses: [],
     deliverys: [],
-    userPaymenMethod: {}, //laListmaBip
+    userPaymenMethod: [], //laListmaBip
     status: "idle",
     error: null,
   },
@@ -58,17 +62,17 @@ const ShopOrderSlice = createSlice({
       })
 
       .addCase(getProductItem.fulfilled, (state, action) => {
-        state.productItems = [];
-        const list = action.payload;
-
-        list.forEach((pr) => {
-          const { color, size, ...rest } = pr;
+       
+        const list = action.payload.reduce((accumulator, currentValue) => {
+          const { color, size, ...rest } = currentValue;
           const newPr = rest.productItem;
-          newPr.color = pr.color;
-          newPr.size = pr.size;
-
-          state.productItems.push(newPr);
-        });
+          newPr.color = currentValue.color;
+          newPr.size = currentValue.size;
+          accumulator.push(newPr);
+         
+          return accumulator;
+        }, []);
+        state.productItems = list;
 
         state.status = "idle";
       })
@@ -213,6 +217,16 @@ const ShopOrderSlice = createSlice({
         state.status = "idle";
       })
 
+      .addCase(updateUser.fulfilled, (state, action)=>{
+        const { password, ...userpayload } = action.payload;
+        state.user = userpayload;
+
+        state.status = "Successed";
+      })
+      .addCase(updateUser.rejected, (state)=>{
+        state.status = "Error";
+      })
+
       //get addesses By UserId
       .addCase(getAddressesByUserId.pending, (state) => {
         state.status = "loading";
@@ -227,7 +241,35 @@ const ShopOrderSlice = createSlice({
         state.status = "Successed";
       })
       .addCase(addNewAddress.rejected, (state, action) => {
-        state.error = "Error";
+        state.error = action.error.message;
+      })
+
+      .addCase(updateAddress.fulfilled, (state, action) => {
+        const exit = state.userAddresses.find(ad=>ad.id === action.payload.id);
+
+        if(exit){
+          Object.assign(exit, action.payload);
+        }
+        state.status = "Successed";
+      })
+      .addCase(updateAddress.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+
+      .addCase(deleteAddress.fulfilled, (state, action) => {
+        state.userAddresses = state.userAddresses.filter(ad=>ad.id !== action.payload);
+        state.status = "Delete Successed";
+      })
+      .addCase(deleteAddress.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+
+      .addCase(setAsDefaultAddress.fulfilled, (state, action) => {
+        state.userAddresses = action.payload;
+        state.status = "Successed";
+      })
+      .addCase(setAsDefaultAddress.rejected, (state, action) => {
+        state.error = action.error.message;
       })
 
       //get list deliveryMethod
@@ -244,7 +286,7 @@ const ShopOrderSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUserPaymenMethodByUserId.fulfilled, (state, action) => {
-        state.userPaymenMethod = action.payload[0]; //laListmaBip
+        state.userPaymenMethod = action.payload;
         state.status = "idle";
       })
 

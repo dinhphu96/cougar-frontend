@@ -27,11 +27,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-
-    //cuộn trang
-    useEffect(() => {
-      window.scrollTo(0, 200);
-    }, []);
+  //cuộn trang
+  useEffect(() => {
+    window.scrollTo(0, 200);
+  }, []);
 
   const dispatch = useDispatch();
   const userInfor = useSelector(getUserSelector);
@@ -48,7 +47,7 @@ const Checkout = () => {
   const listCartItem = useSelector(getCartSelector);
   const addresses = useSelector(getAddressSelector);
   const listDeliveryMethod = useSelector(getDeliveryMethodSelector);
-  const userPaymenMethod = useSelector(getUserPaymenMethodSelector); //listMaBip
+  const userPaymenMethod = useSelector(getUserPaymenMethodSelector);
   const shopOrder = useSelector(getShopOrderSelector);
 
   const [fullname, setFullname] = useState("");
@@ -59,11 +58,11 @@ const Checkout = () => {
   const [def, setDef] = useState(1);
   const [country, setCountry] = useState("");
   const [shipping, setShipping] = useState("Fast");
-  const [zipcode, setZipcode] = useState("");
   const [orderTotal, setOrderTotal] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
-  const [paymentID, setPaymentID] = useState(2);//bip
+  const [payment, setPayment] = useState(null);
   const [delivery, setDelivery] = useState({});
+  const [select, setSelect] = useState(null);
 
   const [addressCheckOut, setAddressCheckOut] = useState();
 
@@ -119,9 +118,18 @@ const Checkout = () => {
     setCountry(address.countryName);
   };
 
-  const handleChoosePayment = (idPaymen) => {
-    console.log(idPaymen);
-    setPaymentID(idPaymen);//bip
+  const handleChoosePayment = (PaymentTypeName) => {
+    
+    const exist = userPaymenMethod.find(pa=>pa.paymentType.value === PaymentTypeName);
+    
+    if(exist){
+      setPayment(exist);
+    }else{
+      setPayment(null);
+    }
+    setSelect(PaymentTypeName)
+    
+    
   };
 
   const handleChooseShipping = (ShippingName) => {
@@ -135,32 +143,52 @@ const Checkout = () => {
   };
 
   const navigate = useNavigate();
-  const handleContinueToShipping = () => {
-    const UpdateShopOrder = {
-      id: shopOrder.id,
-      orderTotal: orderTotal,
-      orderStatus: 0,
-      userPaymentMethod: userPaymenMethod,
-      address: addressCheckOut,
-      deliveryMethod: delivery,
-      user: userInfor,
-    };
+  const handleContinueToShipping = (e) => {
+    if (addresses.length > 0) {
 
-    dispatch(updateOrder(UpdateShopOrder));
+      const UpdateShopOrder = {
+        id: shopOrder.id,
+        orderTotal: orderTotal,
+        orderStatus: 0,
+        userPaymentMethod: payment,
+        address: addressCheckOut,
+        deliveryMethod: delivery,
+        user: userInfor,
+      };
 
-    toast.success(`Order Success!`, {
-      position: "top-center",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+      dispatch(updateOrder(UpdateShopOrder));
 
-    setTimeout(()=>{navigate("/")}, 1500);
-    
+      toast.success(`Order Success!`, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } else {
+      
+      toast.error(`Create Delivery Address!`, {
+        position: "top-center",
+        autoClose: 600,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 1500);
+    }
   };
 
   return (
@@ -335,11 +363,11 @@ const Checkout = () => {
                 <div className="card-container">
                   <Link
                     className={`card-main-content ${
-                      paymentID === 2//bip
+                      select === null //bip
                         ? "border border-2 border-primary"
                         : "border border-dark"
                     }`}
-                    onClick={() => handleChoosePayment(2)}
+                    onClick={() => handleChoosePayment(null)}
                   >
                     <img
                       className="card-icon"
@@ -355,11 +383,11 @@ const Checkout = () => {
                 <div className="card-container">
                   <Link
                     className={`card-main-content ${
-                      paymentID === 4//bip
+                      select === "ZaloPay Wallet"
                         ? "border border-2 border-primary"
                         : "border border-dark"
                     }`}
-                    onClick={() => handleChoosePayment(4)}
+                    onClick={() => handleChoosePayment("ZaloPay Wallet")}
                   >
                     <img
                       className="card-icon"

@@ -40,8 +40,11 @@ function App() {
   
   const useLogin = JSON.parse(sessionStorage.getItem("user"));
 
+  useEffect(()=>{
+    dispatch(getProductItem());
+  },[dispatch])
+
     useEffect(()=>{
-      dispatch(getProductItem());
       if(useLogin){
         const useId  = useLogin.id;
         dispatch(getUserById(useId));

@@ -17,7 +17,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AiOutlinePlus } from "react-icons/ai";
-import { getAddressesByUserId, addNewAddress } from "../store/shop_order/api";
+import {
+  getAddressesByUserId,
+  addNewAddress,
+  updateUser,
+  deleteAddress,
+  updateAddress,
+  setAsDefaultAddress
+} from "../store/shop_order/api";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Profile() {
   const userrr = useSelector(getUserSelector);
@@ -26,11 +35,14 @@ export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [idAd, setIdAd] = useState(0);
   const [number, setNumber] = useState("");
   const [line, setLine] = useState("");
   const [district, setDistrict] = useState("");
   const [province, setprovince] = useState("");
   const [country, setCountry] = useState("");
+  const [defa, setDefa] = useState(0);
+  const [checkChange, setCheckChange] = useState(false);
 
   useEffect(() => {
     if (userrr.id) {
@@ -46,15 +58,18 @@ export default function Profile() {
 
   const handleChangeName = (e) => {
     setName(e.target.value);
+    setCheckChange(true);
   };
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
+    setCheckChange(true);
   };
 
   const handleChangePhone = (e) => {
     if (!isNaN(e.target.value) && e.target.value.length <= 10) {
       setPhone(e.target.value);
+      setCheckChange(true);
     }
   };
 
@@ -72,31 +87,166 @@ export default function Profile() {
         district: district,
         province: province,
         countryName: country,
-        isDefault: false,
+        isDefault: true,
         user: userrr,
       };
 
+      const exist = addresses.find((ad) => ad.isDefault === true);
+
+      if (exist) {
+        newAddress.isDefault = false;
+      }
+
       dispatch(addNewAddress(newAddress));
+      setIdAd(0);
+      setNumber("");
+      setLine("");
+      setDistrict("");
+      setprovince("");
+      setCountry("");
+      setDefa(0);
+      setCheckChange(false);
+
+      toast.info(`Added!`, {
+        position: "top-right",
+        autoClose: 600,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
   const handleChangeNumber = (e) => {
-    setNumber(e.target.value);
+    if (!isNaN(e.target.value)) {
+      setNumber(e.target.value);
+      setCheckChange(true);
+    }
   };
   const handleChangeLine = (e) => {
     setLine(e.target.value);
+    setCheckChange(true);
   };
   const handleChangeDistrict = (e) => {
     setDistrict(e.target.value);
+    setCheckChange(true);
   };
   const handleChangeProvice = (e) => {
     setprovince(e.target.value);
+    setCheckChange(true);
   };
   const handleChangeCountry = (e) => {
     setCountry(e.target.value);
+    setCheckChange(true);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    if (!checkChange) {
+      e.preventDefault();
+    } else {
+      if (name !== "" && email !== "" && phone !== "") {
+        const upUser = {
+          id: userrr.id,
+          fullname: name,
+          phone: phone,
+          email: email,
+          avatar: null,
+        };
+
+        dispatch(updateUser(upUser));
+        setCheckChange(false);
+
+        toast.info(`Updated!`, {
+          position: "top-right",
+          autoClose: 600,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
+  };
+
+  const handleDeleteAddress = (id) => {
+    dispatch(deleteAddress(id));
+
+    toast.success(`Deleted Address!`, {
+      position: "top-right",
+      autoClose: 600,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  const handleSetAsDefault = (address) => {
+    dispatch(setAsDefaultAddress(address));
+  };
+
+
+  const handleEditAddress = () => {
+    if (checkChange) {
+      if (
+        number !== "" &&
+        line !== "" &&
+        district !== "" &&
+        province !== "" &&
+        country !== ""
+      ) {
+        const upAddress = {
+          id: idAd,
+          unitNumber: number,
+          addressLine: line,
+          district: district,
+          province: province,
+          countryName: country,
+          isDefault: defa,
+          user: userrr,
+        };
+
+        dispatch(updateAddress(upAddress));
+
+        toast.info(`Updated!`, {
+          position: "top-right",
+          autoClose: 600,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    }
+
+    setIdAd(0)
+    setNumber("");
+    setLine("");
+    setDistrict("");
+    setprovince("");
+    setCountry("");
+    setDefa(0);
+    setCheckChange(false);
+  };
+
+  const handlefillEdit = (adress) => {
+    setIdAd(adress.id);
+    setNumber(adress.unitNumber);
+    setLine(adress.addressLine);
+    setDistrict(adress.district);
+    setprovince(adress.province);
+    setCountry(adress.countryName);
+    setDefa(adress.isDefault);
+  };
 
   return (
     <section style={{ backgroundColor: "#eee" }}>
@@ -273,6 +423,7 @@ export default function Profile() {
                               type="button"
                               className="btn btn-primary"
                               onClick={handleNewAddress}
+                              data-bs-dismiss="modal"
                             >
                               Submit
                             </button>
@@ -296,7 +447,7 @@ export default function Profile() {
                         {userrr.fullname}
                         <span style={{ fontSize: "14px", color: "grey" }}>
                           {" "}
-                          | 0398026876
+                          | {userrr.phone}
                         </span>
                       </div>
                       <div style={{ fontSize: "14px", color: "grey" }}>
@@ -327,18 +478,137 @@ export default function Profile() {
                       className="text-end"
                       style={{ fontSize: "14px" }}
                     >
-                      <Link className="text-end">Edit</Link>
-                      <br />
-                      <button
-                        style={{
-                          borderRadius: "3px",
-                          cursor: `${ad.isDefault ? "no-drop" : "pointer"}`,
-                          color: `${ad.isDefault ? "grey" : "black"}`,
-                        }}
-                        className="border px-3 py-1 bg-transparent"
+                      <Link
+                        className="text-end"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2"
+                        onClick={() => handlefillEdit(ad)}
                       >
-                        Set as default
-                      </button>
+                        Edit
+                      </Link>
+                      {/* Modal */}
+                      <div
+                        className="modal fade"
+                        id="exampleModal2"
+                        tabIndex="-1"
+                        aria-labelledby="exampleModalLabel2"
+                        aria-hidden="true"
+                      >
+                        <div className="modal-dialog">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h1
+                                className="modal-title fs-5"
+                                id="exampleModalLabel"
+                              >
+                                Edit Address
+                              </h1>
+                              <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div className="modal-body">
+                              <div className="gap-15 row">
+                                <div className="row pe-0">
+                                  <div className="col-6">
+                                    <input
+                                      type="text"
+                                      placeholder="UnitNumber"
+                                      className="form-control"
+                                      value={number}
+                                      onChange={handleChangeNumber}
+                                    />
+                                  </div>
+
+                                  <div className="col-6 pe-0">
+                                    <input
+                                      type="text"
+                                      placeholder="Address"
+                                      className="form-control"
+                                      value={line}
+                                      onChange={handleChangeLine}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="row pe-0">
+                                  <div className="col-6">
+                                    <input
+                                      type="text"
+                                      placeholder="District"
+                                      className="form-control"
+                                      value={district}
+                                      onChange={handleChangeDistrict}
+                                    />
+                                  </div>
+                                  <div className="col-6 pe-0">
+                                    <input
+                                      type="text"
+                                      placeholder="Province"
+                                      className="form-control"
+                                      value={province}
+                                      onChange={handleChangeProvice}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-12">
+                                  <input
+                                    type="text"
+                                    placeholder="Country"
+                                    className="form-control"
+                                    value={country}
+                                    onChange={handleChangeCountry}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleEditAddress}
+                                data-bs-dismiss="modal"
+                              >
+                                Submit
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <span>&nbsp;</span>
+                      <span>&nbsp;</span>
+                      <span>&nbsp;</span>
+                      {!ad.isDefault ? (
+                        <Link
+                          onClick={() => handleDeleteAddress(ad.id)}
+                          className="text-end"
+                        >
+                          Delete
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      <br />
+
+                      {!ad.isDefault ? (
+                        <button
+                          style={{
+                            borderRadius: "3px",
+                            cursor: `${ad.isDefault ? "no-drop" : "pointer"}`,
+                            color: `${ad.isDefault ? "grey" : "black"}`,
+                          }}
+                          className="border px-3 py-1 bg-transparent"
+                          onClick={() => handleSetAsDefault(ad)}
+                        >
+                          Set as default
+                        </button>
+                      ) : (
+                        ""
+                      )}
                     </MDBCol>
                   </MDBRow>
                 ))}

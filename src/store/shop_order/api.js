@@ -53,6 +53,11 @@ export const getUserById = createAsyncThunk('User/getById', async (id) => {
   return response.data;
 });
 
+export const updateUser = createAsyncThunk('User/update', async (user) => {
+  const response = await axios.put(`http://localhost:8080/rest/users/update/${user.id}`, user);
+  return response.data;
+});
+
 /*-------------------------------------------------------------------------*/
 
 //addesses
@@ -63,6 +68,21 @@ export const getAddressesByUserId = createAsyncThunk('Addess/get', async (userId
 
 export const addNewAddress = createAsyncThunk('Address/add', async (address) => {
   const response = await axios.post("http://localhost:8080/rest/addresses", address);
+  return response.data;
+});
+
+export const updateAddress = createAsyncThunk('Address/update', async (address) => {
+  const response = await axios.put(`http://localhost:8080/rest/addresses/${address.id}`, address);
+  return response.data;
+});
+
+export const deleteAddress = createAsyncThunk('Address/delete', async (IdAddress) => {
+  await axios.delete(`http://localhost:8080/rest/addresses/${IdAddress}`);
+  return IdAddress;
+});
+
+export const setAsDefaultAddress = createAsyncThunk('Addess/setAsDefault', async (address) => {
+  const response = await axios.put(`http://localhost:8080/rest/addresses/setAsDefault`, address);
   return response.data;
 });
 
