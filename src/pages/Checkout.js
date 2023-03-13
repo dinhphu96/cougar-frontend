@@ -57,7 +57,7 @@ const Checkout = () => {
   const [province, setprovince] = useState("");
   const [def, setDef] = useState(1);
   const [country, setCountry] = useState("");
-  const [shipping, setShipping] = useState("Fast");
+  const [shipping, setShipping] = useState(0);
   const [orderTotal, setOrderTotal] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
   const [payment, setPayment] = useState(null);
@@ -65,6 +65,12 @@ const Checkout = () => {
   const [select, setSelect] = useState(null);
 
   const [addressCheckOut, setAddressCheckOut] = useState();
+
+  useEffect(() => {
+    if(listDeliveryMethod.length){
+      setShipping(listDeliveryMethod.find(deli=>deli.name === "Fast").price);
+    }
+  },[listDeliveryMethod.length > 0])
 
   //set SubTotal
   useEffect(() => {
@@ -74,10 +80,10 @@ const Checkout = () => {
       }, 0);
 
       setSubTotal(subTotal);
-      const deli = listDeliveryMethod.find((de) => de.name === shipping);
+      const deli = listDeliveryMethod.find((de) => de.price === shipping);
 
       if (deli) {
-        setShipping(deli.name);
+        setShipping(deli.price);
         setOrderTotal(subTotal + deli.price);
         setDelivery(deli);
       }
@@ -119,25 +125,24 @@ const Checkout = () => {
   };
 
   const handleChoosePayment = (PaymentTypeName) => {
-    
-    const exist = userPaymenMethod.find(pa=>pa.paymentType.value === PaymentTypeName);
-    
-    if(exist){
+    const exist = userPaymenMethod.find(
+      (pa) => pa.paymentType.value === PaymentTypeName
+    );
+
+    if (exist) {
       setPayment(exist);
-    }else{
+    } else {
       setPayment(null);
     }
-    setSelect(PaymentTypeName)
-    
-    
+    setSelect(PaymentTypeName);
   };
 
-  const handleChooseShipping = (ShippingName) => {
-    const deli = listDeliveryMethod.find((de) => de.name === ShippingName);
+  const handleChooseShipping = (ShippingPrice) => {
+    const deli = listDeliveryMethod.find((de) => de.price === ShippingPrice);
 
     if (deli) {
-      setOrderTotal(subTotal + deli.price);
-      setShipping(deli.name);
+      setOrderTotal(subTotal + ShippingPrice);
+      setShipping(ShippingPrice);
       setDelivery(deli);
     }
   };
@@ -145,7 +150,6 @@ const Checkout = () => {
   const navigate = useNavigate();
   const handleContinueToShipping = (e) => {
     if (addresses.length > 0) {
-
       const UpdateShopOrder = {
         id: shopOrder.id,
         orderTotal: orderTotal,
@@ -173,7 +177,6 @@ const Checkout = () => {
         navigate("/");
       }, 1500);
     } else {
-      
       toast.error(`Create Delivery Address!`, {
         position: "top-center",
         autoClose: 600,
@@ -379,31 +382,34 @@ const Checkout = () => {
                     </div>
                   </Link>
                 </div>
-
-                <div className="card-container">
-                  <Link
-                    className={`card-main-content ${
-                      select === "ZaloPay Wallet"
-                        ? "border border-2 border-primary"
-                        : "border border-dark"
-                    }`}
-                    onClick={() => handleChoosePayment("ZaloPay Wallet")}
-                  >
-                    <img
-                      className="card-icon"
-                      src="https://lzd-img-global.slatic.net/g/tps/tfs/TB17BAYE7L0gK0jSZFAXXcA9pXa-80-80.png_2200x2200q80.png_.webp"
-                      alt=""
-                    />
-                    <div className="card-main-content-text-container">
-                      <p
-                        className="card-title"
-                        data-spm-anchor-id="a2o4n.shipping.0.i0.78935d0aHGGmh5"
-                      >
-                        ZaloPay Wallet
-                      </p>
-                    </div>
-                  </Link>
-                </div>
+                {userPaymenMethod.map((payment) => (
+                  <div key={payment.id} className="card-container">
+                    <Link
+                      className={`card-main-content ${
+                        select === payment.paymentType.value
+                          ? "border border-2 border-primary"
+                          : "border border-dark"
+                      }`}
+                      onClick={() =>
+                        handleChoosePayment(payment.paymentType.value)
+                      }
+                    >
+                      <img
+                        className="card-icon"
+                        src={payment.paymentType.icon}
+                        alt=""
+                      />
+                      <div className="card-main-content-text-container">
+                        <p
+                          className="card-title"
+                          data-spm-anchor-id="a2o4n.shipping.0.i0.78935d0aHGGmh5"
+                        >
+                          {payment.paymentType.value}
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -413,34 +419,19 @@ const Checkout = () => {
               </div>
 
               <div className="card-list-wrapper2">
-                <div className="card-container">
-                  <Link
-                    className={`card-title d-flex ${
-                      shipping === "Fast" ? "text-info" : "text-dark"
-                    }`}
-                    onClick={() => handleChooseShipping("Fast")}
-                  >
-                    <p>Fast</p>
-                    <p className="receive" style={{ fontSize: "12px" }}>
-                      Receive from 2 to 3 days
-                    </p>
-                    <p>$1</p>
-                  </Link>
-                </div>
-                <div className="card-container">
-                  <Link
-                    className={`card-title d-flex ${
-                      shipping === "Super speed" ? "text-info" : "text-dark"
-                    }`}
-                    onClick={() => handleChooseShipping("Super speed")}
-                  >
-                    <p>Supper Speed</p>
-                    <p className="receive" style={{ fontSize: "12px" }}>
-                      Receive in 1 day
-                    </p>
-                    <p>$2</p>
-                  </Link>
-                </div>
+                {listDeliveryMethod.map((deli) => (
+                  <div key={deli.id} className="card-container">
+                    <Link
+                      className={`card-title d-flex ${
+                        shipping === deli.price ? "text-info" : "text-dark"
+                      }`}
+                      onClick={() => handleChooseShipping(deli.price)}
+                    >
+                      <p>{deli.name}</p>
+                      <p>${deli.price}</p>
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -452,7 +443,7 @@ const Checkout = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Shipping</p>
                 <p className="mb-0 total-price">
-                  $ {shipping === "Fast" ? 1 : 2}
+                  $ {shipping}
                 </p>
               </div>
             </div>

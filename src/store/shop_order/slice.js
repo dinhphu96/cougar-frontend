@@ -49,7 +49,7 @@ const ShopOrderSlice = createSlice({
       state.cartItems = [];
       state.shopOrder = null;
       state.userAddresses = [];
-      state.userPaymenMethod = {};
+      state.userPaymenMethod = [];
       state.deliverys = [];
     },
   },
