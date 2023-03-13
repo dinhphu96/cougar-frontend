@@ -7,13 +7,14 @@ import { useSelector } from "react-redux";
 import { getListWishListSelector } from "../store/shop_order/selectors";
 import { useDispatch } from "react-redux";
 import { deleteWishListById } from "../store/shop_order/api";
+import { Link } from "react-router-dom";
 const Wishlist = () => {
   const listWishList = useSelector(getListWishListSelector);
   const dispatch = useDispatch();
 
-  const handleDeleteWishList = (id)=>{
+  const handleDeleteWishList = (id) => {
     dispatch(deleteWishListById(id));
-  }
+  };
 
   return (
     <>
@@ -28,19 +29,23 @@ const Wishlist = () => {
                   src={cross}
                   alt="cross"
                   className="position-absolute cross img-fluid"
-                  onClick={()=>handleDeleteWishList(wi.id)}
+                  onClick={() => handleDeleteWishList(wi.id)}
                 />
 
                 <div className="wishlist-card-image bg-white">
-                  <img
-                    src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${wi.productItem.image}`}
-                    className="img-fluid w-100"
-                    alt="watch"
-                  />
+                  <Link to={"/product/" + wi.productItem.id}>
+                    <img
+                      src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${wi.productItem.image}`}
+                      className="img-fluid w-100"
+                      alt="watch"
+                    />
+                  </Link>
                 </div>
 
                 <div className="py-3 px-3">
-                  <h5 className="title">{wi.productItem.product.name}</h5>
+                  <Link to={"/product/" + wi.productItem.id}>
+                    <h5 className="title">{wi.productItem.product.name}</h5>
+                  </Link>
                   <h6 className="price">$ {wi.productItem.price}</h6>
                 </div>
               </div>
