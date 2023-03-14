@@ -48,10 +48,10 @@ export const deleteOrderDetaiById = createAsyncThunk('OrderDetail/delete', async
 /*-------------------------------------------------------------------------*/
 
 //user
-export const getUserById = createAsyncThunk('User/getById', async (id) => {
-  const response = await axios.get(`http://localhost:8080/rest/users/${id}`);
-  return response.data;
-});
+// export const getUserById = createAsyncThunk('User/getById', async (id) => {
+//   const response = await axios.get(`http://localhost:8080/rest/users/${id}`);
+//   return response.data;
+// });
 
 export const updateUser = createAsyncThunk('User/update', async (user) => {
   const response = await axios.put(`http://localhost:8080/rest/users/update/${user.id}`, user);

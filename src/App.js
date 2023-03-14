@@ -22,9 +22,8 @@ import { useEffect } from "react";
 import {
   getOrderDetailByShopId,
   getShopOrderByUserId,
-  getUserById,
   getProductItem,
-  getWishListByUserId
+  getWishListByUserId,
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
@@ -34,39 +33,40 @@ import {
 import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
 import ChangePassword from "./pages/ChangePassword";
+import ShopOrderSlice from "./store/shop_order/slice";
 
 function App() {
   const dispatch = useDispatch();
   
-  const useLogin = JSON.parse(sessionStorage.getItem("user"));
-
+  const session = JSON.parse(sessionStorage.getItem("user"));
+ 
+  
   useEffect(()=>{
     dispatch(getProductItem());
   },[dispatch])
 
     useEffect(()=>{
-      if(useLogin){
-        const useId  = useLogin.id;
-        dispatch(getUserById(useId));
-
+      if(session){
+        const useLogin = session.SHARE_USER;
+        dispatch(ShopOrderSlice.actions.getUser(useLogin));
       }
-    },[dispatch, useLogin !== null])
+    },[dispatch, session !== null])
 
-  const us = useSelector(getUserSelector);
+  const user = useSelector(getUserSelector);
   
   useEffect(() => {
-    if (us.id) {
-      dispatch(getShopOrderByUserId(us.id));
-      dispatch(getWishListByUserId(us.id))
+    if (user.id) {
+      dispatch(getShopOrderByUserId(user.id));
+      dispatch(getWishListByUserId(user.id))
     }
-  }, [dispatch, us.id]);
+  }, [dispatch, user.id]);
 
-  const so = useSelector(getShopOrderSelector);
+  const shopOrder = useSelector(getShopOrderSelector);
   useEffect(() => {
-    if (so) {
-       dispatch(getOrderDetailByShopId(so.id));
+    if (shopOrder) {
+       dispatch(getOrderDetailByShopId(shopOrder.id));
     }
-  }, [dispatch, so]);
+  }, [dispatch, shopOrder]);
 
   return (
     <>

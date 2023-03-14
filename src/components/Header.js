@@ -35,7 +35,7 @@ const Header = () => {
           <div className="row">
             <div className="col-6">
               <p className="text-white mb-0">
-                Free Shipping Over $100 & Free Returns
+                The world's No. 1 prestigious sales shop
               </p>
             </div>
             <div className="col-6">

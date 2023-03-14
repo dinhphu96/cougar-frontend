@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux/es/exports";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const Checkout = () => {
   //cuộn trang
@@ -67,10 +68,12 @@ const Checkout = () => {
   const [addressCheckOut, setAddressCheckOut] = useState();
 
   useEffect(() => {
-    if(listDeliveryMethod.length){
-      setShipping(listDeliveryMethod.find(deli=>deli.name === "Fast").price);
+    if (listDeliveryMethod.length) {
+      setShipping(
+        listDeliveryMethod.find((deli) => deli.name === "Fast").price
+      );
     }
-  },[listDeliveryMethod.length > 0])
+  }, [listDeliveryMethod.length > 0]);
 
   //set SubTotal
   useEffect(() => {
@@ -238,31 +241,142 @@ const Checkout = () => {
               </p>
               <h4 className="mb-3">Shipping Address</h4>
               <div className="gap-15 row">
-                <div className="col-12">
-                  <span className="text-primary" style={{ fontWeight: "500" }}>
-                    Choose Delivery Address:
-                  </span>
-                  <span
-                    className="text-danger float-end"
-                    style={{ fontStyle: "italic" }}
-                  >
-                    {`${def ? "Default" : "Other"}`}
-                  </span>
-                  <select
-                    value={line}
-                    onChange={handelChooseCountry}
-                    name=""
-                    className="form-control form-select"
-                    id=""
-                  >
-                    {addresses.map((ad) => (
-                      <option key={ad.id} value={ad.addressLine}>
-                        {`${ad.unitNumber}, ${ad.addressLine}, ${ad.district}, ${ad.province}, ${ad.countryName}.`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <div className="col-12 d-flex">
+                  <div style={{width: "95%"}}>  
+                    <span
+                      className="text-primary"
+                      style={{ fontWeight: "500" }}
+                    >
+                      Choose Delivery Address:
+                    </span>
+                    <span
+                      className="text-danger float-end"
+                      style={{ fontStyle: "italic" }}
+                    >
+                      {`${def ? "Default" : "Other"}`}
+                    </span>
+                    <select
+                      value={line}
+                      onChange={handelChooseCountry}
+                      name=""
+                      className="form-control form-select"
+                      id=""
+                    >
+                      {addresses.map((ad) => (
+                        <option key={ad.id} value={ad.addressLine}>
+                          {`${ad.unitNumber}, ${ad.addressLine}, ${ad.district}, ${ad.province}, ${ad.countryName}.`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div style={{width: "5%", paddingLeft: "10px", paddingTop: "24px"}}>
+                    <Link
+                      style={{
+                        backgroundColor: "#ee4d2d",
+                        color: "white",
+                        padding: "7px",
+                        borderRadius: "3px",
+                      }}
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                    >
+                      <AiOutlinePlus />
+                    </Link>
+                    {/* Modal */}
+                    <div
+                      className="modal fade"
+                      id="exampleModal"
+                      tabIndex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h1
+                              className="modal-title fs-5"
+                              id="exampleModalLabel"
+                            >
+                              New Address
+                            </h1>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <div className="gap-15 row">
+                              <div className="row pe-0">
+                                <div className="col-6">
+                                  <input
+                                    type="text"
+                                    placeholder="UnitNumber"
+                                    className="form-control"
+                                    // value={number}
+                                    // onChange={handleChangeNumber}
+                                  />
+                                </div>
 
+                                <div className="col-6 pe-0">
+                                  <input
+                                    type="text"
+                                    placeholder="Address"
+                                    className="form-control"
+                                    // value={line}
+                                    // onChange={handleChangeLine}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="row pe-0">
+                                <div className="col-6">
+                                  <input
+                                    type="text"
+                                    placeholder="District"
+                                    className="form-control"
+                                    // value={district}
+                                    // onChange={handleChangeDistrict}
+                                  />
+                                </div>
+                                <div className="col-6 pe-0">
+                                  <input
+                                    type="text"
+                                    placeholder="Province"
+                                    className="form-control"
+                                    // value={province}
+                                    // onChange={handleChangeProvice}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-12">
+                                <input
+                                  type="text"
+                                  placeholder="Country"
+                                  className="form-control"
+                                  // value={country}
+                                  // onChange={handleChangeCountry}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              // onClick={}
+                              data-bs-dismiss="modal"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
                 <div className="col-12">
                   <input
                     type="text"
@@ -442,9 +556,7 @@ const Checkout = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">
-                  $ {shipping}
-                </p>
+                <p className="mb-0 total-price">$ {shipping}</p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">

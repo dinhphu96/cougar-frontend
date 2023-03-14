@@ -23,7 +23,7 @@ import {
   updateUser,
   deleteAddress,
   updateAddress,
-  setAsDefaultAddress
+  setAsDefaultAddress,
 } from "../store/shop_order/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -98,14 +98,6 @@ export default function Profile() {
       }
 
       dispatch(addNewAddress(newAddress));
-      setIdAd(0);
-      setNumber("");
-      setLine("");
-      setDistrict("");
-      setprovince("");
-      setCountry("");
-      setDefa(0);
-      setCheckChange(false);
 
       toast.info(`Added!`, {
         position: "top-right",
@@ -118,6 +110,15 @@ export default function Profile() {
         theme: "light",
       });
     }
+
+    setIdAd(0);
+    setNumber("");
+    setLine("");
+    setDistrict("");
+    setprovince("");
+    setCountry("");
+    setDefa(0);
+    setCheckChange(false);
   };
 
   const handleChangeNumber = (e) => {
@@ -192,7 +193,6 @@ export default function Profile() {
     dispatch(setAsDefaultAddress(address));
   };
 
-
   const handleEditAddress = () => {
     if (checkChange) {
       if (
@@ -228,7 +228,7 @@ export default function Profile() {
       }
     }
 
-    setIdAd(0)
+    setIdAd(0);
     setNumber("");
     setLine("");
     setDistrict("");

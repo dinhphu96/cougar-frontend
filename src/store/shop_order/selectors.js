@@ -38,3 +38,7 @@ export const getDeliveryMethodSelector = (state) => state.ShopOrder.deliverys;
 
 //userPaymenMethod
 export const getUserPaymenMethodSelector = (state) => state.ShopOrder.userPaymenMethod;
+
+
+//listProductCard
+// export const getListCardSelector = (state)=> state.ShopOrder.cartItems;

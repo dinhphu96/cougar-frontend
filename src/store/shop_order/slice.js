@@ -7,7 +7,7 @@ import {
   getOrderDetailByShopId,
   updateOrderDetail,
   deleteOrderDetaiById,
-  getUserById,
+  // getUserById,
   getAddressesByUserId,
   getProductItem,
   getDeliveryByUserId,
@@ -39,9 +39,9 @@ const ShopOrderSlice = createSlice({
     error: null,
   },
   reducers: {
-    getCart: (state) => {
-      return state.cartItems;
-    },
+    // getCart: (state) => {
+    //   return state.cartItems;
+    // },
 
     removeUser: (state) => {
       state.user = {};
@@ -52,6 +52,10 @@ const ShopOrderSlice = createSlice({
       state.userPaymenMethod = [];
       state.deliverys = [];
     },
+
+    getUser: (state, action)=>{
+      state.user = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -208,14 +212,14 @@ const ShopOrderSlice = createSlice({
       /*------------------------------------------------------------------ */
 
       //getUserById
-      .addCase(getUserById.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(getUserById.fulfilled, (state, action) => {
-        const { password, ...userpayload } = action.payload;
-        state.user = userpayload;
-        state.status = "idle";
-      })
+      // .addCase(getUserById.pending, (state) => {
+      //   state.status = "loading";
+      // })
+      // .addCase(getUserById.fulfilled, (state, action) => {
+      //   // const { password, ...userpayload } = action.payload;
+      //   state.user = action.payload;
+      //   state.status = "idle";
+      // })
 
       .addCase(updateUser.fulfilled, (state, action)=>{
         const { password, ...userpayload } = action.payload;
@@ -294,8 +298,11 @@ const ShopOrderSlice = createSlice({
       .addCase(doLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        // const {accessToken, ...newUser} = action.payload
+        state.user = action.payload.SHARE_USER;
         sessionStorage.setItem("user", JSON.stringify(action.payload));
+
+
         state.error = "Successed";
       })
 

@@ -144,6 +144,9 @@ const ProductCard = (props) => {
             <button
               className="border-0 bg-transparent"
               onClick={handleAddtoWishList}
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              title="Add to wishlist"
             >
               <AiFillHeart
                 style={{
@@ -208,12 +211,18 @@ const ProductCard = (props) => {
                     : "/"
                 }`}
                 className="border-0 bg-transparent mb-2"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="View"
               >
                 <img src={view} alt="view" />
               </Link>
               <button
                 onClick={handleAddProdTocart}
                 className="border-0 bg-transparent"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Add to cart"
               >
                 <img src={addcart} alt="addcart" />
               </button>
