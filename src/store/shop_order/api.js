@@ -154,7 +154,18 @@ export const deleteWishListById = createAsyncThunk('WishList/delete', async (id)
 });
 
 
-export const doChangePassword = createAsyncThunk('auth/change-password', async (password) => {
-  const response = await axios.post("http://localhost:8080/api/auth/change-password", password);
-  return response.data;
-});
+export const doChangePassword = createAsyncThunk(
+  'auth/changepassword',
+  async (info, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/change-password', info);
+      return response.data;
+    } catch (error) {
+      if (error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        throw error;
+      }
+    }
+  }
+);

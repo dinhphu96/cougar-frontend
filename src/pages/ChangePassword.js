@@ -18,6 +18,10 @@ const ChangePassword = () => {
 
   const onConfirm = (data) => {
     const { confNewPassword, ...sendData } = data;
+    const user = sessionStorage.getItem("SHARE_USER");
+    const userLogin = JSON.parse(user);
+    sendData.email = userLogin.email;
+    console.log(sendData);
     if(confNewPassword !== sendData.newPassword){
       alert("New password confirmation failed!");
       return;
@@ -29,7 +33,7 @@ const ChangePassword = () => {
     dispatch(doChangePassword(sendData))
       .then((response) => {
         if (response.type === doChangePassword.fulfilled.toString()) {
-          toast.success(`Change password successfully!`, {
+          toast.success(response.payload.message, {
             position: "top-center",
             autoClose: 1500,
             hideProgressBar: false,
@@ -39,11 +43,11 @@ const ChangePassword = () => {
             progress: undefined,
             theme: "light",
           });
-
           setTimeout(() => { navigate("/profile") }, 1000);
+
         } else if (response.type === doChangePassword.rejected.toString()) {
           console.log(response.payload.message);
-          toast.error(`Password or Email invalid!`, {
+          toast.error(response.payload.message, {
             position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,

@@ -215,7 +215,6 @@ const ShopOrderSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action)=>{
         const { password, ...userpayload } = action.payload;
         state.user = userpayload;
-
         state.status = "Successed";
       })
       .addCase(updateUser.rejected, (state)=>{
@@ -299,12 +298,10 @@ const ShopOrderSlice = createSlice({
       .addCase(doLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        // const {accessToken, ...newUser} = action.payload
         state.user = action.payload.SHARE_USER;
-        sessionStorage.setItem("SHARE_USER", JSON.stringify(action.payload.SHARE_USER));
-        sessionStorage.setItem("accessToken", JSON.stringify(action.payload.accessToken));
 
-
+        sessionStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
+        sessionStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
         state.error = "Successed";
 
       })
@@ -315,7 +312,7 @@ const ShopOrderSlice = createSlice({
         state.user = {};
         state.error = action.payload;
       })
-
+      
       //get wishList by user id
       .addCase(getWishListByUserId.pending, (state) => {
         state.status = "Loading...";
