@@ -7,7 +7,6 @@ import {
   getOrderDetailByShopId,
   updateOrderDetail,
   deleteOrderDetaiById,
-  // getUserById,
   getAddressesByUserId,
   getProductItem,
   getDeliveryByUserId,
@@ -212,21 +211,10 @@ const ShopOrderSlice = createSlice({
       })
 
       /*------------------------------------------------------------------ */
-
-      //getUserById
-      // .addCase(getUserById.pending, (state) => {
-      //   state.status = "loading";
-      // })
-      // .addCase(getUserById.fulfilled, (state, action) => {
-      //   // const { password, ...userpayload } = action.payload;
-      //   state.user = action.payload;
-      //   state.status = "idle";
-      // })
-
+      //update user
       .addCase(updateUser.fulfilled, (state, action)=>{
         const { password, ...userpayload } = action.payload;
         state.user = userpayload;
-
         state.status = "Successed";
       })
       .addCase(updateUser.rejected, (state)=>{
@@ -241,7 +229,8 @@ const ShopOrderSlice = createSlice({
         state.userAddresses = action.payload;
         state.status = "idle";
       })
-
+      
+      //add new Address
       .addCase(addNewAddress.fulfilled, (state, action) => {
         state.userAddresses.push(action.payload);
         state.status = "Successed";
@@ -309,11 +298,9 @@ const ShopOrderSlice = createSlice({
       .addCase(doLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        // const {accessToken, ...newUser} = action.payload
         state.user = action.payload.SHARE_USER;
-        sessionStorage.setItem("user", JSON.stringify(action.payload));
-
-
+        sessionStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
+        sessionStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
         state.error = "Successed";
       })
 
@@ -323,7 +310,7 @@ const ShopOrderSlice = createSlice({
         state.user = {};
         state.error = action.payload;
       })
-
+      
       //get wishList by user id
       .addCase(getWishListByUserId.pending, (state) => {
         state.status = "Loading...";

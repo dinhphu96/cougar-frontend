@@ -23,8 +23,9 @@ const Header = () => {
   const amount = listCartItem.length;
 
   const dispatch = useDispatch();
-  const handleLogout = () => {
-    sessionStorage.removeItem("user");
+  const handleLogout = ()=>{
+    sessionStorage.removeItem("accessToken_cougarshop");
+    sessionStorage.removeItem("SHARE_USER");
     dispatch(ShopOrderSlice.actions.removeUser());
   };
 

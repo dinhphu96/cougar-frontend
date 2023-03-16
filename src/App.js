@@ -84,7 +84,6 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="forgot-password" element={<Forgotpassword />} />
-            <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
             <Route path="checkout" element={<Checkout />} />
