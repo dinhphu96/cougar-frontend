@@ -139,7 +139,30 @@ const Checkout = () => {
     if (exist) {
       setPayment(exist);
     } else {
-      setPayment(null);
+      if(PaymentTypeName !== "Creadit card/ Debit card"){
+        const payType = listPaymentType.find(pt=>pt.value === PaymentTypeName);
+
+        const pay = {
+          user: userInfor,
+          paymentType: payType
+        }
+        dispatch()//post pay
+        setPayment(pay);
+      }else{
+        if(PaymentTypeName !== null){
+          const payType = listPaymentType.find(pt=>pt.value === PaymentTypeName);
+          const pay = {
+            user: userInfor,
+            paymentType: payType
+            //them truonwgf
+
+          }
+          dispatch()//post pay
+          setPayment(pay);
+        }else{
+          setPayment(null);
+        }
+      }
     }
     setSelect(PaymentTypeName);
   };

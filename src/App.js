@@ -38,7 +38,7 @@ import ShopOrderSlice from "./store/shop_order/slice";
 function App() {
   const dispatch = useDispatch();
   
-  const session = JSON.parse(sessionStorage.getItem("user"));
+  const sessionUser = JSON.parse(sessionStorage.getItem("SHARE_USER"));
  
   
   useEffect(()=>{
@@ -46,11 +46,10 @@ function App() {
   },[dispatch])
 
     useEffect(()=>{
-      if(session){
-        const useLogin = session.SHARE_USER;
-        dispatch(ShopOrderSlice.actions.getUser(useLogin));
+      if(sessionUser){
+        dispatch(ShopOrderSlice.actions.getUser(sessionUser));
       }
-    },[dispatch, session !== null])
+    },[dispatch, sessionUser !== null])
 
   const user = useSelector(getUserSelector);
   
@@ -83,7 +82,6 @@ function App() {
             <Route path="blog/:id" element={<SingleBlog />} />
             <Route path="cart" element={<Cart />} />
             <Route path="wishlist" element={<Wishlist />} />
-            <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
