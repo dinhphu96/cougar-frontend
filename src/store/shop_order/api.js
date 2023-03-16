@@ -97,8 +97,13 @@ export const getDeliveryByUserId = createAsyncThunk('DeliveryMethod/get', async 
 /*-------------------------------------------------------------------------*/
 
 //UserPaymenMethod
-export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymenMethod/get', async (userId) => {
-  const response = await axios.get(`http://localhost:8080/rest/UserPaymenMethods/${userId}`);
+export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymentMethod/get', async (userId) => {
+  const response = await axios.get(`http://localhost:8080/rest/userPaymentMethods/${userId}`);
+  return response.data;
+});
+
+export const getListPaymentType = createAsyncThunk('PaymentType/get', async () => {
+  const response = await axios.get(`http://localhost:8080/rest/paymentTypes`);
   return response.data;
 });
 

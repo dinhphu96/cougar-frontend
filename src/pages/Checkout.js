@@ -11,6 +11,7 @@ import {
   getDeliveryMethodSelector,
   getUserPaymenMethodSelector,
   getShopOrderSelector,
+  getListPaymentTypeSelector
 } from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
 import { useEffect } from "react";
@@ -19,6 +20,7 @@ import {
   getDeliveryByUserId,
   getUserPaymenMethodByUserId,
   updateOrder,
+  getListPaymentType
 } from "../store/shop_order/api";
 import { useDispatch } from "react-redux/es/exports";
 
@@ -41,6 +43,7 @@ const Checkout = () => {
     if (userInfor.id) {
       dispatch(getAddressesByUserId(userInfor.id));
       dispatch(getDeliveryByUserId());
+      dispatch(getListPaymentType());
       dispatch(getUserPaymenMethodByUserId(userInfor.id));
     }
   }, [dispatch, userInfor.id]);
@@ -50,6 +53,7 @@ const Checkout = () => {
   const listDeliveryMethod = useSelector(getDeliveryMethodSelector);
   const userPaymenMethod = useSelector(getUserPaymenMethodSelector);
   const shopOrder = useSelector(getShopOrderSelector);
+  const listPaymentType = useSelector(getListPaymentTypeSelector);
 
   const [fullname, setFullname] = useState("");
   const [number, setNumber] = useState("");
@@ -471,16 +475,13 @@ const Checkout = () => {
                 <div className="payment-card-header-title">
                   Select Payment Method
                 </div>
-                <div className="payment-card-header-action">
-                  <Link>View all methods &gt;</Link>
-                </div>
               </div>
 
               <div className="card-list-wrapper">
                 <div className="card-container">
                   <Link
                     className={`card-main-content ${
-                      select === null //bip
+                      select === null
                         ? "border border-2 border-primary"
                         : "border border-dark"
                     }`}
@@ -496,21 +497,21 @@ const Checkout = () => {
                     </div>
                   </Link>
                 </div>
-                {userPaymenMethod.map((payment) => (
-                  <div key={payment.id} className="card-container">
+                {listPaymentType.map((paymentT) => (
+                  <div key={paymentT.id} className="card-container">
                     <Link
                       className={`card-main-content ${
-                        select === payment.paymentType.value
+                        select === paymentT.value
                           ? "border border-2 border-primary"
                           : "border border-dark"
                       }`}
                       onClick={() =>
-                        handleChoosePayment(payment.paymentType.value)
+                        handleChoosePayment(paymentT.value)
                       }
                     >
                       <img
                         className="card-icon"
-                        src={payment.paymentType.icon}
+                        src={paymentT.icon}
                         alt=""
                       />
                       <div className="card-main-content-text-container">
@@ -518,7 +519,7 @@ const Checkout = () => {
                           className="card-title"
                           data-spm-anchor-id="a2o4n.shipping.0.i0.78935d0aHGGmh5"
                         >
-                          {payment.paymentType.value}
+                          {paymentT.value}
                         </p>
                       </div>
                     </Link>

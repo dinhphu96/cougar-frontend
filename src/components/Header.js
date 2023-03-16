@@ -23,10 +23,10 @@ const Header = () => {
   const amount = listCartItem.length;
 
   const dispatch = useDispatch();
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     sessionStorage.removeItem("user");
     dispatch(ShopOrderSlice.actions.removeUser());
-  }
+  };
 
   return (
     <>
@@ -113,22 +113,27 @@ const Header = () => {
                       <ul className="dropdown-menu">
                         <li>
                           <Link
-                            className="dropdown-item" href="#"
+                            className="dropdown-item"
+                            href="#"
                             to={"/profile"}
                           >
                             Edit profile
                           </Link>
                         </li>
-                        
+
                         <li>
-                          <Link className="dropdown-item" to={"/change-password"}>
+                          <Link
+                            className="dropdown-item"
+                            to={"/change-password"}
+                          >
                             Change password
                           </Link>
                         </li>
                         <li>
                           <Link
-                          to={"/"}
-                            className="dropdown-item" href="#"
+                            to={"/"}
+                            className="dropdown-item"
+                            href="#"
                             onClick={handleLogout}
                           >
                             Log out

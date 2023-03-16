@@ -6,7 +6,6 @@ import {
   MDBCard,
   MDBCardText,
   MDBCardBody,
-  MDBCardImage,
 } from "mdb-react-ui-kit";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -27,6 +26,7 @@ import {
 } from "../store/shop_order/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AvatarEditor from "react-avatar-editor";
 
 export default function Profile() {
   const userrr = useSelector(getUserSelector);
@@ -44,6 +44,14 @@ export default function Profile() {
   const [defa, setDefa] = useState(0);
   const [checkChange, setCheckChange] = useState(false);
 
+  const [image, setImage] = useState(null);
+  const [editor, setEditor] = useState(null);
+
+  const handleImageChange = (event) => {
+    setImage(event.target.files[0]);
+    setCheckChange(true);
+  };
+
   useEffect(() => {
     if (userrr.id) {
       dispatch(getAddressesByUserId(userrr.id));
@@ -51,6 +59,16 @@ export default function Profile() {
       setName(userrr.fullname);
       setEmail(userrr.email);
       setPhone(userrr.phone);
+
+      if (userrr.avatar !== "") {
+        setImage(
+          `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
+        );
+      } else {
+        setImage(
+          "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678190935/CougarStore/149071_s8mfea.png"
+        );
+      }
     }
   }, [dispatch, userrr.id]);
 
@@ -149,12 +167,20 @@ export default function Profile() {
       e.preventDefault();
     } else {
       if (name !== "" && email !== "" && phone !== "") {
+        var avat = null;
+        if (editor) {
+          const canvas = editor.getImageScaledToCanvas();
+          avat = canvas.toDataURL();
+          console.log(avat);
+          // Lưu hình ảnh tại đây hoặc thực hiện các xử lý khác với hình ảnh
+        }
+
         const upUser = {
           id: userrr.id,
           fullname: name,
           phone: phone,
           email: email,
-          avatar: null,
+          avatar: avat,
         };
 
         dispatch(updateUser(upUser));
@@ -257,18 +283,21 @@ export default function Profile() {
           <MDBCol lg="4">
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src={
-                    userrr.avatar
-                      ? `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
-                      : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                  }
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: "150px" }}
-                  fluid
-                />
-                <p className="text-muted mb-1">{userrr.fullname}</p>
+                {image && (
+                  <AvatarEditor
+                    ref={(ref) => setEditor(ref)}
+                    image={image}
+                    width={160}
+                    height={160}
+                    border={0}
+                    color={[255, 255, 255, 1]}
+                    borderRadius={360}
+                  />
+                )}
+                <br />
+                <div className="chooseImage">
+                  <input type="file" onChange={handleImageChange} />
+                </div>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

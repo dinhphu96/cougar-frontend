@@ -21,7 +21,8 @@ import {
   updateUser,
   deleteAddress,
   updateAddress,
-  setAsDefaultAddress
+  setAsDefaultAddress,
+  getListPaymentType
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -34,7 +35,8 @@ const ShopOrderSlice = createSlice({
     shopOrder: null,
     userAddresses: [],
     deliverys: [],
-    userPaymenMethod: [], //laListmaBip
+    userPaymenMethod: [],
+    paymentTypes: [],
     status: "idle",
     error: null,
   },
@@ -291,6 +293,15 @@ const ShopOrderSlice = createSlice({
       })
       .addCase(getUserPaymenMethodByUserId.fulfilled, (state, action) => {
         state.userPaymenMethod = action.payload;
+        state.status = "idle";
+      })
+
+      //paymentType
+      .addCase(getListPaymentType.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getListPaymentType.fulfilled, (state, action) => {
+        state.paymentTypes = action.payload;
         state.status = "idle";
       })
 

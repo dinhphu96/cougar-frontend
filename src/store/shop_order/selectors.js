@@ -42,3 +42,6 @@ export const getUserPaymenMethodSelector = (state) => state.ShopOrder.userPaymen
 
 //listProductCard
 // export const getListCardSelector = (state)=> state.ShopOrder.cartItems;
+
+//list payment type
+export const getListPaymentTypeSelector = (state)=> state.ShopOrder.paymentTypes;
