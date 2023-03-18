@@ -40,37 +40,6 @@ const SingleProduct = () => {
   const listWishList = useSelector(getListWishListSelector);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //Rating and comment
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState(null);
-  const handleRatingChange = (newRating) => {
-    setRating(newRating);
-  };
-
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
-
-  const handleSubmitReview = () => {
-    if(userLogin){
-      const newReview = {
-        email: userLogin.email,
-        productId: id,
-        comment: comment,
-        rating: rating
-      }
-      setReview(newReview);
-      dispatch(doReview(review));
-    }else{
-      alert("Vui lòng đăng nhập trước khi review!");
-      navigate("/login");
-    }
-    
-   
-  }
 
   //cuộn trang
   useEffect(() => {
@@ -80,6 +49,9 @@ const SingleProduct = () => {
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
+   //Rating and comment
+   const [comment, setComment] = useState("");
+   const [rating, setRating] = useState(0);
 
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
@@ -224,6 +196,38 @@ const SingleProduct = () => {
       });
     }
 
+  }
+
+
+  //Rating and comment
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
+
+  const handleSubmitReview = () => {
+    if(userLogin){
+      const newReview = {
+        user: userLogin,
+        productItem: singleProduct,
+        ratingValue: rating,
+        comment: comment
+      }
+
+      dispatch(doReview(newReview));
+      alert("Cmt thành công");
+    }else{
+      alert("Vui lòng đăng nhập trước khi review!");
+      navigate("/login");
+    }
+    
+   
   }
 
 
