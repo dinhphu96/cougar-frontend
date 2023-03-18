@@ -23,7 +23,7 @@ const Header = () => {
   const amount = listCartItem.length;
 
   const dispatch = useDispatch();
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     sessionStorage.removeItem("accessToken_cougarshop");
     sessionStorage.removeItem("SHARE_USER");
     dispatch(ShopOrderSlice.actions.removeUser());
@@ -161,9 +161,11 @@ const Header = () => {
                     to="/cart"
                     className="d-flex align-items-center gap-10 text-white"
                   >
-                    <img src={cart} alt="cart" />
+                    <div className="position-relative">
+                      <img src={cart} alt="cart" />
+                      <span className="badge bg-white text-dark position-absolute top-0 start-100 translate-middle rounded-pill">{amount}</span>
+                    </div>
                     <div className="d-flex flex-column gap-10">
-                      <span className="badge bg-white text-dark">{amount}</span>
                       <p className="mb-0">${subTotal}</p>
                     </div>
                   </Link>

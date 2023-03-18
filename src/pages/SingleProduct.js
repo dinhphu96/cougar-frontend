@@ -9,12 +9,13 @@ import Container from "../components/Container";
 
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
-import { useDispatch } from "react-redux/es/exports";
+import { useDispatch } from "react-redux";
 import {
   addNewOrderDetail,
   updateOrderDetail,
   addNewOrder,
-  addWishList
+  addWishList,
+  doReview
 } from "../store/shop_order/api";
 import {
   getCartSelector,
@@ -37,13 +38,45 @@ const SingleProduct = () => {
   const { id } = useParams();
   const [changProductItem, setChangProductItem] = useState(id);
   const listWishList = useSelector(getListWishListSelector);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //Rating and comment
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState(null);
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
+
+  const handleSubmitReview = () => {
+    if(userLogin){
+      const newReview = {
+        email: userLogin.email,
+        productId: id,
+        comment: comment,
+        rating: rating
+      }
+      setReview(newReview);
+      dispatch(doReview(review));
+    }else{
+      alert("Vui lòng đăng nhập trước khi review!");
+      navigate("/login");
+    }
+    
+   
+  }
 
   //cuộn trang
   useEffect(() => {
     window.scrollTo(0, 300);
   }, []);
 
-  const navigate = useNavigate();
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
@@ -54,21 +87,21 @@ const SingleProduct = () => {
 
 
   useEffect(() => {
-    if(listRelatedProductItems.length){
-      const listCol = listRelatedProductItems.map((pro=>pro.color))
+    if (listRelatedProductItems.length) {
+      const listCol = listRelatedProductItems.map((pro => pro.color))
 
-       setListColor(listCol);
+      setListColor(listCol);
     }
-  
+
   }, [listRelatedProductItems.length]);
 
-  useEffect(()=>{
-    
-    if(singleProduct){
+  useEffect(() => {
+
+    if (singleProduct) {
       setBorderColor(singleProduct.id);
     }
 
-  },[singleProduct])
+  }, [singleProduct])
 
 
   if (singleProduct) {
@@ -95,7 +128,7 @@ const SingleProduct = () => {
   const listCartItem = useSelector(getCartSelector);
   const userr = useSelector(getUserSelector);
   const shopOrder = useSelector(getShopOrderSelector);
-  const dispatch = useDispatch();
+
   const [quty, setQuty] = useState(1);
   const setQuantity = (e) => {
     setQuty(+e.target.value);
@@ -110,7 +143,7 @@ const SingleProduct = () => {
           productItem: productAdd,
           shopOrder: shopOrder,
         };
-
+        
         const proExist = listCartItem.find(
           (ite) => ite.productItem.id === cartItem.productItem.id
         );
@@ -166,29 +199,29 @@ const SingleProduct = () => {
   };
 
 
-  const handleAddtoWishList = ()=>{
-    
-    
-    const exist = listWishList.find(wi=>wi.productItem.id === singleProduct.id)
+  const handleAddtoWishList = () => {
 
-    if(!exist){
+
+    const exist = listWishList.find(wi => wi.productItem.id === singleProduct.id)
+
+    if (!exist) {
       const newWishList = {
-          user: userr,
-          productItem: singleProduct
-        }
+        user: userr,
+        productItem: singleProduct
+      }
 
-        dispatch(addWishList(newWishList));
+      dispatch(addWishList(newWishList));
 
-        toast.info(`Added to Wishlist`, {
-          position: "top-right",
-          autoClose: 700,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+      toast.info(`Added to Wishlist`, {
+        position: "top-right",
+        autoClose: 700,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
 
   }
@@ -217,7 +250,7 @@ const SingleProduct = () => {
               {listRelatedProductItems.map((pro) => (
                 <div
                   key={pro.id}
-                  className={`${borderColor === pro.id ? "border border-2 border-danger": "border border-dark"}`}
+                  className={`${borderColor === pro.id ? "border border-2 border-danger" : "border border-dark"}`}
                   style={{ cursor: "pointer" }}
                   onClick={() => handleClickImage(pro.id)}
                 >
@@ -268,13 +301,13 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Size :</h3>
                   <div className="d-flex flex-wrap gap-15">
                     {
-                      listRelatedProductItems.map(pro=>(
-                        <span key={pro.id} className={`badge border bg-white text-dark ${borderColor === pro.id ? 'border-2 border-primary': "border-1 border-secondary"}`}>
+                      listRelatedProductItems.map(pro => (
+                        <span key={pro.id} className={`badge border bg-white text-dark ${borderColor === pro.id ? 'border-2 border-primary' : "border-1 border-secondary"}`}>
                           {pro.size}
                         </span>
                       ))
                     }
-                    
+
 
                   </div>
                 </div>
@@ -282,8 +315,8 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Color :</h3>
                   <ul className="colors ps-0">
                     {
-                      listColor.map(col=>(
-                        <Color key={col} color={col}/>
+                      listColor.map(col => (
+                        <Color key={col} color={col} />
                       ))
                     }
                   </ul>
@@ -316,7 +349,7 @@ const SingleProduct = () => {
                 <div className="d-flex align-items-center gap-15">
                   <div>
                     <Link onClick={handleAddtoWishList}>
-                    <AiFillHeart style={{color: listWishList.some(wi=>wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px"}}/> Add to Wishlist
+                      <AiFillHeart style={{ color: listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
                     </Link>
                   </div>
                 </div>
@@ -385,20 +418,25 @@ const SingleProduct = () => {
               </div>
               <div className="review-form py-4">
                 <h4>Write a Review</h4>
-                <form action="" className="d-flex flex-column gap-15">
+                <div className="d-flex flex-column gap-15">
                   <div>
                     <ReactStars
                       count={5}
+                      onChange={handleRatingChange}
                       size={24}
-                      value={4}
-                      edit={true}
+                      isHalf={true}
+                      emptyIcon={<i className="far fa-star"></i>}
+                      halfIcon={<i className="fa fa-star-half-alt"></i>}
+                      fullIcon={<i className="fa fa-star"></i>}
                       activeColor="#ffd700"
                     />
                   </div>
                   <div>
                     <textarea
-                      name=""
+                      name="comment"
                       id=""
+                      value={comment}
+                      onChange={handleCommentChange}
                       className="w-100 form-control"
                       cols="30"
                       rows="4"
@@ -406,9 +444,9 @@ const SingleProduct = () => {
                     ></textarea>
                   </div>
                   <div className="d-flex justify-content-end">
-                    <button className="button border-0">Submit Review</button>
+                    <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>
                   </div>
-                </form>
+                </div>
               </div>
               <div className="reviews mt-4">
                 <div className="review">

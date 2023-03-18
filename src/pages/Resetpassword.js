@@ -18,6 +18,10 @@ const Resetpassword = () => {
     const { confNewPassword, ...sendPassword } = data;
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get('token');
+    if(confNewPassword !== sendPassword.newPassword){
+      alert("New password confirmation failed!");
+      return;
+    }
     dispatch(doResetPassword({
       password: sendPassword.newPassword,
       token: token
