@@ -21,7 +21,8 @@ import {
   deleteAddress,
   updateAddress,
   setAsDefaultAddress,
-  getListPaymentType
+  getListPaymentType,
+  doReview
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -354,7 +355,15 @@ const ShopOrderSlice = createSlice({
       })
       .addCase(doChangePassword.rejected, (state, action) => {
         state.status = "Failed";
-      });
+      })
+
+      //Review
+      .addCase(doReview.fulfilled, (state, action) => {
+        state.status = "Successed";
+      })
+      .addCase(doReview.rejected, (state, action) => {
+        state.status = "Failed";
+      })
   },
 });
 export default ShopOrderSlice;

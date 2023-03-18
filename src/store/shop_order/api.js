@@ -169,3 +169,19 @@ export const doChangePassword = createAsyncThunk(
     }
   }
 );
+
+export const doReview = createAsyncThunk(
+  'auth/review',
+  async (review, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/review', review);
+      return response.data;
+    } catch (error) {
+      if (error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        throw error;
+      }
+    }
+  }
+);

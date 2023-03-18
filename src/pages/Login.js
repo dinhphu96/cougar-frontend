@@ -31,7 +31,7 @@ const Login = () => {
           theme: "light",
         });
     
-        setTimeout(()=>{navigate("/")}, 1000);
+        setTimeout(()=>{navigate(-1)}, 1000);
       } else if (response.type === doLogin.rejected.toString()) {
         console.log(response.payload.message);
         toast.error(`Password or Email invalid!`, {
