@@ -20,6 +20,13 @@ export const updateOrder = createAsyncThunk('Order/update', async (Order) => {
   return response.data;
 });
 
+export const updateOrderAndPayment = createAsyncThunk('Order/updateOrderAndPayment', async ([payment,UpdateShopOrder]) => {
+  const paymentResponse = await axios.post("http://localhost:8080/rest/userPaymentMethods", payment);
+  UpdateShopOrder.userPaymentMethod = paymentResponse.data;
+  const response = await axios.put(`http://localhost:8080/rest/shopOrders/${UpdateShopOrder.id}`, UpdateShopOrder);
+  return response.data;
+});
+
 
 /*-------------------------------------------------------------------------*/
 
@@ -101,6 +108,11 @@ export const getUserPaymenMethodByUserId = createAsyncThunk('UserPaymentMethod/g
   const response = await axios.get(`http://localhost:8080/rest/userPaymentMethods/${userId}`);
   return response.data;
 });
+
+export const addNewUserPayment = createAsyncThunk("UserPaymentMethod/add", async(payment)=>{
+  const response = await axios.post("http://localhost:8080/rest/userPaymentMethods", payment);
+  return response.data;
+})
 
 export const getListPaymentType = createAsyncThunk('PaymentType/get', async () => {
   const response = await axios.get(`http://localhost:8080/rest/paymentTypes`);

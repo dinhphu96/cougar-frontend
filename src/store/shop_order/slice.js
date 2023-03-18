@@ -21,7 +21,8 @@ import {
   deleteAddress,
   updateAddress,
   setAsDefaultAddress,
-  getListPaymentType
+  getListPaymentType,
+  addNewUserPayment
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -283,6 +284,16 @@ const ShopOrderSlice = createSlice({
       .addCase(getUserPaymenMethodByUserId.fulfilled, (state, action) => {
         state.userPaymenMethod = action.payload;
         state.status = "idle";
+      })
+
+      //addNewUserPayment
+      .addCase(addNewUserPayment.fulfilled, (state, action)=>{
+        state.userPaymenMethod = state.userPaymenMethod.push(action.payload);
+        state.status = "Successed";
+      })
+
+      .addCase(addNewUserPayment.rejected, (state, action)=>{
+        state.status = action.error.message;
       })
 
       //paymentType

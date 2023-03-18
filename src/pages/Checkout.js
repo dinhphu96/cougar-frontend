@@ -11,7 +11,7 @@ import {
   getDeliveryMethodSelector,
   getUserPaymenMethodSelector,
   getShopOrderSelector,
-  getListPaymentTypeSelector
+  getListPaymentTypeSelector,
 } from "../store/shop_order/selectors";
 import CheckOutItem from "../components/CheckOutItem";
 import { useEffect } from "react";
@@ -20,7 +20,9 @@ import {
   getDeliveryByUserId,
   getUserPaymenMethodByUserId,
   updateOrder,
-  getListPaymentType
+  getListPaymentType,
+  addNewUserPayment,
+  updateOrderAndPayment
 } from "../store/shop_order/api";
 import { useDispatch } from "react-redux/es/exports";
 
@@ -68,6 +70,9 @@ const Checkout = () => {
   const [payment, setPayment] = useState(null);
   const [delivery, setDelivery] = useState({});
   const [select, setSelect] = useState(null);
+  const [provider, setProvider] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
 
   const [addressCheckOut, setAddressCheckOut] = useState();
 
@@ -137,30 +142,23 @@ const Checkout = () => {
     );
 
     if (exist) {
+      console.log("có user pay", exist);
       setPayment(exist);
     } else {
-      if(PaymentTypeName !== "Creadit card/ Debit card"){
-        const payType = listPaymentType.find(pt=>pt.value === PaymentTypeName);
+      if (PaymentTypeName === null) {
+        setPayment(null);
+      } else {
+        if (PaymentTypeName !== "Creadit card/ Debit card") {
+          const payType = listPaymentType.find(
+            (pt) => pt.value === PaymentTypeName
+          );
 
-        const pay = {
-          user: userInfor,
-          paymentType: payType
-        }
-        dispatch()//post pay
-        setPayment(pay);
-      }else{
-        if(PaymentTypeName !== null){
-          const payType = listPaymentType.find(pt=>pt.value === PaymentTypeName);
           const pay = {
             user: userInfor,
-            paymentType: payType
-            //them truonwgf
+            paymentType: payType,
+          };
 
-          }
-          dispatch()//post pay
           setPayment(pay);
-        }else{
-          setPayment(null);
         }
       }
     }
@@ -180,32 +178,50 @@ const Checkout = () => {
   const navigate = useNavigate();
   const handleContinueToShipping = (e) => {
     if (addresses.length > 0) {
-      const UpdateShopOrder = {
+      if (payment !== null) {
+        // dispatch(addNewUserPayment(payment));
+        const UpdateShopOrder = {
         id: shopOrder.id,
         orderTotal: orderTotal,
         orderStatus: 0,
-        userPaymentMethod: payment,
+        userPaymentMethod: null,
         address: addressCheckOut,
         deliveryMethod: delivery,
         user: userInfor,
       };
 
-      dispatch(updateOrder(UpdateShopOrder));
+      dispatch(updateOrderAndPayment([payment,UpdateShopOrder]));
 
-      toast.success(`Order Success!`, {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
 
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
+
+      }
+
+      // const UpdateShopOrder = {
+      //   id: shopOrder.id,
+      //   orderTotal: orderTotal,
+      //   orderStatus: 0,
+      //   userPaymentMethod: payment,
+      //   address: addressCheckOut,
+      //   deliveryMethod: delivery,
+      //   user: userInfor,
+      // };
+
+      // dispatch(updateOrder(UpdateShopOrder));
+
+      // toast.success(`Order Success!`, {
+      //   position: "top-center",
+      //   autoClose: 1500,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: false,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "light",
+      // });
+
+      // setTimeout(() => {
+      //   navigate("/");
+      // }, 1500);
     } else {
       toast.error(`Create Delivery Address!`, {
         position: "top-center",
@@ -224,6 +240,38 @@ const Checkout = () => {
     }
   };
 
+  const handleChangeProvider = (e) => {
+    if (isNaN(e.target.value) || e.target.value === "") {
+      setProvider(e.target.value);
+    }
+  };
+
+  const handleChangeAccountNumber = (e) => {
+    if (!isNaN(e.target.value)) {
+      setAccountNumber(e.target.value);
+    }
+  };
+
+  const handlechangeExpiryDate = (e) => {
+    if (!isNaN(e.target.value)) {
+      setExpiryDate(e.target.value);
+    }
+  };
+
+  const handleSubmitCreaditCard = () => {
+    const payType = listPaymentType.find((pt) => pt.value === select);
+    if (provider !== "" && accountNumber !== null && expiryDate !== null) {
+      const userPaymentMethod = {
+        user: userInfor,
+        paymentType: payType,
+        provider: provider,
+        accountNumber: accountNumber,
+        expiryDate: expiryDate,
+      };
+
+      setPayment(userPaymentMethod);
+    }
+  };
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
@@ -269,7 +317,7 @@ const Checkout = () => {
               <h4 className="mb-3">Shipping Address</h4>
               <div className="gap-15 row">
                 <div className="col-12 d-flex">
-                  <div style={{width: "95%"}}>  
+                  <div style={{ width: "95%" }}>
                     <span
                       className="text-primary"
                       style={{ fontWeight: "500" }}
@@ -296,7 +344,13 @@ const Checkout = () => {
                       ))}
                     </select>
                   </div>
-                  <div style={{width: "5%", paddingLeft: "10px", paddingTop: "24px"}}>
+                  <div
+                    style={{
+                      width: "5%",
+                      paddingLeft: "10px",
+                      paddingTop: "24px",
+                    }}
+                  >
                     <Link
                       style={{
                         backgroundColor: "#ee4d2d",
@@ -392,7 +446,7 @@ const Checkout = () => {
                             <button
                               type="button"
                               className="btn btn-primary"
-                              // onClick={}
+                              // onClick={handleSubmitCreaditCard}
                               data-bs-dismiss="modal"
                             >
                               Submit
@@ -403,7 +457,7 @@ const Checkout = () => {
                     </div>
                   </div>
                 </div>
-               
+
                 <div className="col-12">
                   <input
                     type="text"
@@ -528,15 +582,15 @@ const Checkout = () => {
                           ? "border border-2 border-primary"
                           : "border border-dark"
                       }`}
-                      onClick={() =>
-                        handleChoosePayment(paymentT.value)
+                      onClick={() => handleChoosePayment(paymentT.value)}
+                      data-bs-toggle="modal"
+                      data-bs-target={
+                        paymentT.value === "Creadit card/ Debit card"
+                          ? "#addNewUserPaymentMethod"
+                          : "#modalAddOther"
                       }
                     >
-                      <img
-                        className="card-icon"
-                        src={paymentT.icon}
-                        alt=""
-                      />
+                      <img className="card-icon" src={paymentT.icon} alt="" />
                       <div className="card-main-content-text-container">
                         <p
                           className="card-title"
@@ -546,6 +600,123 @@ const Checkout = () => {
                         </p>
                       </div>
                     </Link>
+                    {/* Modal add creadit card */}
+                    <div
+                      className="modal fade"
+                      id="addNewUserPaymentMethod"
+                      tabIndex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h1
+                              className="modal-title fs-5"
+                              id="exampleModalLabel"
+                            >
+                              Payment by {select}
+                            </h1>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <div className="gap-15 row">
+                              <div className="row pe-0">
+                                <div className="col-6">
+                                  <input
+                                    type="text"
+                                    placeholder="provider"
+                                    className="form-control"
+                                    value={provider}
+                                    onChange={handleChangeProvider}
+                                  />
+                                </div>
+
+                                <div className="col-6 pe-0">
+                                  <input
+                                    type="text"
+                                    placeholder="accountNumber"
+                                    className="form-control"
+                                    value={accountNumber}
+                                    onChange={handleChangeAccountNumber}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col-12">
+                                <input
+                                  type="text"
+                                  placeholder="expiryDate"
+                                  className="form-control"
+                                  value={expiryDate}
+                                  onChange={handlechangeExpiryDate}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={handleSubmitCreaditCard}
+                              data-bs-dismiss="modal"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Modal add other */}
+                    <div
+                      className="modal fade"
+                      id="modalAddOther"
+                      tabIndex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog">
+                        <div
+                          className="modal-content"
+                          style={{ width: "350px" }}
+                        >
+                          <div className="modal-header">
+                            <h1
+                              className="modal-title fs-5"
+                              id="exampleModalLabel"
+                            >
+                              Payment by {select}
+                            </h1>
+                            <button
+                              type="button"
+                              className="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <div className="gap-15 row">
+                              <img
+                                src={
+                                  select === "Momo"
+                                    ? "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678983019/CougarStore/momo_idpc7u.jpg"
+                                    : select === "Internet Banking"
+                                    ? "https://thumbs.dreamstime.com/b/beautiful-meticulously-designed-mobile-internet-banking-icon-mobile-internet-banking-icon-120822742.jpg"
+                                    : "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678983730/CougarStore/zalopay_zrftj5.png"
+                                }
+                                alt="imagePayment"
+                              />
+                            </div>
+                          </div>
+                          <div className="modal-footer"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

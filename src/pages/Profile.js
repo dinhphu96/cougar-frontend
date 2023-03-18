@@ -60,7 +60,7 @@ export default function Profile() {
       setEmail(userrr.email);
       setPhone(userrr.phone);
 
-      if (userrr.avatar !== "") {
+      if (userrr.avatar !== null) {
         setImage(
           `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
         );
