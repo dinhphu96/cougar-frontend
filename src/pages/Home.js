@@ -136,12 +136,13 @@ const Home = () => {
             </ImageSlider>
           </div>
           <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-            <div className="row gap-10">
+            <div className="row gap-10" style={{height: "100%", justifyContent: "space-between"}}>
               <div className="col-12 col-sm-12 col-md-6 col-lg-6 small-banner position-relative px-0">
                 <img
                   src={catbanner01}
                   className="img-fluid rounded-3"
                   alt="main banner"
+                  width="100%"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>Best Bag</h4>
@@ -156,6 +157,7 @@ const Home = () => {
                   src={catbanner02}
                   className="img-fluid rounded-3"
                   alt="main banner"
+                  width="100%"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>NEW ARRIVAL</h4>
@@ -170,6 +172,7 @@ const Home = () => {
                   src={catbanner03}
                   className="img-fluid rounded-3"
                   alt="main banner"
+                  width="100%"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>NEW ARRIVAL</h4>
@@ -184,6 +187,7 @@ const Home = () => {
                   src={catbanner04}
                   className="img-fluid rounded-3"
                   alt="main banner"
+                  width="100%"
                 />
                 <div className="small-banner-content position-absolute">
                   <h4>NEW ARRIVAL</h4>
