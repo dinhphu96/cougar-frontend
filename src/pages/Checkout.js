@@ -21,8 +21,7 @@ import {
   getUserPaymenMethodByUserId,
   updateOrder,
   getListPaymentType,
-  addNewUserPayment,
-  updateOrderAndPayment
+  addNewAddress,
 } from "../store/shop_order/api";
 import { useDispatch } from "react-redux/es/exports";
 
@@ -73,8 +72,14 @@ const Checkout = () => {
   const [provider, setProvider] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
+  const [number2, setNumber2] = useState("");
+  const [line2, setLine2] = useState("");
+  const [district2, setDistrict2] = useState("");
+  const [province2, setprovince2] = useState("");
+  const [country2, setCountry2] = useState("");
 
   const [addressCheckOut, setAddressCheckOut] = useState();
+  const [defa, setDefa] = useState(0);
 
   useEffect(() => {
     if (listDeliveryMethod.length) {
@@ -137,32 +142,19 @@ const Checkout = () => {
   };
 
   const handleChoosePayment = (PaymentTypeName) => {
-    const exist = userPaymenMethod.find(
-      (pa) => pa.paymentType.value === PaymentTypeName
-    );
+    setSelect(PaymentTypeName);
 
-    if (exist) {
-      console.log("có user pay", exist);
-      setPayment(exist);
-    } else {
-      if (PaymentTypeName === null) {
-        setPayment(null);
-      } else {
-        if (PaymentTypeName !== "Creadit card/ Debit card") {
-          const payType = listPaymentType.find(
-            (pt) => pt.value === PaymentTypeName
-          );
+    if (PaymentTypeName === "Creadit card/ Debit card") {
+      const exist = userPaymenMethod.find(
+        (pa) => pa.paymentType.value === PaymentTypeName
+      );
 
-          const pay = {
-            user: userInfor,
-            paymentType: payType,
-          };
-
-          setPayment(pay);
-        }
+      if (exist) {
+        setAccountNumber(exist.accountNumber);
+        setProvider(exist.provider);
+        setExpiryDate(exist.expiryDate);
       }
     }
-    setSelect(PaymentTypeName);
   };
 
   const handleChooseShipping = (ShippingPrice) => {
@@ -175,12 +167,28 @@ const Checkout = () => {
     }
   };
 
+  const handleChangeNumber = (e) => {
+    if (!isNaN(e.target.value)) {
+      setNumber2(e.target.value);
+    }
+  };
+  const handleChangeLine = (e) => {
+    setLine2(e.target.value);
+  };
+  const handleChangeDistrict = (e) => {
+    setDistrict2(e.target.value);
+  };
+  const handleChangeProvice = (e) => {
+    setprovince2(e.target.value);
+  };
+  const handleChangeCountry = (e) => {
+    setCountry2(e.target.value);
+  };
+
   const navigate = useNavigate();
   const handleContinueToShipping = (e) => {
     if (addresses.length > 0) {
-      if (payment !== null) {
-        // dispatch(addNewUserPayment(payment));
-        const UpdateShopOrder = {
+      const UpdateShopOrder = {
         id: shopOrder.id,
         orderTotal: orderTotal,
         orderStatus: 0,
@@ -190,42 +198,146 @@ const Checkout = () => {
         user: userInfor,
       };
 
-      dispatch(updateOrderAndPayment([payment,UpdateShopOrder]));
+      if (select === null) {
+        dispatch(updateOrder([null, UpdateShopOrder]));
 
+        toast.success(`Order Success!`, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
 
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      } else {
+        const exist = userPaymenMethod.find(
+          (pa) => pa.paymentType.value === select
+        );
 
+        if (exist) {
+          if (exist.paymentType.value === "Creadit card/ Debit card") {
+            if (payment !== null) {
+              if (exist.provider === payment.provider) {
+                UpdateShopOrder.userPaymentMethod = exist;
+                dispatch(updateOrder([null, UpdateShopOrder]));
+              } else {
+                payment.id = exist.id;
+                dispatch(updateOrder([payment, UpdateShopOrder]));
+              }
+
+              toast.success(`Order Success!`, {
+                position: "top-center",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+
+              setTimeout(() => {
+                navigate("/");
+              }, 500);
+            } else {
+              toast.error(`Fill in your credit card information!`, {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            }
+          } else {
+            UpdateShopOrder.userPaymentMethod = exist;
+
+            dispatch(updateOrder([null, UpdateShopOrder]));
+
+            toast.success(`Order Success!`, {
+              position: "top-center",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            setTimeout(() => {
+              navigate("/");
+            }, 500);
+          }
+        } else {
+          if (select !== "Creadit card/ Debit card") {
+            const payType = listPaymentType.find((pt) => pt.value === select);
+
+            const pay = {
+              user: userInfor,
+              paymentType: payType,
+            };
+
+            dispatch(updateOrder([pay, UpdateShopOrder]));
+
+            toast.success(`Order Success!`, {
+              position: "top-center",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+
+            setTimeout(() => {
+              navigate("/");
+            }, 500);
+          } else {
+            if (payment !== null) {
+              dispatch(updateOrder([payment, UpdateShopOrder]));
+              toast.success(`Order Success!`, {
+                position: "top-center",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+
+              setTimeout(() => {
+                navigate("/");
+              }, 500);
+            } else {
+              toast.error(`Fill in your credit card information!`, {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            }
+          }
+        }
       }
-
-      // const UpdateShopOrder = {
-      //   id: shopOrder.id,
-      //   orderTotal: orderTotal,
-      //   orderStatus: 0,
-      //   userPaymentMethod: payment,
-      //   address: addressCheckOut,
-      //   deliveryMethod: delivery,
-      //   user: userInfor,
-      // };
-
-      // dispatch(updateOrder(UpdateShopOrder));
-
-      // toast.success(`Order Success!`, {
-      //   position: "top-center",
-      //   autoClose: 1500,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: false,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      // });
-
-      // setTimeout(() => {
-      //   navigate("/");
-      // }, 1500);
     } else {
-      toast.error(`Create Delivery Address!`, {
+      toast.error(`No address yet!`, {
         position: "top-center",
-        autoClose: 600,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: false,
@@ -233,10 +345,6 @@ const Checkout = () => {
         progress: undefined,
         theme: "light",
       });
-
-      setTimeout(() => {
-        navigate("/profile");
-      }, 1500);
     }
   };
 
@@ -253,14 +361,12 @@ const Checkout = () => {
   };
 
   const handlechangeExpiryDate = (e) => {
-    if (!isNaN(e.target.value)) {
-      setExpiryDate(e.target.value);
-    }
+    setExpiryDate(e.target.value);
   };
 
   const handleSubmitCreaditCard = () => {
     const payType = listPaymentType.find((pt) => pt.value === select);
-    if (provider !== "" && accountNumber !== null && expiryDate !== null) {
+    if (provider !== "" && accountNumber !== "" && expiryDate !== "") {
       const userPaymentMethod = {
         user: userInfor,
         paymentType: payType,
@@ -272,6 +378,54 @@ const Checkout = () => {
       setPayment(userPaymentMethod);
     }
   };
+
+  const handleSubmitNewAddress = () => {
+    if (
+      number2 !== "" &&
+      line2 !== "" &&
+      district2 !== "" &&
+      province2 !== "" &&
+      country2 !== ""
+    ) {
+      const newAddress = {
+        unitNumber: number2,
+        addressLine: line2,
+        district: district2,
+        province: province2,
+        countryName: country2,
+        isDefault: true,
+        user: userInfor,
+      };
+
+      const exist = addresses.find((ad) => ad.isDefault === true);
+
+      if (exist) {
+        newAddress.isDefault = false;
+      }
+
+      dispatch(addNewAddress(newAddress));
+
+      toast.info(`Added!`, {
+        position: "top-right",
+        autoClose: 600,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setNumber2("");
+      setLine2("");
+      setDistrict2("");
+      setprovince2("");
+      setCountry2("");
+    }
+
+  };
+
+
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
@@ -317,7 +471,7 @@ const Checkout = () => {
               <h4 className="mb-3">Shipping Address</h4>
               <div className="gap-15 row">
                 <div className="col-12 d-flex">
-                  <div style={{ width: "95%" }}>
+                  <div style={{ width: "94%" }}>
                     <span
                       className="text-primary"
                       style={{ fontWeight: "500" }}
@@ -346,8 +500,7 @@ const Checkout = () => {
                   </div>
                   <div
                     style={{
-                      width: "5%",
-                      paddingLeft: "10px",
+                      marginLeft: "10px",
                       paddingTop: "24px",
                     }}
                   >
@@ -360,6 +513,7 @@ const Checkout = () => {
                       }}
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
+                      // onClick={handleClickNewAddress}
                     >
                       <AiOutlinePlus />
                     </Link>
@@ -395,8 +549,8 @@ const Checkout = () => {
                                     type="text"
                                     placeholder="UnitNumber"
                                     className="form-control"
-                                    // value={number}
-                                    // onChange={handleChangeNumber}
+                                    value={number2}
+                                    onChange={handleChangeNumber}
                                   />
                                 </div>
 
@@ -405,8 +559,8 @@ const Checkout = () => {
                                     type="text"
                                     placeholder="Address"
                                     className="form-control"
-                                    // value={line}
-                                    // onChange={handleChangeLine}
+                                    value={line2}
+                                    onChange={handleChangeLine}
                                   />
                                 </div>
                               </div>
@@ -417,8 +571,8 @@ const Checkout = () => {
                                     type="text"
                                     placeholder="District"
                                     className="form-control"
-                                    // value={district}
-                                    // onChange={handleChangeDistrict}
+                                    value={district2}
+                                    onChange={handleChangeDistrict}
                                   />
                                 </div>
                                 <div className="col-6 pe-0">
@@ -426,8 +580,8 @@ const Checkout = () => {
                                     type="text"
                                     placeholder="Province"
                                     className="form-control"
-                                    // value={province}
-                                    // onChange={handleChangeProvice}
+                                    value={province2}
+                                    onChange={handleChangeProvice}
                                   />
                                 </div>
                               </div>
@@ -436,8 +590,8 @@ const Checkout = () => {
                                   type="text"
                                   placeholder="Country"
                                   className="form-control"
-                                  // value={country}
-                                  // onChange={handleChangeCountry}
+                                  value={country2}
+                                  onChange={handleChangeCountry}
                                 />
                               </div>
                             </div>
@@ -446,7 +600,7 @@ const Checkout = () => {
                             <button
                               type="button"
                               className="btn btn-primary"
-                              // onClick={handleSubmitCreaditCard}
+                              onClick={handleSubmitNewAddress}
                               data-bs-dismiss="modal"
                             >
                               Submit
@@ -485,7 +639,6 @@ const Checkout = () => {
                       className="form-control"
                       value={line}
                       readOnly
-                      onChange={() => {}}
                     />
                   </div>
                 </div>
@@ -498,7 +651,6 @@ const Checkout = () => {
                       className="form-control"
                       value={district}
                       readOnly
-                      onChange={() => {}}
                     />
                   </div>
                   <div className="col-6 pe-0">
@@ -508,7 +660,6 @@ const Checkout = () => {
                       className="form-control"
                       value={province}
                       readOnly
-                      onChange={() => {}}
                     />
                   </div>
                 </div>
@@ -519,7 +670,6 @@ const Checkout = () => {
                     className="form-control"
                     value={country}
                     readOnly
-                    onChange={() => {}}
                   />
                 </div>
                 <div className="w-100">
@@ -649,7 +799,7 @@ const Checkout = () => {
                               </div>
                               <div className="col-12">
                                 <input
-                                  type="text"
+                                  type="date"
                                   placeholder="expiryDate"
                                   className="form-control"
                                   value={expiryDate}
