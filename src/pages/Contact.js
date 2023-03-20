@@ -4,8 +4,47 @@ import Meta from "../components/Meta";
 import { AiOutlineHome, AiOutlineMail } from "react-icons/ai";
 import { BiPhoneCall, BiInfoCircle } from "react-icons/bi";
 import Container from "../components/Container";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { postContact } from '../store/contact/api';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
+  const { register: contact, handleSubmit, formState: { errors } } = useForm({ mode: "onChange" });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onContact = (data) => {
+    const contact = {...data, status: 0};
+    dispatch(postContact(contact)).then((response) => {
+      if (response.type === "postContact/fulfilled") {
+        toast.success(response.payload.message, {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(()=>{navigate("/")}, 1000);
+      } else {
+        toast.error(response.payload.message, {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    })
+  }
+
   return (
     <>
       <Meta title={"Contact Us"} />
@@ -28,37 +67,63 @@ const Contact = () => {
             <div className="contact-inner-wrapper d-flex justify-content-between ">
               <div>
                 <h3 className="contact-title mb-4">Contact</h3>
-                <form action="" className="d-flex flex-column gap-15">
+                <form onSubmit={handleSubmit(onContact)} className="d-flex flex-column gap-15">
                   <div>
                     <input
+                      className="form-control"
+                      {...contact("fullname", { required: true })}
                       type="text"
-                      className="form-control"
-                      placeholder="Name"
+                      name="fullname"
+                      placeholder="Fullname"
                     />
+                    <span className="errors">
+                      {errors.fullname?.type === 'required' && <span className="text-danger error">Fullname field is required.</span>}
+                    </span>
                   </div>
                   <div>
                     <input
+                      className="form-control"
+                      {...contact("email", { required: true, pattern: /^\S+@\S+$/i })}
                       type="email"
-                      className="form-control"
-                      placeholder="Email"
-                    />
+                      name="email"
+                      placeholder="Email" />
+                    <span className="errors">
+                      {errors.email?.type === 'required' && <span className="text-danger error">Email field is required.</span>}
+                      {errors.email?.type === 'pattern' && <span className="text-danger error">Invalid email.</span>}
+                    </span>
                   </div>
                   <div>
                     <input
-                      type="tel"
                       className="form-control"
-                      placeholder="Phone Number"
+                      type="tel"
+                      name="phone"
+                      {...contact("phone", {
+                        required: true,
+                        pattern: /^(0)\d{9}$/
+                      })}
+                      placeholder="Mobile Number"
                     />
+                    <span className="errors">
+                      {errors.phone?.type === "required" && (
+                        <span className="text-danger error">Phone field is required</span>
+                      )}
+                      {errors.phone?.type === "pattern" && (
+                        <span className="text-danger error">Please enter a valid Vietnamese mobile number starting with 0 followed by 9 digits.</span>
+                      )}
+                    </span>
                   </div>
                   <div>
                     <textarea
-                      name=""
-                      id=""
-                      className="w-100 form-control"
-                      cols="30"
-                      rows="4"
-                      placeholder="Comments"
-                    ></textarea>
+                      className="form-control"
+                      style={{minHeight: "100px"}}
+                      {...contact("content", { required: true })}
+                      type="text"
+                      name="content"
+                      placeholder="Content"
+                    />
+                    <span className="errors">
+                      {errors.content?.type === 'required' && <span className="text-danger error">Content field is required.</span>}
+                    </span>
                   </div>
                   <div>
                     <button className="button border-0">Submit</button>
