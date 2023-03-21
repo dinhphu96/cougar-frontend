@@ -287,11 +287,11 @@ export const doChangePassword = createAsyncThunk(
 );
 
 export const doReview = createAsyncThunk(
-  "auth/review",
+  "Reviews/send",
   async (review, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/review",
+        "http://localhost:8080/rest/review/send",
         review
       );
       return response.data;
@@ -304,3 +304,4 @@ export const doReview = createAsyncThunk(
     }
   }
 );
+

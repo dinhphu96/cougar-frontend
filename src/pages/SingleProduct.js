@@ -6,7 +6,7 @@ import Color from "../components/Color";
 import { AiFillHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
-
+import moment from 'moment';
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
 import { useDispatch } from "react-redux";
@@ -29,9 +29,8 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
-
-
+import { getListReview } from "../store/review/api";
+import StarRatings from "react-star-ratings";
 
 
 const SingleProduct = () => {
@@ -41,6 +40,7 @@ const SingleProduct = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
   //cuộn trang
   useEffect(() => {
     window.scrollTo(0, 300);
@@ -49,9 +49,7 @@ const SingleProduct = () => {
   const singleProduct = useSelector(getOnePrISelector(changProductItem));
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
-   //Rating and comment
-   const [comment, setComment] = useState("");
-   const [rating, setRating] = useState(0);
+  const [listReview, setListReview] = useState([]);
 
   const listRelatedProductItems = useSelector(
     getRelatedProductItemsSelector(singleProduct)
@@ -68,12 +66,24 @@ const SingleProduct = () => {
   }, [listRelatedProductItems.length]);
 
   useEffect(() => {
-
     if (singleProduct) {
       setBorderColor(singleProduct.id);
+      dispatch(getListReview(singleProduct.product.id)).then(response => {
+        setListReview(response.payload);
+      });
     }
+  }, [singleProduct]);
 
-  }, [singleProduct])
+  useEffect(() => {
+    if (listReview.length > 0) {
+      const newAverageRating = (
+        listReview.reduce((total, review) => total + review.ratingValue, 0) /
+        listReview.length
+      ).toFixed(1);
+      setAverageRating(newAverageRating);
+    }
+  }, [listReview]);
+
 
 
   if (singleProduct) {
@@ -115,7 +125,7 @@ const SingleProduct = () => {
           productItem: productAdd,
           shopOrder: shopOrder,
         };
-        
+
         const proExist = listCartItem.find(
           (ite) => ite.productItem.id === cartItem.productItem.id
         );
@@ -198,7 +208,10 @@ const SingleProduct = () => {
 
   }
 
-
+  //Rating and comment
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [averageRating, setAverageRating] = useState("");
   //Rating and comment
 
   const handleRatingChange = (newRating) => {
@@ -211,8 +224,9 @@ const SingleProduct = () => {
 
   const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
 
-  const handleSubmitReview = () => {
-    if(userLogin){
+  const handleSubmitReview = (event) => {
+    event.preventDefault();
+    if (userLogin) {
       const newReview = {
         user: userLogin,
         productItem: singleProduct,
@@ -222,13 +236,36 @@ const SingleProduct = () => {
 
       dispatch(doReview(newReview));
       alert("Cmt thành công");
-    }else{
+      dispatch(getListReview(singleProduct.id)).then((response) => {
+        setListReview(response.payload);
+      });
+
+    } else {
       alert("Vui lòng đăng nhập trước khi review!");
       navigate("/login");
     }
-    
-   
+    setComment("");
+    setShowReviewForm(false);
+    setAverageRating(listReview.reduce(
+      (total, review) => total + review.ratingValue,
+      0
+    ) / listReview.length);
+    console.log(listReview);
+    console.log(averageRating);
   }
+
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [visibleComments, setVisibleComments] = useState(5);
+
+  const showMoreComments = () => {
+    setVisibleComments(visibleComments + 5);
+  };
+
+  const hideComments = () => {
+    setVisibleComments(5);
+  };
+
+
 
 
   return (
@@ -402,75 +439,116 @@ const SingleProduct = () => {
                 <div>
                   <h4 className="mb-2">Customer Reviews</h4>
                   <div className="d-flex align-items-center gap-10">
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={4}
-                      edit={false}
-                      activeColor="#ffd700"
+                    <StarRatings
+                      rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                        (total, review) => total + review.ratingValue,
+                        0
+                      ) / listReview.length) : 0}
+                      starRatedColor="#ffd700"
+                      starHoverColor="#ffd700"
+                      numberOfStars={5}
+                      starDimension="30px"
+                      name="rating"
                     />
-                    <p className="mb-0">Based on 2 Reviews</p>
+                    <p className="mb-0">({listReview && listReview.length > 0 ? (parseFloat(averageRating) || "0.0") : "0.0"}) Based on {listReview.length} Reviews</p>
                   </div>
                 </div>
                 {true && (
                   <div>
-                    <Link className="text-dark text-decoration-underline">
+                    <button onClick={() => setShowReviewForm(true)} className="text-dark text-decoration-underline">
                       Write a Review
-                    </Link>
+                    </button>
                   </div>
                 )}
               </div>
-              <div className="review-form py-4">
-                <h4>Write a Review</h4>
-                <div className="d-flex flex-column gap-15">
-                  <div>
-                    <ReactStars
-                      count={5}
-                      onChange={handleRatingChange}
-                      size={24}
-                      isHalf={true}
-                      emptyIcon={<i className="far fa-star"></i>}
-                      halfIcon={<i className="fa fa-star-half-alt"></i>}
-                      fullIcon={<i className="fa fa-star"></i>}
-                      activeColor="#ffd700"
-                    />
-                  </div>
-                  <div>
-                    <textarea
-                      name="comment"
-                      id=""
-                      value={comment}
-                      onChange={handleCommentChange}
-                      className="w-100 form-control"
-                      cols="30"
-                      rows="4"
-                      placeholder="Comments"
-                    ></textarea>
-                  </div>
-                  <div className="d-flex justify-content-end">
-                    <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>
+              {showReviewForm && (
+                <div className="review-form py-4">
+                  <h4>Write a Review</h4>
+                  <div className="d-flex flex-column gap-15">
+                    <div>
+                      <ReactStars
+                        count={5}
+                        onChange={handleRatingChange}
+                        size={20}
+                        value={rating}
+                        edit={true}
+                        activeColor="#ffd700"
+                      />
+                    </div>
+                    <div>
+                      <textarea
+                        name="comment"
+                        id=""
+                        value={comment}
+                        onChange={handleCommentChange}
+                        className="w-100 form-control"
+                        cols="30"
+                        rows="4"
+                        placeholder="Comments"
+                      ></textarea>
+                    </div>
+                    <div className="d-flex justify-content-end">
+                      <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <div className="reviews mt-4">
-                <div className="review">
-                  <div className="d-flex gap-10 align-items-center">
-                    <h6 className="mb-0">Navdeep</h6>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={4}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                  </div>
-                  <p className="mt-3">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Consectetur fugit ut excepturi quos. Id reprehenderit
-                    voluptatem placeat consequatur suscipit ex. Accusamus dolore
-                    quisquam deserunt voluptate, sit magni perspiciatis quas
-                    iste?
-                  </p>
+                <div className="reviews mt-4">
+                  {listReview && listReview.length > 0 ? (
+                    listReview.slice(0, visibleComments).map((review) => {
+                      const createDate = moment.utc(review.createDate);
+                      const now = moment();
+                      const diffSeconds = now.diff(createDate, 'seconds');
+                      const diffMin = Math.floor(diffSeconds / 60);
+                      let timeAgo;
+                      if (diffMin < 60) {
+                        timeAgo = `${diffMin} phút trước`;
+                      } else {
+                        const diffHours = Math.floor(diffMin / 60);
+                        timeAgo = `${diffHours} giờ trước`;
+                      }
+                      return (
+                        <div key={review.id} className="review">
+                          <div className="d-flex gap-10 justify-content-between align-items-center">
+                            <h6 className="mb-0">{review.user.fullname}</h6>
+                            <span className="d-inline-block ">
+                              <ReactStars
+                                count={5}
+                                size={15}
+                                value={review.ratingValue}
+                                edit={false}
+                                activeColor="#ffd700"
+                              />
+                            </span>
+                          </div>
+                          <p className="mt-3 justify-content-between align-items-center">{review.comment}</p>
+                          <span style={{ fontSize: "12px", marginTop: "-20px", marginBottom: "10px" }} className="d-flex justify-content-end fst-italic">{timeAgo}</span>
+                        </div>
+                      )
+                    })
+                  ) : (
+                    <div>Không có bình luận nào về sản phẩm này!</div>
+                  )}
+                  {listReview.length > visibleComments ? (
+                    <div>
+                      <button
+                        className="text-dark text-decoration-underline"
+                        onClick={showMoreComments}
+                      >
+                        Show more comments
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <button
+                        className="text-dark text-decoration-underline"
+                        onClick={hideComments}
+                      >
+                        Hide comments
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
