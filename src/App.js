@@ -34,6 +34,7 @@ import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
 import ChangePassword from "./pages/ChangePassword";
 import ShopOrderSlice from "./store/shop_order/slice";
+import YourOrder from "./pages/YourOrder";
 
 function App() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="yourorder" element={<YourOrder />} />
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
             <Route path="product/:id" element={<SingleProduct />} />

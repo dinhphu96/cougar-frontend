@@ -8,7 +8,7 @@ const reviewSlice = createSlice({
     initialState: {
         reviews: [],
         status: "idle",
-        error: null,
+        error: null
     },
     reducers: {
     },

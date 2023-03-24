@@ -222,6 +222,7 @@ const Header = () => {
                     <NavLink to="/product">Our Store</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
+                    <NavLink to="/yourorder">Your Order</NavLink>
                   </div>
                 </div>
               </div>

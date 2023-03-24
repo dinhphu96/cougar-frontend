@@ -305,3 +305,22 @@ export const doReview = createAsyncThunk(
   }
 );
 
+export const doUpdateReview = createAsyncThunk(
+  "Reviews/update",
+  async (newReview, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/rest/review/change-review",
+        newReview
+      );
+      return response.data;
+    } catch (error) {
+      if (error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        throw error;
+      }
+    }
+  }
+);
+

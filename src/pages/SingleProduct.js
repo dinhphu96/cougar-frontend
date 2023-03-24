@@ -15,7 +15,8 @@ import {
   updateOrderDetail,
   addNewOrder,
   addWishList,
-  doReview
+  doReview,
+  doUpdateReview
 } from "../store/shop_order/api";
 import {
   getCartSelector,
@@ -58,8 +59,7 @@ const SingleProduct = () => {
 
   useEffect(() => {
     if (listRelatedProductItems.length) {
-      const listCol = listRelatedProductItems.map((pro => pro.color))
-
+      const listCol = listRelatedProductItems.map((pro => pro.color));
       setListColor(listCol);
     }
 
@@ -209,9 +209,11 @@ const SingleProduct = () => {
   }
 
   //Rating and comment
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [rating, setRating] = useState(selectedReview?.ratingValue || 0);
+  const [comment, setComment] = useState(selectedReview?.comment || "");
   const [averageRating, setAverageRating] = useState("");
+
   //Rating and comment
 
   const handleRatingChange = (newRating) => {
@@ -232,30 +234,95 @@ const SingleProduct = () => {
         productItem: singleProduct,
         ratingValue: rating,
         comment: comment
-      }
-
-      dispatch(doReview(newReview));
-      alert("Cmt thành công");
-      dispatch(getListReview(singleProduct.id)).then((response) => {
-        setListReview(response.payload);
+      };
+      dispatch(doReview(newReview)).then((response) => {
+        if (response.type === doReview.fulfilled.toString()) {
+          toast.success(response.payload.message, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          dispatch(getListReview(singleProduct.id)).then((response) => {
+            setListReview(response.payload);
+          });
+          setComment("");
+          setShowReviewForm(false);
+          setAverageRating(listReview.reduce(
+            (total, review) => total + review.ratingValue,
+            0
+          ) / response.payload.length);
+        } else if (response.type === doReview.rejected.toString()) {
+          console.log(response.payload.message);
+          toast.error(response.payload.message, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       });
-
     } else {
-      alert("Vui lòng đăng nhập trước khi review!");
-      navigate("/login");
+      toast.error("Please login to review this product!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+          navigate('/login');
+        },
+      })
     }
+  }
+
+  const handleUpdateReview = async (event) => {
+    event.preventDefault();
+    const newReview = {
+      user: userLogin,
+      productItem: singleProduct,
+      ratingValue: rating,
+      comment: comment
+    };
+    const updateResponse = await dispatch(doUpdateReview(newReview));
+    if (updateResponse.type === doUpdateReview.fulfilled.toString()) {
+      toast.success(updateResponse.payload.message, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+    const listReviewResponse = await dispatch(getListReview(singleProduct.id));
+    setListReview(listReviewResponse.payload);
     setComment("");
     setShowReviewForm(false);
-    setAverageRating(listReview.reduce(
+    setAverageRating(listReviewResponse.payload.reduce(
       (total, review) => total + review.ratingValue,
       0
-    ) / listReview.length);
-    console.log(listReview);
+    ) / listReviewResponse.payload.length);
+    console.log(listReviewResponse.payload);
     console.log(averageRating);
-  }
+  };
 
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [visibleComments, setVisibleComments] = useState(5);
+  const [editingReview, setEditReview] = useState(false);
 
   const showMoreComments = () => {
     setVisibleComments(visibleComments + 5);
@@ -266,6 +333,15 @@ const SingleProduct = () => {
   };
 
 
+
+  const handleEditReview = (newReview) => {
+    console.log(newReview);
+    setShowReviewForm(true);
+    setEditReview(true);
+    setSelectedReview(newReview);
+    setComment(newReview.comment);
+    setRating(newReview.ratingValue);
+  }
 
 
   return (
@@ -463,7 +539,7 @@ const SingleProduct = () => {
               </div>
               {showReviewForm && (
                 <div className="review-form py-4">
-                  <h4>Write a Review</h4>
+                  <h4>{editingReview ? 'Edit' : 'Write a'} Review</h4>
                   <div className="d-flex flex-column gap-15">
                     <div>
                       <ReactStars
@@ -488,7 +564,7 @@ const SingleProduct = () => {
                       ></textarea>
                     </div>
                     <div className="d-flex justify-content-end">
-                      <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>
+                      {editingReview ? (<button onClick={handleUpdateReview} className="button border-0">Save Change</button>) : <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>}
                     </div>
                   </div>
                 </div>
@@ -497,16 +573,34 @@ const SingleProduct = () => {
                 <div className="reviews mt-4">
                   {listReview && listReview.length > 0 ? (
                     listReview.slice(0, visibleComments).map((review) => {
+                      const isCurrentUserReview = review.user.email === userLogin.email;
                       const createDate = moment.utc(review.createDate);
                       const now = moment();
                       const diffSeconds = now.diff(createDate, 'seconds');
                       const diffMin = Math.floor(diffSeconds / 60);
                       let timeAgo;
-                      if (diffMin < 60) {
-                        timeAgo = `${diffMin} phút trước`;
-                      } else {
+                      if (diffMin < 1) {
+                        timeAgo = `bây giờ`;
+                      } else if (diffMin > 60) {
                         const diffHours = Math.floor(diffMin / 60);
-                        timeAgo = `${diffHours} giờ trước`;
+                        if (diffHours > 24) {
+                          const diffDays = Math.floor(diffHours / 24);
+                          if (diffDays > 30) {
+                            const diffMonths = Math.floor(diffDays / 30);
+                            if (diffMonths > 12) {
+                              const diffYears = Math.floor(diffMonths / 12);
+                              timeAgo = `${diffYears} năm trước`;
+                            } else {
+                              timeAgo = `${diffMonths} tháng trước`;
+                            }
+                          } else {
+                            timeAgo = `${diffDays} ngày trước`;
+                          }
+                        } else {
+                          timeAgo = `${diffHours} giờ trước`;
+                        }
+                      } else {
+                        timeAgo = `${diffMin} phút trước`;
                       }
                       return (
                         <div key={review.id} className="review">
@@ -522,7 +616,19 @@ const SingleProduct = () => {
                               />
                             </span>
                           </div>
-                          <p className="mt-3 justify-content-between align-items-center">{review.comment}</p>
+                          <p className="mt-3 justify-content-between align-items-center d-flex">{review.comment}
+                            <span className="ml-auto">
+                              {isCurrentUserReview && (
+                                <button
+                                  className=""
+                                  style={{ outline: "none" }}
+                                  onClick={() => handleEditReview(review)}
+                                >
+                                  Edit
+                                </button>
+                              )}
+                            </span>
+                          </p>
                           <span style={{ fontSize: "12px", marginTop: "-20px", marginBottom: "10px" }} className="d-flex justify-content-end fst-italic">{timeAgo}</span>
                         </div>
                       )

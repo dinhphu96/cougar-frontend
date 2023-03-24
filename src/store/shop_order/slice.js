@@ -23,7 +23,8 @@ import {
   setAsDefaultAddress,
   getListPaymentType,
   addNewUserPayment,
-  doReview
+  doReview,
+  doUpdateReview
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -40,6 +41,7 @@ const ShopOrderSlice = createSlice({
     paymentTypes: [],
     status: "idle",
     error: null,
+    message: ""
   },
   reducers: {
     // getCart: (state) => {
@@ -371,8 +373,17 @@ const ShopOrderSlice = createSlice({
       //Review
       .addCase(doReview.fulfilled, (state, action) => {
         state.status = "Successed";
+        state.message = action.payload;
       })
       .addCase(doReview.rejected, (state, action) => {
+        state.status = "Failed";
+      })
+      // update review
+      .addCase(doUpdateReview.fulfilled, (state, action) => {
+        state.status = "Successed";
+        state.message = action.payload;
+      })
+      .addCase(doUpdateReview.rejected, (state, action) => {
         state.status = "Failed";
       })
   },
