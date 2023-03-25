@@ -636,25 +636,30 @@ const SingleProduct = () => {
                   ) : (
                     <div>Không có bình luận nào về sản phẩm này!</div>
                   )}
+                  <div>
                   {listReview.length > visibleComments ? (
-                    <div>
-                      <button
-                        className="text-dark text-decoration-underline"
-                        onClick={showMoreComments}
-                      >
-                        Show more comments
-                      </button>
-                    </div>
-                  ) : (
-                    <div>
-                      <button
-                        className="text-dark text-decoration-underline"
-                        onClick={hideComments}
-                      >
-                        Hide comments
-                      </button>
-                    </div>
-                  )}
+  <div>
+    <button
+      className="text-dark text-decoration-underline"
+      onClick={showMoreComments}
+    >
+      Show more comments
+    </button>
+  </div>
+) : null}
+
+{listReview.length > visibleComments && visibleComments > 5 ? (
+  <div>
+    <button
+      className="text-dark text-decoration-underline"
+      onClick={hideComments}
+    >
+      Hide comments
+    </button>
+  </div>
+) : null}
+
+                  </div>
                 </div>
               </div>
             </div>
