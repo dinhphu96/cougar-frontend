@@ -573,38 +573,34 @@ const SingleProduct = () => {
                 <div className="reviews mt-4">
                   {listReview && listReview.length > 0 ? (
                     listReview.slice(0, visibleComments).map((review) => {
-                      let isCurrentUserReview;
+                      const isCurrentUserReview = review.user && userLogin && review.user.email === userLogin.email;
+                      const createDate = moment.utc(review.createDate);
+                      const now = moment();
+                      const diffSeconds = now.diff(createDate, 'seconds');
+                      const diffMin = Math.floor(diffSeconds / 60);
                       let timeAgo;
-                      if (userLogin) {
-                        isCurrentUserReview = review.user.email === userLogin.email;
-                        const createDate = moment.utc(review.createDate);
-                        const now = moment();
-                        const diffSeconds = now.diff(createDate, 'seconds');
-                        const diffMin = Math.floor(diffSeconds / 60);
-                        
-                        if (diffMin < 1) {
-                          timeAgo = `bây giờ`;
-                        } else if (diffMin > 60) {
-                          const diffHours = Math.floor(diffMin / 60);
-                          if (diffHours > 24) {
-                            const diffDays = Math.floor(diffHours / 24);
-                            if (diffDays > 30) {
-                              const diffMonths = Math.floor(diffDays / 30);
-                              if (diffMonths > 12) {
-                                const diffYears = Math.floor(diffMonths / 12);
-                                timeAgo = `${diffYears} năm trước`;
-                              } else {
-                                timeAgo = `${diffMonths} tháng trước`;
-                              }
+                      if (diffMin < 1) {
+                        timeAgo = `now`;
+                      } else if (diffMin > 60) {
+                        const diffHours = Math.floor(diffMin / 60);
+                        if (diffHours > 24) {
+                          const diffDays = Math.floor(diffHours / 24);
+                          if (diffDays > 30) {
+                            const diffMonths = Math.floor(diffDays / 30);
+                            if (diffMonths > 12) {
+                              const diffYears = Math.floor(diffMonths / 12);
+                              timeAgo = `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
                             } else {
-                              timeAgo = `${diffDays} ngày trước`;
+                              timeAgo = `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
                             }
                           } else {
-                            timeAgo = `${diffHours} giờ trước`;
+                            timeAgo = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
                           }
                         } else {
-                          timeAgo = `${diffMin} phút trước`;
+                          timeAgo = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
                         }
+                      } else {
+                        timeAgo = `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
                       }
                       return (
                         <div key={review.id} className="review">
