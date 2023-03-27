@@ -67,7 +67,7 @@ function App() {
        dispatch(getOrderDetailByShopId(shopOrder.id));
     }
   }, [dispatch, shopOrder]);
-
+  const userLogin = sessionStorage.getItem("SHARE_USER");
   return (
     <>
       <BrowserRouter>
@@ -76,7 +76,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="yourorder" element={<YourOrder />} />
+            {userLogin ? (<Route path="yourorder" element={<YourOrder />} />) : null}
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
             <Route path="product/:id" element={<SingleProduct />} />

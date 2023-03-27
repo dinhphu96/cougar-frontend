@@ -68,7 +68,7 @@ const SingleProduct = () => {
   useEffect(() => {
     if (singleProduct) {
       setBorderColor(singleProduct.id);
-      dispatch(getListReview(singleProduct.product.id)).then(response => {
+      dispatch(getListReview(singleProduct.id)).then(response => {
         setListReview(response.payload);
       });
     }
@@ -92,6 +92,7 @@ const SingleProduct = () => {
     var description = singleProduct.product.description;
     var name = singleProduct.product.name;
     var price = singleProduct.price;
+    var sku = singleProduct.sku;
     var categoryName = singleProduct.product.subcategory.name;
     var inStock = singleProduct.qtyInStock !== 0 ? "In Stock" : "Out of Stock";
   }
@@ -388,14 +389,18 @@ const SingleProduct = () => {
               <div className="border-bottom py-3">
                 <p className="price">{`$${price}`}</p>
                 <div className="d-flex align-items-center gap-10">
-                  <ReactStars
-                    count={5}
-                    size={24}
-                    value={4}
-                    edit={false}
-                    activeColor="#ffd700"
-                  />
-                  <p className="mb-0 t-review">( 2 Reviews )</p>
+                <StarRatings
+                      rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                        (total, review) => total + review.ratingValue,
+                        0
+                      ) / listReview.length) : 0}
+                      starRatedColor="#ffd700"
+                      starHoverColor="#ffd700"
+                      numberOfStars={5}
+                      starDimension="30px"
+                      name="rating"
+                    />
+                  <p className="mb-0 t-review">( {listReview.length} Reviews )</p>
                 </div>
                 <a className="review-btn" href="#review">
                   Write a Review
@@ -413,6 +418,13 @@ const SingleProduct = () => {
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Availablity :</h3>
                   <p className="product-data">{inStock}</p>
+                </div>
+                <div className="d-flex gap-10 align-items-center my-2">
+                  <h3 className="product-heading">SKU :</h3>
+                  <p className="product-data">{sku}</p>
+                </div>
+                <div className="d-flex gap-10 align-items-center my-3">
+                  
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Size :</h3>
@@ -531,7 +543,7 @@ const SingleProduct = () => {
                 </div>
                 {true && (
                   <div>
-                    <button onClick={() => setShowReviewForm(true)} className="text-dark text-decoration-underline">
+                    <button onClick={() => setShowReviewForm(true)} className="button-17">
                       Write a Review
                     </button>
                   </div>
@@ -620,11 +632,11 @@ const SingleProduct = () => {
                             <span className="ml-auto">
                               {isCurrentUserReview && (
                                 <button
-                                  className=""
+                                  className="button-16"
                                   style={{ outline: "none" }}
                                   onClick={() => handleEditReview(review)}
                                 >
-                                  Edit
+                                  ( Edit )
                                 </button>
                               )}
                             </span>
@@ -637,27 +649,27 @@ const SingleProduct = () => {
                     <div>Không có bình luận nào về sản phẩm này!</div>
                   )}
                   <div>
-                  {listReview.length > visibleComments ? (
-  <div>
-    <button
-      className="text-dark text-decoration-underline"
-      onClick={showMoreComments}
-    >
-      Show more comments
-    </button>
-  </div>
-) : null}
+                    {listReview.length > visibleComments ? (
+                      <div>
+                        <button
+                          className="text-dark text-decoration-underline"
+                          onClick={showMoreComments}
+                        >
+                          Show more comments
+                        </button>
+                      </div>
+                    ) : null}
 
-{listReview.length > visibleComments && visibleComments > 5 ? (
-  <div>
-    <button
-      className="text-dark text-decoration-underline"
-      onClick={hideComments}
-    >
-      Hide comments
-    </button>
-  </div>
-) : null}
+                    {listReview.length > visibleComments && visibleComments > 5 ? (
+                      <div>
+                        <button
+                          className="text-dark text-decoration-underline"
+                          onClick={hideComments}
+                        >
+                          Hide comments
+                        </button>
+                      </div>
+                    ) : null}
 
                   </div>
                 </div>
