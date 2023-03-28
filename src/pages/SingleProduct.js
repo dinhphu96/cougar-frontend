@@ -628,7 +628,7 @@ const SingleProduct = () => {
                       return (
                         <div key={review.id} className="review">
                           <div className="d-flex gap-10 justify-content-between align-items-center">
-                            <h6 className="mb-0">{review.user.fullname}</h6>
+                            <h6 className="mb-0">{review.user.fullname}</h6> <span style={{fontStyle:"italic"}}>{review.edited === true ? "( Edited )" : ""}</span>
                             <span className="d-inline-block ">
                               <ReactStars
                                 count={5}
@@ -647,7 +647,7 @@ const SingleProduct = () => {
                                   style={{ outline: "none" }}
                                   onClick={() => handleEditReview(review)}
                                 >
-                                  ( Edit )
+                                   {review.edited === true ? "" : "( Edit )"} 
                                 </button>
                               )}
                             </span>
