@@ -253,10 +253,14 @@ const SingleProduct = () => {
           });
           setComment("");
           setShowReviewForm(false);
-          setAverageRating(listReview.reduce(
-            (total, review) => total + review.ratingValue,
-            0
-          ) / response.payload.length);
+          if (Array.isArray(listReview) && listReview.length > 0) {
+            setAverageRating(listReview.reduce(
+              (total, review) => total + review.ratingValue,
+              0
+            ) / listReview.length);
+          } else {
+            setAverageRating(rating);
+          }
         } else if (response.type === doReview.rejected.toString()) {
           console.log(response.payload.message);
           toast.error(response.payload.message, {
@@ -290,13 +294,13 @@ const SingleProduct = () => {
 
   const handleUpdateReview = async (event) => {
     event.preventDefault();
-    const newReview = {
-      user: userLogin,
-      productItem: singleProduct,
-      ratingValue: rating,
-      comment: comment
+    const updatedReview = {
+      ...selectedReview,
+      comment: comment,
+      ratingValue: rating // sử dụng giá trị của rating hiện tại
     };
-    const updateResponse = await dispatch(doUpdateReview(newReview));
+    console.log(updatedReview);
+    const updateResponse = await dispatch(doUpdateReview(updatedReview));
     if (updateResponse.type === doUpdateReview.fulfilled.toString()) {
       toast.success(updateResponse.payload.message, {
         position: "top-center",
@@ -313,35 +317,42 @@ const SingleProduct = () => {
     setListReview(listReviewResponse.payload);
     setComment("");
     setShowReviewForm(false);
-    setAverageRating(listReviewResponse.payload.reduce(
-      (total, review) => total + review.ratingValue,
-      0
-    ) / listReviewResponse.payload.length);
-    console.log(listReviewResponse.payload);
-    console.log(averageRating);
+
+    if (Array.isArray(listReviewResponse.payload) && listReviewResponse.payload.length > 0) {
+      setAverageRating(listReviewResponse.payload.reduce(
+        (total, review) => total + review.ratingValue,
+        0
+      ) / listReviewResponse.payload.length);
+    } else {
+      setAverageRating(rating);
+    }
+    console.log("after rating value: ", rating);
   };
 
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [visibleComments, setVisibleComments] = useState(5);
+  const [visibleComments, setVisibleComments] = useState(3);
   const [editingReview, setEditReview] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
 
   const showMoreComments = () => {
     setVisibleComments(visibleComments + 5);
   };
 
   const hideComments = () => {
-    setVisibleComments(5);
+    setVisibleComments(3);
   };
 
 
 
   const handleEditReview = (newReview) => {
-    console.log(newReview);
+    console.log(newReview.id);
     setShowReviewForm(true);
     setEditReview(true);
     setSelectedReview(newReview);
     setComment(newReview.comment);
     setRating(newReview.ratingValue);
+    setEditingReviewId(newReview.id);
+    console.log("Current rating value: ", newReview.ratingValue);
   }
 
 
@@ -389,17 +400,17 @@ const SingleProduct = () => {
               <div className="border-bottom py-3">
                 <p className="price">{`$${price}`}</p>
                 <div className="d-flex align-items-center gap-10">
-                <StarRatings
-                      rating={listReview && listReview.length > 0 ? (listReview.reduce(
-                        (total, review) => total + review.ratingValue,
-                        0
-                      ) / listReview.length) : 0}
-                      starRatedColor="#ffd700"
-                      starHoverColor="#ffd700"
-                      numberOfStars={5}
-                      starDimension="30px"
-                      name="rating"
-                    />
+                  <StarRatings
+                    rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                      (total, review) => total + review.ratingValue,
+                      0
+                    ) / listReview.length) : 0}
+                    starRatedColor="#ffd700"
+                    starHoverColor="#ffd700"
+                    numberOfStars={5}
+                    starDimension="30px"
+                    name="rating"
+                  />
                   <p className="mb-0 t-review">( {listReview.length} Reviews )</p>
                 </div>
                 <a className="review-btn" href="#review">
@@ -424,7 +435,7 @@ const SingleProduct = () => {
                   <p className="product-data">{sku}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-3">
-                  
+
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Size :</h3>
