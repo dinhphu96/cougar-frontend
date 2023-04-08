@@ -22,9 +22,8 @@ import {
   getCartSelector,
   getUserSelector,
   getShopOrderSelector,
-  getOnePrISelector,
-  getRelatedProductItemsSelector,
-  getListWishListSelector
+  getListWishListSelector,
+  getPrISelector
 } from "../store/shop_order/selectors";
 
 import { toast } from "react-toastify";
@@ -36,25 +35,36 @@ import StarRatings from "react-star-ratings";
 
 const SingleProduct = () => {
   const { id } = useParams();
-  const [changProductItem, setChangProductItem] = useState(id);
+  const [singleProduct, setChangProductItem] = useState(null);
   const listWishList = useSelector(getListWishListSelector);
+  const productItems = useSelector(getPrISelector);
+  const [listRelatedProductItems, setlistRelatedProductItems] = useState([]);
+
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
+  useEffect(() => {
+    if (id && productItems.length) {
+      const prI = productItems.find((pr) => pr.id === +id);
+      if(prI){
+        setChangProductItem(prI);
+        const listRelatedProductItems = () => productItems.filter((pr) => pr.product.id === prI.product.id);
+        setlistRelatedProductItems(listRelatedProductItems);
+      }
+    }
+
+  }, [productItems.length > 0]);
 
   //cuộn trang
   useEffect(() => {
     window.scrollTo(0, 300);
   }, []);
 
-  const singleProduct = useSelector(getOnePrISelector(changProductItem));
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
   const [listReview, setListReview] = useState([]);
-
-  const listRelatedProductItems = useSelector(
-    getRelatedProductItemsSelector(singleProduct)
-  );
 
 
   useEffect(() => {
@@ -381,7 +391,7 @@ const SingleProduct = () => {
                   key={pro.id}
                   className={`${borderColor === pro.id ? "border border-2 border-danger" : "border border-dark"}`}
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleClickImage(pro.id)}
+                  onClick={() => handleClickImage(pro)}
                 >
                   <img
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
@@ -489,7 +499,7 @@ const SingleProduct = () => {
                 <div className="d-flex align-items-center gap-15">
                   <div>
                     <Link onClick={handleAddtoWishList}>
-                      <AiFillHeart style={{ color: listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
+                      <AiFillHeart style={{color: singleProduct && listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
                     </Link>
                   </div>
                 </div>
