@@ -24,7 +24,9 @@ import {
   getListPaymentType,
   addNewUserPayment,
   doReview,
-  doUpdateReview
+  doUpdateReview,
+  getAllInvoiceByUserId,
+  getAllInvoiceDetailByUserId
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -39,6 +41,8 @@ const ShopOrderSlice = createSlice({
     deliverys: [],
     userPaymenMethod: [],
     paymentTypes: [],
+    invoices: [],
+    invoiceDetails: [],
     status: "idle",
     error: null,
     message: ""
@@ -121,6 +125,7 @@ const ShopOrderSlice = createSlice({
       .addCase(updateOrder.fulfilled, (state, action) => {
         state.shopOrder = null;
         state.cartItems = [];
+        state.invoices.push(action.payload);
       })
 
       .addCase(updateOrder.rejected, (state, action) => {
@@ -385,6 +390,24 @@ const ShopOrderSlice = createSlice({
       })
       .addCase(doUpdateReview.rejected, (state, action) => {
         state.status = "Failed";
+      })
+
+      // GET ALL INVOICES
+      .addCase(getAllInvoiceByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getAllInvoiceByUserId.fulfilled, (state, action) => {
+        state.invoices = action.payload;
+        state.status = "idle";
+      })
+
+      // GET ALL INVOICE DETAILS
+      .addCase(getAllInvoiceDetailByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getAllInvoiceDetailByUserId.fulfilled, (state, action) => {
+        state.invoiceDetails = action.payload;
+        state.status = "idle";
       })
   },
 });

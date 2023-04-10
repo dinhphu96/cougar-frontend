@@ -342,3 +342,12 @@ export const doUpdateReview = createAsyncThunk(
   }
 );
 
+export const getAllInvoiceByUserId = createAsyncThunk('getAllInvoiceByUserId', async (id) => {
+  const response = await axios.get(`http://localhost:8080/rest/shopOrders/all/${id}`);
+  return response.data;
+});
+
+export const getAllInvoiceDetailByUserId = createAsyncThunk('getAllInvoiceDetailByUserId', async (id) => {
+  const response = await axios.get(`http://localhost:8080/rest/orderDetails/all/${id}`);
+  return response.data;
+});

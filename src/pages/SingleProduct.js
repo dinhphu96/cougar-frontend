@@ -40,8 +40,6 @@ const SingleProduct = () => {
   const listWishList = useSelector(getListWishListSelector);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-
   //cuộn trang
   useEffect(() => {
     window.scrollTo(0, 300);

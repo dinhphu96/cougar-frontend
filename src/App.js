@@ -24,6 +24,8 @@ import {
   getShopOrderByUserId,
   getProductItem,
   getWishListByUserId,
+  getAllInvoiceByUserId,
+  getAllInvoiceDetailByUserId,
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
@@ -57,7 +59,9 @@ function App() {
   useEffect(() => {
     if (user.id) {
       dispatch(getShopOrderByUserId(user.id));
-      dispatch(getWishListByUserId(user.id))
+      dispatch(getWishListByUserId(user.id));
+      dispatch(getAllInvoiceByUserId(user.id));
+      dispatch(getAllInvoiceDetailByUserId(user.id));
     }
   }, [dispatch, user.id]);
 
@@ -76,7 +80,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
-            {userLogin ? (<Route path="yourorder" element={<YourOrder />} />) : null}
+            <Route path="yourorder" element={<YourOrder />} />
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
             <Route path="product/:id" element={<SingleProduct />} />

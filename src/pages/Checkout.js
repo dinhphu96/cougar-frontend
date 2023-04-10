@@ -682,7 +682,7 @@ const Checkout = () => {
                       className="button border-0"
                       onClick={handleContinueToShipping}
                     >
-                      Continue to Shipping
+                      Continue to Purchase
                     </button>
                   </div>
                 </div>

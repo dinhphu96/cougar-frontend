@@ -16,6 +16,7 @@ import ShopOrderSlice from "../store/shop_order/slice";
 const Header = () => {
   const userrr = useSelector(getUserSelector);
   const listCartItem = useSelector(getCartSelector);
+  const userL = sessionStorage.getItem("SHARE_USER");
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
@@ -222,7 +223,7 @@ const Header = () => {
                     <NavLink to="/product">Our Store</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
-                    <NavLink to="/yourorder">Your Order</NavLink>
+                    {userL ? <NavLink to="/yourorder">Your Order</NavLink> : null}
                   </div>
                 </div>
               </div>

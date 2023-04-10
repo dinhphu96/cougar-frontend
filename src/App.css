@@ -890,7 +890,7 @@ footer .input-group-text {
   position: relative;
 }
 
-#progressbar-2 #step1:before {
+#progressbar-2 #step0:before {
   content: '\f058';
   font-family: "Font Awesome 5 Free";
   color: #fff;
@@ -899,11 +899,32 @@ footer .input-group-text {
   padding-left: 0px;
 }
 
+#progressbar-2 #step0:not(.active):before {
+  content: '\f111';
+}
+
+#progressbar-2 #step1:before {
+  content: '\f058';
+  font-family: "Font Awesome 5 Free";
+  color: #fff;
+  width: 37px;
+}
+
+#progressbar-2 #step1:not(.active):before {
+  content: '\f111';
+}
+
 #progressbar-2 #step2:before {
   content: '\f058';
   font-family: "Font Awesome 5 Free";
   color: #fff;
   width: 37px;
+  margin-right: 0;
+  text-align: center;
+}
+
+#progressbar-2 #step2:not(.active):before {
+  content: '\f111';
 }
 
 #progressbar-2 #step3:before {
@@ -915,13 +936,8 @@ footer .input-group-text {
   text-align: center;
 }
 
-#progressbar-2 #step4:before {
+#progressbar-2 #step3:not(.active):before {
   content: '\f111';
-  font-family: "Font Awesome 5 Free";
-  color: #fff;
-  width: 37px;
-  margin-right: 0;
-  text-align: center;
 }
 
 #progressbar-2 li:before {
@@ -946,19 +962,22 @@ footer .input-group-text {
 
 #progressbar-2 li:nth-child(1):after {
   left: 1%;
-  width: 100%
+  width: 100%;
+  background: #c5cae9;
 }
+
 
 #progressbar-2 li:nth-child(2):after {
   left: 1%;
   width: 100%;
 }
 
+
 #progressbar-2 li:nth-child(3):after {
   left: 1%;
   width: 100%;
-  background: #c5cae9 !important;
 }
+
 
 #progressbar-2 li:nth-child(4) {
   left: 0;
@@ -1062,4 +1081,104 @@ footer .input-group-text {
 
 .button-16:hover {
   color: #f88111;
+}
+
+/* CSS */
+.button-92 {
+  --c: #fff;
+  /* text color */
+  background: linear-gradient(90deg, #0000 33%, #fff5, #0000 67%) var(--_p,100%)/300% no-repeat,
+    #004dff;
+  /* background color */
+  color: #0000;
+  border: none;
+  transform: perspective(500px) rotateY(calc(20deg*var(--_i,-1)));
+  text-shadow: calc(var(--_i,-1)* 0.08em) -.01em 0   var(--c),
+    calc(var(--_i,-1)*-0.08em)  .01em 2px #0004;
+  outline-offset: .1em;
+  transition: 0.3s;
+}
+
+.button-92:hover,
+.button-92:focus-visible {
+  --_p: 0%;
+  --_i: 1;
+}
+
+.button-92:active {
+  text-shadow: none;
+  color: var(--c);
+  box-shadow: inset 0 0 9e9q #0005;
+  transition: 0s;
+}
+
+.button-92 {
+  font-weight: bold;
+  font-size: 2rem;
+  margin: 0;
+  cursor: pointer;
+  padding: .1em .3em;
+}
+
+
+.css-pdct74-MuiTablePagination-selectLabel, .css-levciy-MuiTablePagination-displayedRows{
+  margin-top: 13px;
+}
+
+.horizontal-timeline .items {
+  border-top: 2px solid #ddd;
+}
+
+.horizontal-timeline .items .items-list {
+  position: relative;
+  margin-right: 0;
+}
+
+.horizontal-timeline .items .items-list:before {
+  content: "";
+  position: absolute;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  top: 0;
+  margin-top: -5px;
+}
+
+.horizontal-timeline .items .items-list {
+  padding-top: 15px;
+}
+
+.scrollable {
+  height: 200px;
+  overflow: auto;
+}
+
+.status-0 {
+  color: orange !important; 
+}
+
+.status-1 {
+  color: blue !important;
+}
+
+.status-2 {
+  color: purple !important;
+}
+
+.status-3 {
+  color: green !important;
+}
+
+.status-4 {
+  color: red !important;
+}
+
+
+.header-comlumn-st{
+  color: rgb(212, 212, 212) !important;
+}
+
+.css-1ex1afd-MuiTableCell-root,.css-y8ay40-MuiTableCell-root, .css-i02g0k-MuiTableCell-root, .css-dwuj3p-MuiTableCell-root, .css-177gid-MuiTableCell-root, .css-1yhpg23-MuiTableCell-root{
+  font-family: "Rubik", sans-serif !important;
 }
