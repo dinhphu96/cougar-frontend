@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
@@ -11,10 +11,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
+
 const Login = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm({ mode: "onChange" });
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const onSubmit = (data) => {
@@ -32,8 +34,11 @@ const Login = () => {
         });
 
         setTimeout(() => {
-          
-            navigate('/');          
+          if (location.pathname === '/signup') {
+            navigate('/');
+          } else {
+            navigate(-1);
+          }
         }, 1000);
       } else if (response.type === doLogin.rejected.toString()) {
         console.log(response.payload.message);
@@ -83,7 +88,6 @@ const Login = () => {
                 </span>
                 <div>
                   <Link to="/forgot-password">Forgot Password?</Link>
-
                   <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
                     <button type="submit" className="button border-0">
                       Login
@@ -94,13 +98,6 @@ const Login = () => {
                   </div>
                 </div>
               </form>
-              <div>
-
-
-
-
-
-              </div>
             </div>
           </div>
         </div>

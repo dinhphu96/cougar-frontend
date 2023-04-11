@@ -31,7 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { getListReview } from "../store/review/api";
 import StarRatings from "react-star-ratings";
-
+import jwtDecode from "jwt-decode";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -40,7 +40,7 @@ const SingleProduct = () => {
   const productItems = useSelector(getPrISelector);
   const [listRelatedProductItems, setlistRelatedProductItems] = useState([]);
 
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ const SingleProduct = () => {
   useEffect(() => {
     if (id && productItems.length) {
       const prI = productItems.find((pr) => pr.id === +id);
-      if(prI){
+      if (prI) {
         setChangProductItem(prI);
         const listRelatedProductItems = () => productItems.filter((pr) => pr.product.id === prI.product.id);
         setlistRelatedProductItems(listRelatedProductItems);
@@ -121,69 +121,107 @@ const SingleProduct = () => {
   const listCartItem = useSelector(getCartSelector);
   const userr = useSelector(getUserSelector);
   const shopOrder = useSelector(getShopOrderSelector);
-
   const [quty, setQuty] = useState(1);
   const setQuantity = (e) => {
     setQuty(+e.target.value);
   };
   const handleAddToCart = () => {
-    if (userr.id !== undefined) {
-      const { color, size, ...productAdd } = singleProduct;
-      if (listCartItem.length !== 0) {
-        const cartItem = {
-          qty: quty,
-          price: singleProduct.price,
-          productItem: productAdd,
-          shopOrder: shopOrder,
-        };
+    const token = localStorage.getItem("accessToken_cougarshop");
+    const now = Math.floor(Date.now() / 1000);
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.exp < now) {
+        localStorage.removeItem('SHARE_USER');
+        localStorage.removeItem('accessToken_cougarshop');
+        toast.error('Token has expired please login again!', {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          onClose: () => {
+            navigate('/login');
+          }
+        });
 
-        const proExist = listCartItem.find(
-          (ite) => ite.productItem.id === cartItem.productItem.id
-        );
-        if (proExist) {
-          cartItem.id = proExist.id;
-          cartItem.qty += proExist.qty;
-          dispatch(updateOrderDetail(cartItem));
-        } else {
-          dispatch(addNewOrderDetail(cartItem));
-        }
       } else {
-        if (shopOrder) {
+        const { color, size, ...productAdd } = singleProduct;
+        if (listCartItem.length !== 0) {
           const cartItem = {
             qty: quty,
             price: singleProduct.price,
             productItem: productAdd,
             shopOrder: shopOrder,
           };
-          dispatch(addNewOrderDetail(cartItem));
+
+          const proExist = listCartItem.find(
+            (ite) => ite.productItem.id === cartItem.productItem.id
+          );
+          if (proExist) {
+            cartItem.id = proExist.id;
+            cartItem.qty += proExist.qty;
+            dispatch(updateOrderDetail(cartItem));
+          } else {
+            dispatch(addNewOrderDetail(cartItem));
+          }
         } else {
-          const shopO = {
-            user: userr,
-          };
+          if (shopOrder) {
+            const cartItem = {
+              qty: quty,
+              price: singleProduct.price,
+              productItem: productAdd,
+              shopOrder: shopOrder,
+            };
+            dispatch(addNewOrderDetail(cartItem));
+          } else {
+            const shopO = {
+              user: userr,
+            };
 
-          const cartItem = {
-            qty: quty,
-            price: singleProduct.price,
-            productItem: productAdd,
-          };
+            const cartItem = {
+              qty: quty,
+              price: singleProduct.price,
+              productItem: productAdd,
+            };
 
-          dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+            dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+          }
         }
-      }
 
-      toast.info(`Added - (${quty}) ${name}`, {
-        position: "top-right",
-        autoClose: 700,
+        toast.info(`Added - (${quty}) ${name}`, {
+          position: "top-right",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } else {
+      toast.error('You need to login to add products to cart!', {
+        position: 'top-center',
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: 'light',
+        onClose: () => {
+          navigate('/login');
+        }
       });
-    } else {
-      navigate("/login");
     }
+    // if (userr.id !== undefined) {
+
+    // } else {
+    //   navigate("/login");
+    // }
   };
 
   const handleClickImage = (pro) => {
@@ -235,7 +273,7 @@ const SingleProduct = () => {
     setComment(e.target.value);
   };
 
-  const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
+  const userLogin = JSON.parse(localStorage.getItem("SHARE_USER"))
 
   const handleSubmitReview = (event) => {
     event.preventDefault();
@@ -499,7 +537,7 @@ const SingleProduct = () => {
                 <div className="d-flex align-items-center gap-15">
                   <div>
                     <Link onClick={handleAddtoWishList}>
-                      <AiFillHeart style={{color: singleProduct && listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
+                      <AiFillHeart style={{ color: singleProduct && listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
                     </Link>
                   </div>
                 </div>
@@ -638,7 +676,7 @@ const SingleProduct = () => {
                       return (
                         <div key={review.id} className="review">
                           <div className="d-flex gap-10 justify-content-between align-items-center">
-                            <h6 className="mb-0">{review.user.fullname}</h6> <span style={{fontStyle:"italic"}}>{review.edited === true ? "( Edited )" : ""}</span>
+                            <h6 className="mb-0">{review.user.fullname}</h6> <span style={{ fontStyle: "italic" }}>{review.edited === true ? "( Edited )" : ""}</span>
                             <span className="d-inline-block ">
                               <ReactStars
                                 count={5}
@@ -657,7 +695,7 @@ const SingleProduct = () => {
                                   style={{ outline: "none" }}
                                   onClick={() => handleEditReview(review)}
                                 >
-                                   {review.edited === true ? "" : "( Edit )"} 
+                                  {review.edited === true ? "" : "( Edit )"}
                                 </button>
                               )}
                             </span>

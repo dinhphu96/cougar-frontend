@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import { FaEye } from "react-icons/fa";

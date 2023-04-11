@@ -16,7 +16,7 @@ import ShopOrderSlice from "../store/shop_order/slice";
 const Header = () => {
   const userrr = useSelector(getUserSelector);
   const listCartItem = useSelector(getCartSelector);
-  const userL = sessionStorage.getItem("SHARE_USER");
+  const userL = localStorage.getItem("SHARE_USER");
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
@@ -25,8 +25,8 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const handleLogout = () => {
-    sessionStorage.removeItem("accessToken_cougarshop");
-    sessionStorage.removeItem("SHARE_USER");
+    localStorage.removeItem("accessToken_cougarshop");
+    localStorage.removeItem("SHARE_USER");
     dispatch(ShopOrderSlice.actions.removeUser());
   };
 

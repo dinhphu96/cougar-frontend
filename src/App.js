@@ -29,8 +29,7 @@ import {
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
-  getShopOrderSelector,
-  getUserSelector,
+  getShopOrderSelector, getUserSelector
 } from "./store/shop_order/selectors";
 import { ToastContainer } from "react-toastify";
 import Profile from "./pages/Profile";
@@ -38,40 +37,42 @@ import ChangePassword from "./pages/ChangePassword";
 import ShopOrderSlice from "./store/shop_order/slice";
 import YourOrder from "./pages/YourOrder";
 
+
 function App() {
   const dispatch = useDispatch();
-  
-  const sessionUser = JSON.parse(sessionStorage.getItem("SHARE_USER"));
- 
-  
-  useEffect(()=>{
-    dispatch(getProductItem());
-  },[dispatch])
+  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
 
-    useEffect(()=>{
-      if(sessionUser){
-        dispatch(ShopOrderSlice.actions.getUser(sessionUser));
-      }
-    },[dispatch, sessionUser !== null])
-
-  const user = useSelector(getUserSelector);
-  
   useEffect(() => {
-    if (user.id) {
-      dispatch(getShopOrderByUserId(user.id));
-      dispatch(getWishListByUserId(user.id));
-      dispatch(getAllInvoiceByUserId(user.id));
-      dispatch(getAllInvoiceDetailByUserId(user.id));
-    }
-  }, [dispatch, user.id]);
+    dispatch(getProductItem());
+  }, [dispatch])
 
+  useEffect(() => {
+    if (sessionUser) {
+      dispatch(ShopOrderSlice.actions.getUser(sessionUser));
+      dispatch(getShopOrderByUserId(sessionUser.id));
+      dispatch(getWishListByUserId(sessionUser.id));
+      dispatch(getAllInvoiceByUserId(sessionUser.id));
+      dispatch(getAllInvoiceDetailByUserId(sessionUser.id));
+    }
+  }, [dispatch, sessionUser !== null])
+
+  // const user = useSelector(getUserSelector);
+
+  // useEffect(() => {
+  //   if (user.id) {
+  //     dispatch(getShopOrderByUserId(user.id));
+  //     dispatch(getWishListByUserId(user.id));
+  //     dispatch(getAllInvoiceByUserId(user.id));
+  //     dispatch(getAllInvoiceDetailByUserId(user.id));
+  //   }
+  // }, [dispatch, user.id]);
+  
   const shopOrder = useSelector(getShopOrderSelector);
   useEffect(() => {
     if (shopOrder) {
-       dispatch(getOrderDetailByShopId(shopOrder.id));
+      dispatch(getOrderDetailByShopId(shopOrder.id));
     }
   }, [dispatch, shopOrder]);
-  const userLogin = sessionStorage.getItem("SHARE_USER");
   return (
     <>
       <BrowserRouter>
@@ -92,7 +93,7 @@ function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
             <Route path="checkout" element={<Checkout />} />
-            <Route path="profile" element={<Profile />}/>
+            <Route path="profile" element={<Profile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
         </Routes>

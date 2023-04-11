@@ -4,7 +4,7 @@ import {
 } from "./api";
 
 const reviewSlice = createSlice({
-    name: "review",
+    name: "Review",
     initialState: {
         reviews: [],
         status: "idle",

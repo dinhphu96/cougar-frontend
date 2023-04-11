@@ -319,8 +319,8 @@ const ShopOrderSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.SHARE_USER;
 
-        sessionStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
-        sessionStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
+        localStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
+        localStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
         state.error = "Successed";
 
       })
