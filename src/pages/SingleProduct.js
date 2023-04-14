@@ -55,7 +55,7 @@ const SingleProduct = () => {
       }
     }
 
-  }, [productItems.length > 0]);
+  }, [productItems.length > 0, id]);
 
   //cuộn trang
   useEffect(() => {
