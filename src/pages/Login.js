@@ -34,7 +34,7 @@ const Login = () => {
         });
 
         setTimeout(() => {
-          if (location.pathname === '/signup') {
+          if (navigate(-1) === '/signup' || navigate(-1) === '/login') {
             navigate('/');
           } else {
             navigate(-1);
