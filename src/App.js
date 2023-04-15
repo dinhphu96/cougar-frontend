@@ -49,23 +49,19 @@ function App() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(ShopOrderSlice.actions.getUser(sessionUser));
-      dispatch(getShopOrderByUserId(sessionUser.id));
-      dispatch(getWishListByUserId(sessionUser.id));
-      dispatch(getAllInvoiceByUserId(sessionUser.id));
-      dispatch(getAllInvoiceDetailByUserId(sessionUser.id));
     }
   }, [dispatch, sessionUser !== null])
 
-  // const user = useSelector(getUserSelector);
+  const user = useSelector(getUserSelector);
 
-  // useEffect(() => {
-  //   if (user.id) {
-  //     dispatch(getShopOrderByUserId(user.id));
-  //     dispatch(getWishListByUserId(user.id));
-  //     dispatch(getAllInvoiceByUserId(user.id));
-  //     dispatch(getAllInvoiceDetailByUserId(user.id));
-  //   }
-  // }, [dispatch, user.id]);
+  useEffect(() => {
+    if (user.id) {
+      dispatch(getShopOrderByUserId(user.id));
+      dispatch(getWishListByUserId(user.id));
+      dispatch(getAllInvoiceByUserId(user.id));
+      dispatch(getAllInvoiceDetailByUserId(user.id));
+    }
+  }, [dispatch, user.id]);
   
   const shopOrder = useSelector(getShopOrderSelector);
   useEffect(() => {
