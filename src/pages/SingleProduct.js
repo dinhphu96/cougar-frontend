@@ -14,9 +14,7 @@ import {
   addNewOrderDetail,
   updateOrderDetail,
   addNewOrder,
-  addWishList,
-  doReview,
-  doUpdateReview
+  addWishList
 } from "../store/shop_order/api";
 import {
   getCartSelector,
@@ -29,9 +27,10 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { getListReview } from "../store/review/api";
+import { doReview, doUpdateReview, getListReview } from "../store/review/api";
 import StarRatings from "react-star-ratings";
 import jwtDecode from "jwt-decode";
+import { getListReviewByIdProductItem } from "../store/review/selectors";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -39,7 +38,7 @@ const SingleProduct = () => {
   const listWishList = useSelector(getListWishListSelector);
   const productItems = useSelector(getPrISelector);
   const [listRelatedProductItems, setlistRelatedProductItems] = useState([]);
-
+  const listReviews = useSelector(getListReviewByIdProductItem);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,7 +63,7 @@ const SingleProduct = () => {
 
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
-  const [listReview, setListReview] = useState([]);
+  // const [listReview, setListReview] = useState([]);
 
 
   useEffect(() => {
@@ -78,21 +77,19 @@ const SingleProduct = () => {
   useEffect(() => {
     if (singleProduct) {
       setBorderColor(singleProduct.id);
-      dispatch(getListReview(singleProduct.id)).then(response => {
-        setListReview(response.payload);
-      });
+      dispatch(getListReview(singleProduct.id));
     }
   }, [singleProduct]);
 
   useEffect(() => {
-    if (listReview.length > 0) {
+    if (listReviews.length > 0) {
       const newAverageRating = (
-        listReview.reduce((total, review) => total + review.ratingValue, 0) /
-        listReview.length
+        listReviews.reduce((total, review) => total + review.ratingValue, 0) /
+        listReviews.length
       ).toFixed(1);
       setAverageRating(newAverageRating);
     }
-  }, [listReview]);
+  }, [listReviews]);
 
 
 
@@ -277,6 +274,19 @@ const SingleProduct = () => {
 
   const handleSubmitReview = (event) => {
     event.preventDefault();
+    if(comment === ""){
+      toast.error("Please write somethings about this product", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     if (userLogin) {
       const newReview = {
         user: userLogin,
@@ -286,7 +296,7 @@ const SingleProduct = () => {
       };
       dispatch(doReview(newReview)).then((response) => {
         if (response.type === doReview.fulfilled.toString()) {
-          toast.success(response.payload.message, {
+          toast.success("Thanks for review!", {
             position: "top-center",
             autoClose: 1500,
             hideProgressBar: false,
@@ -296,19 +306,8 @@ const SingleProduct = () => {
             progress: undefined,
             theme: "light",
           });
-          dispatch(getListReview(singleProduct.id)).then((response) => {
-            setListReview(response.payload);
-          });
           setComment("");
           setShowReviewForm(false);
-          if (Array.isArray(listReview) && listReview.length > 0) {
-            setAverageRating(listReview.reduce(
-              (total, review) => total + review.ratingValue,
-              0
-            ) / listReview.length);
-          } else {
-            setAverageRating(rating);
-          }
         } else if (response.type === doReview.rejected.toString()) {
           console.log(response.payload.message);
           toast.error(response.payload.message, {
@@ -350,7 +349,7 @@ const SingleProduct = () => {
     console.log(updatedReview);
     const updateResponse = await dispatch(doUpdateReview(updatedReview));
     if (updateResponse.type === doUpdateReview.fulfilled.toString()) {
-      toast.success(updateResponse.payload.message, {
+      toast.success("Updated!", {
         position: "top-center",
         autoClose: 1500,
         hideProgressBar: false,
@@ -361,20 +360,10 @@ const SingleProduct = () => {
         theme: "light",
       });
     }
-    const listReviewResponse = await dispatch(getListReview(singleProduct.id));
-    setListReview(listReviewResponse.payload);
     setComment("");
     setShowReviewForm(false);
-
-    if (Array.isArray(listReviewResponse.payload) && listReviewResponse.payload.length > 0) {
-      setAverageRating(listReviewResponse.payload.reduce(
-        (total, review) => total + review.ratingValue,
-        0
-      ) / listReviewResponse.payload.length);
-    } else {
-      setAverageRating(rating);
-    }
     console.log("after rating value: ", rating);
+    setEditReview(null);
   };
 
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -449,17 +438,17 @@ const SingleProduct = () => {
                 <p className="price">{`$${price}`}</p>
                 <div className="d-flex align-items-center gap-10">
                   <StarRatings
-                    rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                    rating={listReviews && listReviews.length > 0 ? (listReviews.reduce(
                       (total, review) => total + review.ratingValue,
                       0
-                    ) / listReview.length) : 0}
+                    ) / listReviews.length) : 0}
                     starRatedColor="#ffd700"
                     starHoverColor="#ffd700"
                     numberOfStars={5}
                     starDimension="30px"
                     name="rating"
                   />
-                  <p className="mb-0 t-review">( {listReview.length} Reviews )</p>
+                  <p className="mb-0 t-review">( {listReviews.length} Reviews )</p>
                 </div>
                 <a className="review-btn" href="#review">
                   Write a Review
@@ -587,17 +576,17 @@ const SingleProduct = () => {
                   <h4 className="mb-2">Customer Reviews</h4>
                   <div className="d-flex align-items-center gap-10">
                     <StarRatings
-                      rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                      rating={listReviews && listReviews.length > 0 ? (listReviews.reduce(
                         (total, review) => total + review.ratingValue,
                         0
-                      ) / listReview.length) : 0}
+                      ) / listReviews.length) : 0}
                       starRatedColor="#ffd700"
                       starHoverColor="#ffd700"
                       numberOfStars={5}
                       starDimension="30px"
                       name="rating"
                     />
-                    <p className="mb-0">({listReview && listReview.length > 0 ? (parseFloat(averageRating) || "0.0") : "0.0"}) Based on {listReview.length} Reviews</p>
+                    <p className="mb-0">({listReviews && listReviews.length > 0 ? (parseFloat(averageRating) || "0.0") : "0.0"}) Based on {listReviews.length} Reviews</p>
                   </div>
                 </div>
                 {true && (
@@ -642,8 +631,8 @@ const SingleProduct = () => {
               )}
               <div className="reviews mt-4">
                 <div className="reviews mt-4">
-                  {listReview && listReview.length > 0 ? (
-                    listReview.slice(0, visibleComments).map((review) => {
+                  {listReviews && listReviews.length > 0 ? (
+                    listReviews.slice(0, visibleComments).map((review) => {
                       const isCurrentUserReview = review.user && userLogin && review.user.email === userLogin.email;
                       const createDate = moment.utc(review.createDate);
                       const now = moment();
@@ -708,7 +697,7 @@ const SingleProduct = () => {
                     <div>Không có bình luận nào về sản phẩm này!</div>
                   )}
                   <div>
-                    {listReview.length > visibleComments ? (
+                    {listReviews.length > visibleComments ? (
                       <div>
                         <button
                           className="text-dark text-decoration-underline"
@@ -719,7 +708,7 @@ const SingleProduct = () => {
                       </div>
                     ) : null}
 
-                    {listReview.length > visibleComments && visibleComments > 5 ? (
+                    {listReviews.length > visibleComments && visibleComments > 5 ? (
                       <div>
                         <button
                           className="text-dark text-decoration-underline"

@@ -9,3 +9,41 @@ export const getListReview = createAsyncThunk(
     return response.data;
   }
 );
+//do review
+export const doReview = createAsyncThunk(
+  "Reviews/send",
+  async (review, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/rest/review/send",
+        review
+      );
+      return response.data;
+    } catch (error) {
+      if (error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        throw error;
+      }
+    }
+  }
+);
+
+//Update review
+export const doUpdateReview = createAsyncThunk(
+  "reviews/updateReview",
+  async (review, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/rest/review/${review.id}`,
+        {
+          ratingValue: review.ratingValue,
+          comment: review.comment
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

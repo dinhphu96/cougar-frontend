@@ -1,0 +1,1 @@
+export const getListReviewByIdProductItem = (state) => state.Reviews.reviews;
