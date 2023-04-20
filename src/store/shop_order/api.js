@@ -286,62 +286,6 @@ export const doChangePassword = createAsyncThunk(
   }
 );
 
-export const doReview = createAsyncThunk(
-  "Reviews/send",
-  async (review, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/rest/review/send",
-        review
-      );
-      return response.data;
-    } catch (error) {
-      if (error.response.data) {
-        return rejectWithValue(error.response.data);
-      } else {
-        throw error;
-      }
-    }
-  }
-);
-
-// export const doUpdateReview = createAsyncThunk(
-//   "Reviews/update",
-//   async (newReview, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.post(
-//         "http://localhost:8080/rest/review/change-review",
-//         newReview
-//       );
-//       return response.data;
-//     } catch (error) {
-//       if (error.response.data) {
-//         return rejectWithValue(error.response.data);
-//       } else {
-//         throw error;
-//       }
-//     }
-//   }
-// );
-
-export const doUpdateReview = createAsyncThunk(
-  "reviews/updateReview",
-  async (review, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:8080/rest/review/${review.id}`,
-        {
-          ratingValue: review.ratingValue,
-          comment: review.comment
-        }
-      );
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const getAllInvoiceByUserId = createAsyncThunk('getAllInvoiceByUserId', async (id) => {
   const response = await axios.get(`http://localhost:8080/rest/shopOrders/all/${id}`);
   return response.data;

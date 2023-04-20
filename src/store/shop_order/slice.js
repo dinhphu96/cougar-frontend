@@ -23,8 +23,6 @@ import {
   setAsDefaultAddress,
   getListPaymentType,
   addNewUserPayment,
-  doReview,
-  doUpdateReview,
   getAllInvoiceByUserId,
   getAllInvoiceDetailByUserId
 } from "./api";
@@ -371,23 +369,6 @@ const ShopOrderSlice = createSlice({
         state.status = "Successed";
       })
       .addCase(doChangePassword.rejected, (state, action) => {
-        state.status = "Failed";
-      })
-
-      //Review
-      .addCase(doReview.fulfilled, (state, action) => {
-        state.status = "Successed";
-        state.message = action.payload;
-      })
-      .addCase(doReview.rejected, (state, action) => {
-        state.status = "Failed";
-      })
-      // update review
-      .addCase(doUpdateReview.fulfilled, (state, action) => {
-        state.status = "Successed";
-        state.message = action.payload;
-      })
-      .addCase(doUpdateReview.rejected, (state, action) => {
         state.status = "Failed";
       })
 
