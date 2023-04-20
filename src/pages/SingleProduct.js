@@ -503,8 +503,8 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Color :</h3>
                   <ul className="colors ps-0">
                     {
-                      listColor.map(col => (
-                        <Color key={col} color={col} />
+                      listRelatedProductItems.map(col => (
+                        <Color key={col.id} color={col.color} />
                       ))
                     }
                   </ul>

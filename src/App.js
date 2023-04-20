@@ -40,11 +40,12 @@ import YourOrder from "./pages/YourOrder";
 
 function App() {
   const dispatch = useDispatch();
-  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
 
   useEffect(() => {
     dispatch(getProductItem());
   }, [dispatch])
+
+  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
 
   useEffect(() => {
     if (sessionUser) {

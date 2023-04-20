@@ -210,7 +210,6 @@ const ShopOrderSlice = createSlice({
         if (existing) {
           state.cartItems = state.cartItems.filter((ite) => ite.id !== id);
         }
-
         state.status = "succeeded";
       })
 
