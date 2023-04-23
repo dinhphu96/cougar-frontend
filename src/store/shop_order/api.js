@@ -99,11 +99,19 @@ export const deleteOrderDetaiById = createAsyncThunk(
 // });
 
 export const updateUser = createAsyncThunk("User/update", async (user) => {
-  const response = await axios.put(
-    `http://localhost:8080/rest/users/update/${user.id}`,
-    user
-  );
-  return response.data;
+  if(user.checkImage){
+    const response = await axios.put(
+      `http://localhost:8080/api/users/updateWithAvatar`,
+      user.user
+    );
+    return response.data;
+  }else{
+    const response = await axios.put(
+      `http://localhost:8080/api/users/update`,
+      user.user
+    );
+    return response.data;
+  }
 });
 
 /*-------------------------------------------------------------------------*/

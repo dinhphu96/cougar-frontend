@@ -43,13 +43,18 @@ export default function Profile() {
   const [country, setCountry] = useState("");
   const [defa, setDefa] = useState(0);
   const [checkChange, setCheckChange] = useState(false);
-
+  
+  //image
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
+  const [fileImage, setFileImage] = useState(null);
+  const [changeProImage, setChangeProImage] = useState(false);
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
     setCheckChange(true);
+    setChangeProImage(true);
+    setFileImage(event.target.files[0]);
   };
 
   useEffect(() => {
@@ -59,11 +64,12 @@ export default function Profile() {
       setName(userrr.fullname);
       setEmail(userrr.email);
       setPhone(userrr.phone);
-
+      
       if (userrr.avatar !== null) {
         setImage(
           `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
         );
+        setFileImage(userrr.avatar);
       } else {
         setImage(
           "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678190935/CougarStore/149071_s8mfea.png"
@@ -90,6 +96,17 @@ export default function Profile() {
       setCheckChange(true);
     }
   };
+
+  const resetForm = ()=>{
+    setIdAd(0);
+    setNumber("");
+    setLine("");
+    setDistrict("");
+    setprovince("");
+    setCountry("");
+    setDefa(0);
+    setCheckChange(false);
+  }
 
   const handleNewAddress = () => {
     if (
@@ -140,10 +157,8 @@ export default function Profile() {
   };
 
   const handleChangeNumber = (e) => {
-    if (!isNaN(e.target.value)) {
       setNumber(e.target.value);
       setCheckChange(true);
-    }
   };
   const handleChangeLine = (e) => {
     setLine(e.target.value);
@@ -163,38 +178,51 @@ export default function Profile() {
   };
 
   const handleSubmit = (e) => {
-    if (!checkChange) {
-      e.preventDefault();
-    } else {
-      if (name !== "" && email !== "" && phone !== "") {
-        var avat = null;
-        if (editor) {
+
+    if (checkChange) {
+      if (name !== "" && email !== "" && phone !== "" && phone.length === 10) {
+        if (changeProImage) {
+
+
           const canvas = editor.getImageScaledToCanvas();
-          avat = canvas.toDataURL();
-          console.log(avat);
-          // Lưu hình ảnh tại đây hoặc thực hiện các xử lý khác với hình ảnh
+          const image = canvas.toDataURL();
+
+          const upUser = {
+            id: userrr.id,
+            fullname: name,
+            phone: phone,
+            email: email,
+            avatar: image,
+          };
+  
+          dispatch(updateUser({user: upUser, checkImage: true}));
+          setCheckChange(false);
+          setChangeProImage(false);
+          console.log("up có hinh");
+         
+        } else {
+          const upUser = {
+            id: userrr.id,
+            fullname: name,
+            phone: phone,
+            email: email,
+            avatar: fileImage,
+          };
+  
+          dispatch(updateUser({user: upUser, checkImage: false}));
+          setCheckChange(false);
+          console.log("up khong hinh");
         }
 
-        const upUser = {
-          id: userrr.id,
-          fullname: name,
-          phone: phone,
-          email: email,
-          avatar: avat,
-        };
-
-        dispatch(updateUser(upUser));
-        setCheckChange(false);
-
-        toast.info(`Updated!`, {
-          position: "top-right",
-          autoClose: 600,
+        toast.success('Update User Successed!', {
+          position: 'top-center',
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: 'light'
         });
       }
     }
@@ -363,6 +391,7 @@ export default function Profile() {
                       className="w-100"
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
+                      onClick={resetForm}
                     >
                       <AiOutlinePlus className="me-2" />
                       Add New Address
@@ -448,6 +477,14 @@ export default function Profile() {
                             </div>
                           </div>
                           <div className="modal-footer">
+                          <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={resetForm}
+                            >
+                              Reset
+                            </button>
+
                             <button
                               type="button"
                               className="btn btn-primary"

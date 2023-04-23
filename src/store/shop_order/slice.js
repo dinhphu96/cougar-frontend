@@ -221,6 +221,10 @@ const ShopOrderSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action)=>{
         const { password, ...userpayload } = action.payload;
         state.user = userpayload;
+  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
+        const {roles, ...rest} = sessionUser;
+        const {createDate, ...user} = userpayload;
+        localStorage.setItem('SHARE_USER', JSON.stringify({...user, roles}));
         state.status = "Successed";
       })
       .addCase(updateUser.rejected, (state)=>{
