@@ -177,43 +177,30 @@ export default function Profile() {
     setCheckChange(true);
   };
 
-  const handleSubmit = (e) => {
+
+  const alertCustom = (type, message)=>{
+    toast[type](message, {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+  
+  const handleSubmit = () => {
     if (checkChange) {
       const pattern = new RegExp(/^((\+84)|0)(9|8|7|3|5)[0-9]{8}$/);
       const patternEmail = new RegExp(/^[^\s@]+@[^\s@]+\.com+$/i);
       if (name === "") {
-        toast.error("Check your Fullname!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        alertCustom("error", "Check your Fullname!");
       } else if (email === "" || !patternEmail.test(email) ) {
-        toast.error("Check your Email!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        alertCustom("error", "Check your Email!");
       } else if (phone === "" || !pattern.test(phone)) {
-        toast.error("Check your Phone!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        alertCustom("error", "Check your Phone!");
       } else {
         if (changeProImage) {
           const canvas = editor.getImageScaledToCanvas();
@@ -244,16 +231,7 @@ export default function Profile() {
           setCheckChange(false);
           console.log("up khong hinh");
         }
-        toast.success("Update User Successed!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        alertCustom("success", "Update User Successed!");
       }
     }
   };
@@ -261,16 +239,7 @@ export default function Profile() {
   const handleDeleteAddress = (id) => {
     dispatch(deleteAddress(id));
 
-    toast.success(`Deleted Address!`, {
-      position: "top-right",
-      autoClose: 600,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    alertCustom("success", "Deleted Address!");
   };
 
   const handleSetAsDefault = (address) => {
@@ -299,16 +268,7 @@ export default function Profile() {
 
         dispatch(updateAddress(upAddress));
 
-        toast.info(`Updated!`, {
-          position: "top-right",
-          autoClose: 600,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        alertCustom("info", "Updated!");
       }
     }
 

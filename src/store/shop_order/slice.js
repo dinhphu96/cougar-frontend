@@ -24,7 +24,7 @@ import {
   getListPaymentType,
   addNewUserPayment,
   getAllInvoiceByUserId,
-  getAllInvoiceDetailByUserId
+  getAllInvoiceDetailByUserId,
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -43,7 +43,7 @@ const ShopOrderSlice = createSlice({
     invoiceDetails: [],
     status: "idle",
     error: null,
-    message: ""
+    message: "",
   },
   reducers: {
     // getCart: (state) => {
@@ -60,9 +60,9 @@ const ShopOrderSlice = createSlice({
       state.deliverys = [];
     },
 
-    getUser: (state, action)=>{
+    getUser: (state, action) => {
       state.user = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -73,14 +73,13 @@ const ShopOrderSlice = createSlice({
       })
 
       .addCase(getProductItem.fulfilled, (state, action) => {
-       
         const list = action.payload.reduce((accumulator, currentValue) => {
           const { color, size, ...rest } = currentValue;
           const newPr = rest.productItem;
           newPr.color = currentValue.color;
           newPr.size = currentValue.size;
           accumulator.push(newPr);
-         
+
           return accumulator;
         }, []);
         state.productItems = list;
@@ -218,16 +217,16 @@ const ShopOrderSlice = createSlice({
 
       /*------------------------------------------------------------------ */
       //update user
-      .addCase(updateUser.fulfilled, (state, action)=>{
+      .addCase(updateUser.fulfilled, (state, action) => {
         const { password, ...userpayload } = action.payload;
         state.user = userpayload;
-  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
-        const {roles, ...rest} = sessionUser;
-        const {createDate, ...user} = userpayload;
-        localStorage.setItem('SHARE_USER', JSON.stringify({...user, roles}));
+        const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
+        const { roles } = sessionUser;
+        const { createDate, ...user } = userpayload;
+        localStorage.setItem("SHARE_USER", JSON.stringify({ ...user, roles }));
         state.status = "Successed";
       })
-      .addCase(updateUser.rejected, (state)=>{
+      .addCase(updateUser.rejected, (state) => {
         state.status = "Error";
       })
 
@@ -250,9 +249,11 @@ const ShopOrderSlice = createSlice({
       })
 
       .addCase(updateAddress.fulfilled, (state, action) => {
-        const exit = state.userAddresses.find(ad=>ad.id === action.payload.id);
+        const exit = state.userAddresses.find(
+          (ad) => ad.id === action.payload.id
+        );
 
-        if(exit){
+        if (exit) {
           Object.assign(exit, action.payload);
         }
         state.status = "Successed";
@@ -262,7 +263,9 @@ const ShopOrderSlice = createSlice({
       })
 
       .addCase(deleteAddress.fulfilled, (state, action) => {
-        state.userAddresses = state.userAddresses.filter(ad=>ad.id !== action.payload);
+        state.userAddresses = state.userAddresses.filter(
+          (ad) => ad.id !== action.payload
+        );
         state.status = "Delete Successed";
       })
       .addCase(deleteAddress.rejected, (state, action) => {
@@ -296,12 +299,12 @@ const ShopOrderSlice = createSlice({
       })
 
       //addNewUserPayment
-      .addCase(addNewUserPayment.fulfilled, (state, action)=>{
+      .addCase(addNewUserPayment.fulfilled, (state, action) => {
         state.userPaymenMethod = state.userPaymenMethod.push(action.payload);
         state.status = "Successed";
       })
 
-      .addCase(addNewUserPayment.rejected, (state, action)=>{
+      .addCase(addNewUserPayment.rejected, (state, action) => {
         state.status = action.error.message;
       })
 
@@ -320,10 +323,15 @@ const ShopOrderSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.SHARE_USER;
 
-        localStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
-        localStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
+        localStorage.setItem(
+          "SHARE_USER",
+          JSON.stringify(action.payload.SHARE_USER)
+        );
+        localStorage.setItem(
+          "accessToken_cougarshop",
+          JSON.stringify(action.payload.accessToken)
+        );
         state.error = "Successed";
-
       })
 
       .addCase(doLogin.rejected, (state, action) => {
@@ -332,7 +340,7 @@ const ShopOrderSlice = createSlice({
         state.user = {};
         state.error = action.payload;
       })
-      
+
       //get wishList by user id
       .addCase(getWishListByUserId.pending, (state) => {
         state.status = "Loading...";
@@ -392,7 +400,7 @@ const ShopOrderSlice = createSlice({
       .addCase(getAllInvoiceDetailByUserId.fulfilled, (state, action) => {
         state.invoiceDetails = action.payload;
         state.status = "idle";
-      })
+      });
   },
 });
 export default ShopOrderSlice;
