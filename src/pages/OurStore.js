@@ -5,87 +5,233 @@ import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
 import Container from "../components/Container";
 
-import { colorList, sizeList } from "../store/filtersStore/filtersSelector";
+import { availabilitySelector, categoriesList, categoriesSelector, colorList, headerSelector, listProductItems, productTagChooseSelector, productTagsSelector, sizeList, sizeSelector, subCategoriesList } from "../store/filtersStore/filtersSelector";
 
 import product05 from "../images/product/product-05.png";
 import product06 from "../images/product/product-06.png";
 
-// import { getPrISelector } from "../store/shop_order/selectors";
-import { useSelector } from "react-redux";
-
-import { useDispatch } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
 import filtersSlice from "../store/filtersStore/filtersSlice";
 import { getFilterSelector } from '../store/filtersStore/filtersSelector';
-import { getColorAndSize } from "../store/filtersStore/api";
+import { getColorAndSize, getCategories } from "../store/filtersStore/api";
 import { useEffect } from "react";
 
 const OurStore = () => {
-  // const productItems = useSelector(getPrISelector);
-  const productItems = useSelector(getFilterSelector);
-
-  const dispatch = useDispatch();
-
   const [filterCategory, setFilterCategory] = useState([]);
   const [filterAvailability, setFilterAvailability] = useState([]);
   const [filterPriceFrom, setFilterPriceFrom] = useState(0);
   const [filterPriceTo, setFilterPriceTo] = useState(9999);
-  const [filterProductTags, setFilterProductTags] = useState([]);
   const [filterColor, setFilterColor] = useState('');
+  const [page, setPage] = useState(1);
   const [filterSize, setFilterSize] = useState([]);
 
+  const dispatch = useDispatch();
+
+  const listProductItem = useSelector(getFilterSelector);
+  const listProductItemsDefault = useSelector(listProductItems);
+  const categories = useSelector(categoriesList);
+  const listCheckedCategories = useSelector(categoriesSelector);
+  const listCheckedSize = useSelector(sizeSelector);
+  const listCheckedInStock = useSelector(availabilitySelector);
+  const listSubCategories = useSelector(subCategoriesList);
+  const listCheckedProductTag = useSelector(productTagsSelector);
+  const productTagChoose = useSelector(productTagChooseSelector);
+
+  const listSubCate = [];
+  listSubCategories.map((subCate) => {
+    return listSubCate.includes(subCate.name) ? '' : listSubCate.push(subCate.name);
+  })
+  // list color of product
+  const list = [];
+  const headerCategories = useSelector(headerSelector);
+  useSelector(colorList).map((todo) => {
+    return list.includes(todo.value) ? '' : list.push(todo.value);
+  });
+
+  const temp = useSelector(listProductItems);
+  const result = temp.reduce((acc, sizeItem) => {
+    const size = sizeItem.size;
+    const index = acc.findIndex((obj) => obj.size === size);
+    if (index !== -1) {
+      acc[index].count++;
+    } else {
+      acc.push({ size, count: 1 });
+    }
+    return acc;
+  }, []);
+  // length paginationSize
+  const paginationSize = (listProductItem.length / 9).toFixed();
+
+  var countInStock = 0;
+  var countOutStock = 0;
+  listProductItemsDefault.map((todo) => {
+    todo.productItem.product.qtyInStock != 0 ? countInStock++ : countOutStock++
+  })
+
+
   const handleFiltersGender = (gender) => {
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     setFilterCategory(gender.target.value);
     dispatch(filtersSlice.actions.genderFilterChange(gender.target.value));
+    dispatch(filtersSlice.actions.categoryHeaderChange(''));
   }
 
   const handleFilersAvailability = (value) => {
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     setFilterAvailability(value.target.value);
     dispatch(filtersSlice.actions.availabilityFilterChange(value.target.value));
   }
 
   const handleFiltersPriceFrom = (price) => {
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     setFilterPriceFrom(price.target.value);
     dispatch(filtersSlice.actions.priceFromFilterChange(price.target.value));
   }
 
   const handleFiltersPriceTo = (price) => {
     setFilterPriceTo(price.target.value);
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     dispatch(filtersSlice.actions.priceToFilterChange(price.target.value));
   }
 
   const handleFilersProductTags = (tag) => {
-    if (tag.target.className === 'badge bg-light text-secondary rounded-3 py-2 px-3 btn') {
-      tag.target.className = 'badge bg-warning text-secondary rounded-3 py-2 px-3 btn btn-warning';
-    } else {
-      tag.target.className = 'badge bg-light text-secondary rounded-3 py-2 px-3 btn';
-    }
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     dispatch(filtersSlice.actions.productTagsFilterChange(tag.target.value));
   }
   const handleFiltersColor = (c) => {
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     setFilterColor(c.target.id);
     dispatch(filtersSlice.actions.colorFilterClick(c.target.id));
   }
 
-  const handleFiltersSize = (s) =>{
-    console.log(s.target.value);
+  const handleFiltersSize = (s) => {
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
     setFilterSize(s.target.value);
-    dispatch(filtersSlice.actions.sizeFilterChange(s.target.value));  
+    dispatch(filtersSlice.actions.sizeFilterChange(s.target.value));
+  }
+
+  //pagination
+  const handlePage = (page) => {
+    setPage(parseInt(page.target.id) + 0);
+    dispatch(filtersSlice.actions.pageChange(parseInt(page.target.id) + 0));
+  }
+
+  const handlePrev = () => {
+    if (page != 1) {
+      setPage(page - 1);
+      dispatch(filtersSlice.actions.pageChange(page - 1));
+    }
+  }
+
+  const handleNext = () => {
+    if (page < paginationSize) {
+      setPage(page + 1);
+      dispatch(filtersSlice.actions.pageChange(page + 1));
+    }
   }
 
   useEffect(() => {
     dispatch(getColorAndSize());
-  }, [dispatch]);
-  const list = [];
-  const listSizes = [];
-  const listSize = useSelector(sizeList).map((todo) => {
-    return listSizes.includes(todo.value) ? '' : listSizes.push(todo.value);
-  });;
-  const listColor = useSelector(colorList).map((todo) => {
-    return list.includes(todo.value) ? '' : list.push(todo.value);
-  });
+    dispatch(getCategories());
+    // Availability
+    if (categories.length) {
+      if (headerCategories === '') {
+        categories.map((cate) => {
+          const found = listCheckedCategories.find((s) => s === cate.name);
+          if (!found) {
+            setFilterCategory(cate.name);
+            dispatch(filtersSlice.actions.genderFilterChange(cate.name));
+          }
+        })
+      } else {
+        categories.map((cate) => {
+          const found = listCheckedCategories.find((s) => s === cate.name);
+          if (cate.name === headerCategories) {
+            if (!found) {
+              setFilterCategory(cate.name);
+              dispatch(filtersSlice.actions.genderFilterChange(cate.name));
+            }
+          } else {
+            if (found) {
+              setFilterCategory(cate.name);
+              dispatch(filtersSlice.actions.genderFilterChange(cate.name));
+            }
+          }
+        });
+      }
+    }
+
+    // inStock
+    const foundIn = listCheckedInStock.find((s) => s === 'inStock');
+    const foundOut = listCheckedInStock.find((s) => s === 'outStock');
+    if (!foundIn) {
+      setFilterAvailability('inStock');
+      dispatch(filtersSlice.actions.availabilityFilterChange('inStock'));
+    }
+    if (!foundOut) {
+      setFilterAvailability('outStock');
+      dispatch(filtersSlice.actions.availabilityFilterChange('outStock'));
+    }
+    // price From
+    setFilterPriceFrom(0);
+    dispatch(filtersSlice.actions.priceFromFilterChange(0));
+    // price To
+    setFilterPriceTo(9999);
+    dispatch(filtersSlice.actions.priceToFilterChange(9999));
+    // color
+    setFilterColor('');
+    dispatch(filtersSlice.actions.colorFilterClick(''));
+    // size
+    if (result.length) {
+      result.map((s) => {
+        const found = listCheckedSize.find((size) => size === s.size);
+        if (!found) {
+          setFilterSize(s.size);
+          dispatch(filtersSlice.actions.sizeFilterChange(s.size));
+        }
+      });
+    }
+    // productTag
+    if (productTagChoose === '') {
+      if (listSubCate.length) {
+        listSubCate.map((subCate) => {
+          const found = listCheckedProductTag.find((tag) => tag === subCate);
+          if (!found) {
+            dispatch(filtersSlice.actions.productTagsFilterChange(subCate));
+          }
+        });
+      }
+    } else {
+      if (listSubCate.length) {
+        listSubCate.map((subCate) => {
+          const found = listCheckedProductTag.find((tag) => tag === subCate);
+          if (productTagChoose === subCate) {
+            if (!found) {
+              dispatch(filtersSlice.actions.productTagsFilterChange(subCate));
+            }
+          }else{
+            if(found){
+              dispatch(filtersSlice.actions.productTagsFilterChange(subCate));
+            }
+          }
+        });
+      }
+    }
+
+    // page
+    setPage(1);
+    dispatch(filtersSlice.actions.pageChange(1));
+  }, [dispatch, headerCategories, categories.length > 0, result.length > 0, listSubCate.length > 0, productTagChoose]);
 
   const [grid, setGrid] = useState(4);
+
   return (
     <>
       <Meta title={"Our Store"} />
@@ -97,48 +243,25 @@ const OurStore = () => {
               <h3 className="filter-title">Shop By Categories</h3>
               <div>
                 <ul className="ps-0">
-                  <li>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value='Men'
-                        id=""
-                        onChange={handleFiltersGender}
-                      />
-                      <label className="form-check-label" htmlFor="">
-                        Men (1)
-                      </label>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value='Women'
-                        id=""
-                        onChange={handleFiltersGender}
-                      />
-                      <label className="form-check-label" htmlFor="">
-                        Women (1)
-                      </label>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value='Kids'
-                        id=""
-                        onChange={handleFiltersGender}
-                      />
-                      <label className="form-check-label" htmlFor="">
-                        Kids (1)
-                      </label>
-                    </div>
-                  </li>
+                  {categories.map((cate) => (
+                    <li key={cate.id}>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          value={cate.name}
+                          id=""
+                          onChange={handleFiltersGender}
+                          checked={listCheckedCategories.find((todo) => todo === cate.name) ? 'checked' : ''}
+                        />
+                        <label className="form-check-label" htmlFor="">
+                          {cate.name} ({listProductItemsDefault.filter((value) =>
+                            value.productItem.product.subcategory.category.name === cate.name
+                              ? value : '').length})
+                        </label>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -154,9 +277,10 @@ const OurStore = () => {
                       value="inStock"
                       id=""
                       onChange={handleFilersAvailability}
+                      checked={listCheckedInStock.find((todo) => todo === 'inStock') ? 'checked' : ''}
                     />
                     <label className="form-check-label" htmlFor="">
-                      In Stock (1)
+                      In Stock ({countInStock})
                     </label>
                   </div>
                   <div className="form-check">
@@ -166,13 +290,14 @@ const OurStore = () => {
                       value="outStock"
                       id=""
                       onChange={handleFilersAvailability}
+                      checked={listCheckedInStock.find((todo) => todo === 'outStock') ? 'checked' : ''}
                     />
                     <label className="form-check-label" htmlFor="">
-                      Out of Stock(0)
+                      Out of Stock ({countOutStock})
                     </label>
                   </div>
                 </div>
-                <h5 className="sub-title">Price</h5>
+                <h5 className="sub-title">Price : {filterPriceFrom} - {filterPriceTo} $</h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
@@ -201,7 +326,6 @@ const OurStore = () => {
                 </div>
                 <h5 className="sub-title">Colors</h5>
                 <div>
-
                   <ul className="colors ps-0">
                     <button className="btn btn-warning py-0" style={{ height: '20px', textAlign: 'center' }} id={''} onClick={handleFiltersColor}>All</button>
                     {list.map((color, index) => (
@@ -214,17 +338,18 @@ const OurStore = () => {
                 <h5 className="sub-title">Size</h5>
                 <div>
                   {
-                    listSizes.map((todo,index) => (
+                    result.map((todo, index) => (
                       <div className="form-check" key={index}>
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          value={todo}
+                          value={todo.size}
                           id="color-1"
                           onChange={handleFiltersSize}
+                          checked={listCheckedSize.find((s) => s === todo.size) ? 'checked' : ''}
                         />
                         <label className="form-check-label" htmlFor="color-1">
-                          {todo} (2)
+                          {todo.size} ({todo.count})
                         </label>
                       </div>
                     ))
@@ -233,54 +358,18 @@ const OurStore = () => {
               </div>
             </div>
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Product Tags</h3>
+              <h3 className="filter-title">Categories</h3>
               <div>
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='T-Shirt'
-                      onClick={handleFilersProductTags}>T-Shirt</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Skurt'
-                      onClick={handleFilersProductTags}>Skurt</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Shirt'
-                      onClick={handleFilersProductTags}>Shirt</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Jacket'
-                      onClick={handleFilersProductTags}>Jacket</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Shoes'
-                      onClick={handleFilersProductTags}>Shoes</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Watches'
-                      onClick={handleFilersProductTags}>Watches</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Jean'
-                      onClick={handleFilersProductTags}>Jean</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='short'
-                      onClick={handleFilersProductTags}>Short</button>
-                  </span>
-                  <span>
-                    <button className="badge bg-light text-secondary rounded-3 py-2 px-3 btn"
-                      value='Pants'
-                      onClick={handleFilersProductTags}>Pants</button>
-                  </span>
+                  {listSubCate.map((subCate, index) => (
+                    <span key={index}>
+                      <button className={listCheckedProductTag.find((tag) => tag === subCate) ?
+                        "badge bg-warning text-secondary rounded-3 py-2 px-3 btn btn-warning"
+                        : "badge bg-light text-secondary rounded-3 py-2 px-3 btn"}
+                        value={subCate}
+                        onClick={handleFilersProductTags}>{subCate}</button>
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -352,7 +441,7 @@ const OurStore = () => {
                   </select>
                 </div>
                 <div className="d-flex align-items-center gap-10">
-                  <p className="totalproducts mb-0">21 Products</p>
+                  <p className="totalproducts mb-0">{listProductItem.length} Products</p>
                   <div className="d-flex gap-10 align-items-center grid">
                     <img
                       onClick={() => {
@@ -393,11 +482,53 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                {productItems.map((prI) => (
-                  <ProductCard key={prI.id} productItem={prI} grid={grid} />
+                {listProductItem.map((prI, index) => (
+                  index < 9 * page && index >= 9 * (page - 1) ?
+                    <ProductCard key={prI.id} productItem={prI} grid={grid} />
+                    : ''
                 ))}
-
               </div>
+            </div>
+            <div className="">
+              <nav className="pagination-outer" aria-label="Page navigation">
+                <ul className="pagination">
+                  <li
+                    className="page-item"
+                    onClick={handlePrev}
+                  >
+                    <a href="#" className="page-link" aria-label="Previous">
+                      <span aria-hidden="true">«</span>
+                    </a>
+                  </li>
+                  {listProductItem.map((prI, index) => (
+                    paginationSize > 4 ?
+                      page <= (paginationSize - 4) ?
+                        index < 4 ?
+                          index + 1 === page ?
+                            <li key={page + index} className="page-item active" onClick={handlePage}><a id={page + index} className="page-link" href="#">{page + index}</a></li>
+                            : <li key={page + index} className="page-item" onClick={handlePage}><a id={page + index} className="page-link" href="#">{page + index}</a></li>
+                          : ''
+                        : index < 4 ?
+                          index + 1 === page ?
+                            <li key={index + (paginationSize + 1 - 4)} className="page-item active" onClick={handlePage}><a id={index + (paginationSize + 1 - 4)} className="page-link" href="#">{index + (paginationSize + 1 - 4)}</a></li>
+                            : <li key={index + (paginationSize + 1 - 4)} className="page-item" onClick={handlePage}><a id={index + (paginationSize + 1 - 4)} className="page-link" href="#">{index + (paginationSize + 1 - 4)}</a></li>
+                          : ''
+                      : index < paginationSize ?
+                        index + 1 === page ?
+                          <li key={index + 1} className="page-item active" onClick={handlePage}><a id={index + 1} className="page-link" href="#">{index + 1}</a></li>
+                          : <li key={index + 1} className="page-item" onClick={handlePage}><a id={index + 1} className="page-link" href="#">{index + 1}</a></li>
+                        : ''
+                  ))}
+                  <li
+                    className="page-item"
+                    onClick={handleNext}
+                  >
+                    <a href="#" className="page-link" aria-label="Next">
+                      <span aria-hidden="true">»</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
