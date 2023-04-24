@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import wishlist from "../images/wishlist.svg";
@@ -12,23 +12,66 @@ import {
   getUserSelector,
 } from "../store/shop_order/selectors";
 import ShopOrderSlice from "../store/shop_order/slice";
+import { subCategoriesList, productItems, categoriesList, categoriesSelector, headerSelector } from "../store/filtersStore/filtersSelector";
+import { getCategories, getSubCategories } from "../store/filtersStore/api";
+import { useEffect } from "react";
+import filtersSlice from "../store/filtersStore/filtersSlice";
 
 const Header = () => {
   const userrr = useSelector(getUserSelector);
   const listCartItem = useSelector(getCartSelector);
+  const listSubCategories = useSelector(subCategoriesList);
+  const listProductItems = useSelector(productItems);
+
+  const categories = useSelector(categoriesList);
+  const listCheckedCategories = useSelector(categoriesSelector);
+  const headerCategories = useSelector(headerSelector);
+  const [filterSearch, setFilterSearch] = useState('');
+
   const userL = localStorage.getItem("SHARE_USER");
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCategories());
+    dispatch(getSubCategories());
+  }, [dispatch]);
+
   const amount = listCartItem.length;
 
-  const dispatch = useDispatch();
   const handleLogout = () => {
     localStorage.removeItem("accessToken_cougarshop");
     localStorage.removeItem("SHARE_USER");
     dispatch(ShopOrderSlice.actions.removeUser());
   };
+
+  const handleHome = () =>{
+    dispatch(filtersSlice.actions.categoryHeaderChange(''));
+    dispatch(filtersSlice.actions.productTagChooseChange(''));
+  }
+
+  const counts = (name, cate) => {
+    var c = 0;
+    listProductItems.map((pr) => {
+      if (pr.product.subcategory.name === name && pr.product.subcategory.category.id === cate) {
+        c++;
+      }
+    })
+    return c;
+  }
+
+  const handleCategoryHeader = (cate) =>{
+    dispatch(filtersSlice.actions.categoryHeaderChange(cate.target.id));
+    dispatch(filtersSlice.actions.productTagChooseChange(cate.target.name));
+  }
+
+  const handleSearch = (text) =>{
+    console.log(text.target.value);
+    dispatch(filtersSlice.actions.searchChange(text.target.value));
+  }
 
   return (
     <>
@@ -70,9 +113,10 @@ const Header = () => {
                   placeholder="Search Product Here..."
                   aria-label="Search Product Here..."
                   aria-describedby="basic-addon2"
+                  onChange={handleSearch}
                 />
                 <Link
-                  to={"/"}
+                  to="/product"
                   className="input-group-text p-3"
                   id="basic-addon2"
                 >
@@ -191,35 +235,54 @@ const Header = () => {
                       aria-expanded="false"
                     >
                       <img src={menu} alt="" />
-                      <span className="me-5 d-inline-block">
-                        Shop Categories
-                      </span>
+                      <span className="me-5 d-inline-block"> Shop Categories </span>
                     </button>
-                    <ul
-                      className="dropdown-menu py-0"
-                      aria-labelledby="dropdownMenuButton1"
-                    >
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Men
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          women
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Kids
-                        </Link>
-                      </li>
+
+                    <ul className="dropdown-menu py-0" style={{ width: '1000px' }} aria-labelledby="dropdownMenuButton1">
+                      <div className="row mx-5 my-3" >
+                        <div className="col-4">
+                          <h3 className="text-primary ">Men</h3>
+                          <ul className="list-unstyled border-primary">
+                            {
+                              listSubCategories.map((sub) => {
+                                if (sub.category.id === 1) {
+                                  return <li key={sub.id} onClick={handleCategoryHeader}><Link id='Men' className=" text-white" name={sub.name} to="/product"> {sub.name} ({counts(sub.name, 1)})</Link></li>
+                                }
+                              })
+                            }
+                          </ul>
+                        </div>
+                        <div className="col-4">
+                          <h3 className="text-warning">Women</h3>
+                          <ul className="list-unstyled border-warning">
+                            {
+                              listSubCategories.map((sub) => {
+                                if (sub.category.id === 2) {
+                                  return <li key={sub.id} onClick={handleCategoryHeader}><Link id='Women' className=" text-white" name={sub.name} to="/product"> {sub.name} ({counts(sub.name, 2)})</Link></li>
+                                }
+                              })
+                            }
+                          </ul>
+                        </div>
+                        <div className="col-4" >
+                          <h3 className="text-danger">Kids</h3>
+                          <ul className="list-unstyled border-danger">
+                            {
+                              listSubCategories.map((sub) => {
+                                if (sub.category.id === 3) {
+                                  return <li key={sub.id} onClick={handleCategoryHeader}><Link id='Kids' className=" text-white" name={sub.name} to="/product"> {sub.name} ({counts(sub.name, 3)})</Link></li>
+                                }
+                              })
+                            }
+                          </ul>
+                        </div>
+                      </div>
                     </ul>
                   </div>
                 </div>
                 <div className="menu-links">
                   <div className="d-flex align-items-center gap-15">
-                    <NavLink to="/">Home</NavLink>
+                    <NavLink onClick={handleHome} to="/">Home</NavLink>
                     <NavLink to="/product">Our Store</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
