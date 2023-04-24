@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
 const Login = () => {
-
-  const { register, handleSubmit, formState: { errors } } = useForm({ mode: "onChange" });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: "onChange" });
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -34,11 +35,7 @@ const Login = () => {
         });
 
         setTimeout(() => {
-          if (navigate(-1) === '/signup' || navigate(-1) === '/login') {
-            navigate('/');
-          } else {
-            navigate(-1);
-          }
+          navigate("/");
         }, 1000);
       } else if (response.type === doLogin.rejected.toString()) {
         console.log(response.payload.message);
@@ -65,16 +62,28 @@ const Login = () => {
           <div className="col-12">
             <div className="auth-card">
               <h2 className="text-center mb-3">LOG IN</h2>
-              <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column gap-15">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="d-flex flex-column gap-15"
+              >
                 <input
                   className="form-control"
-                  {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
+                  {...register("email", {
+                    required: true,
+                    pattern: /^\S+@\S+$/i,
+                  })}
                   type="email"
                   placeholder="Email"
                 />
                 <span className="errors">
-                  {errors.email?.type === 'required' && <span className="text-danger error">Email field is required.</span>}
-                  {errors.email?.type === 'pattern' && <span className="text-danger error">Invalid email.</span>}
+                  {errors.email?.type === "required" && (
+                    <span className="text-danger error">
+                      Email field is required.
+                    </span>
+                  )}
+                  {errors.email?.type === "pattern" && (
+                    <span className="text-danger error">Invalid email.</span>
+                  )}
                 </span>
                 <input
                   className="form-control"
@@ -83,8 +92,16 @@ const Login = () => {
                   placeholder="Password"
                 />
                 <span className="errors">
-                  {errors.password?.type === 'required' && <span className="text-danger error">Password field is required.</span>}
-                  {errors.password?.type === 'minLength' && <span className="text-danger error">Password must be at least 6 characters.</span>}
+                  {errors.password?.type === "required" && (
+                    <span className="text-danger error">
+                      Password field is required.
+                    </span>
+                  )}
+                  {errors.password?.type === "minLength" && (
+                    <span className="text-danger error">
+                      Password must be at least 6 characters.
+                    </span>
+                  )}
                 </span>
                 <div>
                   <Link to="/forgot-password">Forgot Password?</Link>

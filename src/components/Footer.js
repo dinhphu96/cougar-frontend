@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { BsLinkedin, BsGithub, BsYoutube, BsInstagram } from "react-icons/bs";
 import newsletter from "../images/newsletter.png";
+import logo from "../images/cougar-logo.png";
 const Footer = () => {
   return (
     <>
@@ -62,7 +63,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className="col-3">
+            <div className="col-4">
               <h4 className="text-white mb-4">Information</h4>
               <div className="footer-link d-flex flex-column">
                 <p className="text-white py-2 mb-1">Privacy Policy</p>
@@ -72,21 +73,12 @@ const Footer = () => {
                 <p className="text-white py-2 mb-1">Blogs</p>
               </div>
             </div>
-            <div className="col-3">
+            <div className="col-4">
               <h4 className="text-white mb-4">Account</h4>
               <div className="footer-link d-flex flex-column">
                 <p className="text-white py-2 mb-1">About Us</p>
                 <p className="text-white py-2 mb-1">Faq</p>
                 <p className="text-white py-2 mb-1">Contact</p>
-              </div>
-            </div>
-            <div className="col-2">
-              <h4 className="text-white mb-4">Quick Links</h4>
-              <div className="footer-link d-flex flex-column">
-                <p className="text-white py-2 mb-1">Men</p>
-                <p className="text-white py-2 mb-1">Women</p>
-                <p className="text-white py-2 mb-1">Kids</p>
-                <p className="text-white py-2 mb-1">Accessories</p>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ const ChangePassword = () => {
 
   const onConfirm = (data) => {
     const { confNewPassword, ...sendData } = data;
-    const user = sessionStorage.getItem("SHARE_USER");
+    const user = localStorage.getItem("SHARE_USER");
     const userLogin = JSON.parse(user);
     sendData.email = userLogin.email;
     console.log(sendData);

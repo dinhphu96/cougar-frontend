@@ -194,7 +194,6 @@ const ProductCard = (props) => {
                 {name}
               </Link>
             </h5>
-            <ReactStars count={5} size={24} value={3} activeColor="#ffd700" />
             <p className={`description ${grid === 12 ? "d-block" : "d-none"}`}>
               {description}
             </p>
