@@ -39,15 +39,18 @@ function CartItem(props) {
   return (
     <div className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center">
       <div className="cart-col-1 gap-15 d-flex align-items-center">
-        <div className="w-25 bg-white">
+        <Link
+          className="w-25 bg-white"
+          to={"/product/" + item.productItem.id}
+        >
           <img
             src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${image}`}
             className="img-fluid"
             alt="product image1"
           />
-        </div>
+        </Link>
         <div className="w-75">
-          <p>{name}</p>
+          <Link to={"/product/" + item.productItem.id}>{name}</Link>
           <p>Size: {size}</p>
           <p>Color: {color}</p>
         </div>

@@ -44,12 +44,17 @@ export default function Profile() {
   const [defa, setDefa] = useState(0);
   const [checkChange, setCheckChange] = useState(false);
 
+  //image
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
+  const [fileImage, setFileImage] = useState(null);
+  const [changeProImage, setChangeProImage] = useState(false);
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
     setCheckChange(true);
+    setChangeProImage(true);
+    setFileImage(event.target.files[0]);
   };
 
   useEffect(() => {
@@ -64,6 +69,7 @@ export default function Profile() {
         setImage(
           `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
         );
+        setFileImage(userrr.avatar);
       } else {
         setImage(
           "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678190935/CougarStore/149071_s8mfea.png"
@@ -89,6 +95,17 @@ export default function Profile() {
       setPhone(e.target.value);
       setCheckChange(true);
     }
+  };
+
+  const resetForm = () => {
+    setIdAd(0);
+    setNumber("");
+    setLine("");
+    setDistrict("");
+    setprovince("");
+    setCountry("");
+    setDefa(0);
+    setCheckChange(false);
   };
 
   const handleNewAddress = () => {
@@ -140,10 +157,8 @@ export default function Profile() {
   };
 
   const handleChangeNumber = (e) => {
-    if (!isNaN(e.target.value)) {
-      setNumber(e.target.value);
-      setCheckChange(true);
-    }
+    setNumber(e.target.value);
+    setCheckChange(true);
   };
   const handleChangeLine = (e) => {
     setLine(e.target.value);
@@ -163,35 +178,78 @@ export default function Profile() {
   };
 
   const handleSubmit = (e) => {
-    if (!checkChange) {
-      e.preventDefault();
-    } else {
-      if (name !== "" && email !== "" && phone !== "") {
-        var avat = null;
-        if (editor) {
-          const canvas = editor.getImageScaledToCanvas();
-          avat = canvas.toDataURL();
-          console.log(avat);
-          // Lưu hình ảnh tại đây hoặc thực hiện các xử lý khác với hình ảnh
-        }
-
-        const upUser = {
-          id: userrr.id,
-          fullname: name,
-          phone: phone,
-          email: email,
-          avatar: avat,
-        };
-
-        dispatch(updateUser(upUser));
-        setCheckChange(false);
-
-        toast.info(`Updated!`, {
-          position: "top-right",
-          autoClose: 600,
+    if (checkChange) {
+      const pattern = new RegExp(/^((\+84)|0)(9|8|7|3|5)[0-9]{8}$/);
+      const patternEmail = new RegExp(/^[^\s@]+@[^\s@]+\.com+$/i);
+      if (name === "") {
+        toast.error("Check your Fullname!", {
+          position: "top-center",
+          autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (email === "" || !patternEmail.test(email) ) {
+        toast.error("Check your Email!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (phone === "" || !pattern.test(phone)) {
+        toast.error("Check your Phone!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        if (changeProImage) {
+          const canvas = editor.getImageScaledToCanvas();
+          const image = canvas.toDataURL();
+
+          const upUser = {
+            id: userrr.id,
+            fullname: name,
+            phone: phone,
+            email: email,
+            avatar: image,
+          };
+
+          dispatch(updateUser({ user: upUser, checkImage: true }));
+          setCheckChange(false);
+          setChangeProImage(false);
+          console.log("up có hinh");
+        } else {
+          const upUser = {
+            id: userrr.id,
+            fullname: name,
+            phone: phone,
+            email: email,
+            avatar: fileImage,
+          };
+
+          dispatch(updateUser({ user: upUser, checkImage: false }));
+          setCheckChange(false);
+          console.log("up khong hinh");
+        }
+        toast.success("Update User Successed!", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
           theme: "light",
@@ -329,6 +387,7 @@ export default function Profile() {
                       className="border-0 w-100"
                       value={email}
                       onChange={handleChangeEmail}
+                      required
                     ></input>
                   </MDBCol>
                 </MDBRow>
@@ -347,6 +406,17 @@ export default function Profile() {
                     ></input>
                   </MDBCol>
                 </MDBRow>
+                <hr/>
+                <MDBRow>
+                  <MDBCol>
+                    <button
+                      className="button float-end border-0"
+                      onClick={handleSubmit}
+                    >
+                      Save Change
+                    </button>
+                  </MDBCol>
+                </MDBRow>
                 <hr />
                 <MDBRow className="align-items-center">
                   <MDBCol sm="8">
@@ -363,6 +433,7 @@ export default function Profile() {
                       className="w-100"
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
+                      onClick={resetForm}
                     >
                       <AiOutlinePlus className="me-2" />
                       Add New Address
@@ -448,6 +519,14 @@ export default function Profile() {
                             </div>
                           </div>
                           <div className="modal-footer">
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={resetForm}
+                            >
+                              Reset
+                            </button>
+
                             <button
                               type="button"
                               className="btn btn-primary"
@@ -643,12 +722,6 @@ export default function Profile() {
                 ))}
               </MDBCardBody>
             </MDBCard>
-            <button
-              className="button float-end border-0"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
           </MDBCol>
         </MDBRow>
       </MDBContainer>

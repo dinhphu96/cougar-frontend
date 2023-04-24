@@ -99,11 +99,19 @@ export const deleteOrderDetaiById = createAsyncThunk(
 // });
 
 export const updateUser = createAsyncThunk("User/update", async (user) => {
-  const response = await axios.put(
-    `http://localhost:8080/rest/users/update/${user.id}`,
-    user
-  );
-  return response.data;
+  if(user.checkImage){
+    const response = await axios.put(
+      `http://localhost:8080/api/users/updateWithAvatar`,
+      user.user
+    );
+    return response.data;
+  }else{
+    const response = await axios.put(
+      `http://localhost:8080/api/users/update`,
+      user.user
+    );
+    return response.data;
+  }
 });
 
 /*-------------------------------------------------------------------------*/
@@ -286,22 +294,12 @@ export const doChangePassword = createAsyncThunk(
   }
 );
 
-export const doReview = createAsyncThunk(
-  "Reviews/send",
-  async (review, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/rest/review/send",
-        review
-      );
-      return response.data;
-    } catch (error) {
-      if (error.response.data) {
-        return rejectWithValue(error.response.data);
-      } else {
-        throw error;
-      }
-    }
-  }
-);
+export const getAllInvoiceByUserId = createAsyncThunk('getAllInvoiceByUserId', async (id) => {
+  const response = await axios.get(`http://localhost:8080/rest/shopOrders/all/${id}`);
+  return response.data;
+});
 
+export const getAllInvoiceDetailByUserId = createAsyncThunk('getAllInvoiceDetailByUserId', async (id) => {
+  const response = await axios.get(`http://localhost:8080/rest/orderDetails/all/${id}`);
+  return response.data;
+});

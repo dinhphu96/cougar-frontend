@@ -23,7 +23,8 @@ import {
   setAsDefaultAddress,
   getListPaymentType,
   addNewUserPayment,
-  doReview
+  getAllInvoiceByUserId,
+  getAllInvoiceDetailByUserId
 } from "./api";
 
 const ShopOrderSlice = createSlice({
@@ -38,8 +39,11 @@ const ShopOrderSlice = createSlice({
     deliverys: [],
     userPaymenMethod: [],
     paymentTypes: [],
+    invoices: [],
+    invoiceDetails: [],
     status: "idle",
     error: null,
+    message: ""
   },
   reducers: {
     // getCart: (state) => {
@@ -119,6 +123,7 @@ const ShopOrderSlice = createSlice({
       .addCase(updateOrder.fulfilled, (state, action) => {
         state.shopOrder = null;
         state.cartItems = [];
+        state.invoices.push(action.payload);
       })
 
       .addCase(updateOrder.rejected, (state, action) => {
@@ -203,7 +208,6 @@ const ShopOrderSlice = createSlice({
         if (existing) {
           state.cartItems = state.cartItems.filter((ite) => ite.id !== id);
         }
-
         state.status = "succeeded";
       })
 
@@ -217,6 +221,10 @@ const ShopOrderSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action)=>{
         const { password, ...userpayload } = action.payload;
         state.user = userpayload;
+  const sessionUser = JSON.parse(localStorage.getItem("SHARE_USER"));
+        const {roles, ...rest} = sessionUser;
+        const {createDate, ...user} = userpayload;
+        localStorage.setItem('SHARE_USER', JSON.stringify({...user, roles}));
         state.status = "Successed";
       })
       .addCase(updateUser.rejected, (state)=>{
@@ -312,8 +320,8 @@ const ShopOrderSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.SHARE_USER;
 
-        sessionStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
-        sessionStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
+        localStorage.setItem('SHARE_USER', JSON.stringify(action.payload.SHARE_USER));
+        localStorage.setItem('accessToken_cougarshop', JSON.stringify(action.payload.accessToken));        
         state.error = "Successed";
 
       })
@@ -368,12 +376,22 @@ const ShopOrderSlice = createSlice({
         state.status = "Failed";
       })
 
-      //Review
-      .addCase(doReview.fulfilled, (state, action) => {
-        state.status = "Successed";
+      // GET ALL INVOICES
+      .addCase(getAllInvoiceByUserId.pending, (state) => {
+        state.status = "loading";
       })
-      .addCase(doReview.rejected, (state, action) => {
-        state.status = "Failed";
+      .addCase(getAllInvoiceByUserId.fulfilled, (state, action) => {
+        state.invoices = action.payload;
+        state.status = "idle";
+      })
+
+      // GET ALL INVOICE DETAILS
+      .addCase(getAllInvoiceDetailByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getAllInvoiceDetailByUserId.fulfilled, (state, action) => {
+        state.invoiceDetails = action.payload;
+        state.status = "idle";
       })
   },
 });

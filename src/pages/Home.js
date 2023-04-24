@@ -291,7 +291,7 @@ const Home = () => {
           </div>
         </div>
       </Container>
-      <Container class1="featured-wrapper py-4 home-wrapper-2">
+      {/* <Container class1="featured-wrapper py-4 home-wrapper-2">
         <div className="row">
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
@@ -300,7 +300,7 @@ const Home = () => {
             <ProductCard key={prI.id} productItem={prI} />
           ))}
         </div>
-      </Container>
+      </Container> */}
 
       <Container class1="famous-wrapper py-4 home-wrapper-2">
         <div className="row">

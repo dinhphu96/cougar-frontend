@@ -28,6 +28,7 @@ const Header = () => {
   const headerCategories = useSelector(headerSelector);
   const [filterSearch, setFilterSearch] = useState('');
 
+  const userL = localStorage.getItem("SHARE_USER");
   const subTotal = listCartItem.reduce((total, init) => {
     return init.total + total;
   }, 0);
@@ -42,8 +43,8 @@ const Header = () => {
   const amount = listCartItem.length;
 
   const handleLogout = () => {
-    sessionStorage.removeItem("accessToken_cougarshop");
-    sessionStorage.removeItem("SHARE_USER");
+    localStorage.removeItem("accessToken_cougarshop");
+    localStorage.removeItem("SHARE_USER");
     dispatch(ShopOrderSlice.actions.removeUser());
   };
 
@@ -285,6 +286,7 @@ const Header = () => {
                     <NavLink to="/product">Our Store</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
+                    {userL ? <NavLink to="/yourorder">Your Order</NavLink> : null}
                   </div>
                 </div>
               </div>

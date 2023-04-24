@@ -4,6 +4,9 @@ export const getCartSelector = (state) => state.ShopOrder.cartItems;
 export const getShopOrderSelector = (state) => state.ShopOrder.shopOrder;
 export const getUserSelector = (state) => state.ShopOrder.user;
 
+//invoices
+export const getInvoiceSelector = (state) => state.ShopOrder.invoices;
+export const getInvoiceDetailSelector = (state) => state.ShopOrder.invoiceDetails;
 
 
 //product

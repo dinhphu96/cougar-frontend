@@ -14,52 +14,61 @@ import {
   addNewOrderDetail,
   updateOrderDetail,
   addNewOrder,
-  addWishList,
-  doReview
+  addWishList
 } from "../store/shop_order/api";
 import {
   getCartSelector,
   getUserSelector,
   getShopOrderSelector,
-  getOnePrISelector,
-  getRelatedProductItemsSelector,
-  getListWishListSelector
+  getListWishListSelector,
+  getPrISelector
 } from "../store/shop_order/selectors";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { getListReview } from "../store/review/api";
+import { doReview, doUpdateReview, getListReview } from "../store/review/api";
 import StarRatings from "react-star-ratings";
-
+import jwtDecode from "jwt-decode";
+import { getListReviewByIdProductItem } from "../store/review/selectors";
 
 const SingleProduct = () => {
   const { id } = useParams();
-  const [changProductItem, setChangProductItem] = useState(id);
+  const [singleProduct, setChangProductItem] = useState(null);
   const listWishList = useSelector(getListWishListSelector);
+  const productItems = useSelector(getPrISelector);
+  const [listRelatedProductItems, setlistRelatedProductItems] = useState([]);
+  const listReviews = useSelector(getListReviewByIdProductItem);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
+  useEffect(() => {
+    if (id && productItems.length) {
+      const prI = productItems.find((pr) => pr.id === +id);
+      if (prI) {
+        setChangProductItem(prI);
+        const listRelatedProductItems = () => productItems.filter((pr) => pr.product.id === prI.product.id);
+        setlistRelatedProductItems(listRelatedProductItems);
+      }
+    }
+
+  }, [productItems.length > 0, id]);
 
   //cuộn trang
   useEffect(() => {
     window.scrollTo(0, 300);
   }, []);
 
-  const singleProduct = useSelector(getOnePrISelector(changProductItem));
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
-  const [listReview, setListReview] = useState([]);
-
-  const listRelatedProductItems = useSelector(
-    getRelatedProductItemsSelector(singleProduct)
-  );
+  // const [listReview, setListReview] = useState([]);
 
 
   useEffect(() => {
     if (listRelatedProductItems.length) {
-      const listCol = listRelatedProductItems.map((pro => pro.color))
-
+      const listCol = listRelatedProductItems.map((pro => pro.color));
       setListColor(listCol);
     }
 
@@ -68,21 +77,19 @@ const SingleProduct = () => {
   useEffect(() => {
     if (singleProduct) {
       setBorderColor(singleProduct.id);
-      dispatch(getListReview(singleProduct.product.id)).then(response => {
-        setListReview(response.payload);
-      });
+      dispatch(getListReview(singleProduct.id));
     }
   }, [singleProduct]);
 
   useEffect(() => {
-    if (listReview.length > 0) {
+    if (listReviews.length > 0) {
       const newAverageRating = (
-        listReview.reduce((total, review) => total + review.ratingValue, 0) /
-        listReview.length
+        listReviews.reduce((total, review) => total + review.ratingValue, 0) /
+        listReviews.length
       ).toFixed(1);
       setAverageRating(newAverageRating);
     }
-  }, [listReview]);
+  }, [listReviews]);
 
 
 
@@ -92,6 +99,7 @@ const SingleProduct = () => {
     var description = singleProduct.product.description;
     var name = singleProduct.product.name;
     var price = singleProduct.price;
+    var sku = singleProduct.sku;
     var categoryName = singleProduct.product.subcategory.name;
     var inStock = singleProduct.qtyInStock !== 0 ? "In Stock" : "Out of Stock";
   }
@@ -110,69 +118,107 @@ const SingleProduct = () => {
   const listCartItem = useSelector(getCartSelector);
   const userr = useSelector(getUserSelector);
   const shopOrder = useSelector(getShopOrderSelector);
-
   const [quty, setQuty] = useState(1);
   const setQuantity = (e) => {
     setQuty(+e.target.value);
   };
   const handleAddToCart = () => {
-    if (userr.id !== undefined) {
-      const { color, size, ...productAdd } = singleProduct;
-      if (listCartItem.length !== 0) {
-        const cartItem = {
-          qty: quty,
-          price: singleProduct.price,
-          productItem: productAdd,
-          shopOrder: shopOrder,
-        };
+    const token = localStorage.getItem("accessToken_cougarshop");
+    const now = Math.floor(Date.now() / 1000);
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.exp < now) {
+        localStorage.removeItem('SHARE_USER');
+        localStorage.removeItem('accessToken_cougarshop');
+        toast.error('Token has expired please login again!', {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          onClose: () => {
+            navigate('/login');
+          }
+        });
 
-        const proExist = listCartItem.find(
-          (ite) => ite.productItem.id === cartItem.productItem.id
-        );
-        if (proExist) {
-          cartItem.id = proExist.id;
-          cartItem.qty += proExist.qty;
-          dispatch(updateOrderDetail(cartItem));
-        } else {
-          dispatch(addNewOrderDetail(cartItem));
-        }
       } else {
-        if (shopOrder) {
+        const { color, size, ...productAdd } = singleProduct;
+        if (listCartItem.length !== 0) {
           const cartItem = {
             qty: quty,
             price: singleProduct.price,
             productItem: productAdd,
             shopOrder: shopOrder,
           };
-          dispatch(addNewOrderDetail(cartItem));
+
+          const proExist = listCartItem.find(
+            (ite) => ite.productItem.id === cartItem.productItem.id
+          );
+          if (proExist) {
+            cartItem.id = proExist.id;
+            cartItem.qty += proExist.qty;
+            dispatch(updateOrderDetail(cartItem));
+          } else {
+            dispatch(addNewOrderDetail(cartItem));
+          }
         } else {
-          const shopO = {
-            user: userr,
-          };
+          if (shopOrder) {
+            const cartItem = {
+              qty: quty,
+              price: singleProduct.price,
+              productItem: productAdd,
+              shopOrder: shopOrder,
+            };
+            dispatch(addNewOrderDetail(cartItem));
+          } else {
+            const shopO = {
+              user: userr,
+            };
 
-          const cartItem = {
-            qty: quty,
-            price: singleProduct.price,
-            productItem: productAdd,
-          };
+            const cartItem = {
+              qty: quty,
+              price: singleProduct.price,
+              productItem: productAdd,
+            };
 
-          dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+            dispatch(addNewOrder({ shopOrder: shopO, orderDetail: cartItem }));
+          }
         }
-      }
 
-      toast.info(`Added - (${quty}) ${name}`, {
-        position: "top-right",
-        autoClose: 700,
+        toast.info(`Added - (${quty}) ${name}`, {
+          position: "top-right",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } else {
+      toast.error('You need to login to add products to cart!', {
+        position: 'top-center',
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: 'light',
+        onClose: () => {
+          navigate('/login');
+        }
       });
-    } else {
-      navigate("/login");
     }
+    // if (userr.id !== undefined) {
+
+    // } else {
+    //   navigate("/login");
+    // }
   };
 
   const handleClickImage = (pro) => {
@@ -209,9 +255,11 @@ const SingleProduct = () => {
   }
 
   //Rating and comment
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [rating, setRating] = useState(selectedReview?.ratingValue || 0);
+  const [comment, setComment] = useState(selectedReview?.comment || "");
   const [averageRating, setAverageRating] = useState("");
+
   //Rating and comment
 
   const handleRatingChange = (newRating) => {
@@ -222,50 +270,127 @@ const SingleProduct = () => {
     setComment(e.target.value);
   };
 
-  const userLogin = JSON.parse(sessionStorage.getItem("SHARE_USER"))
+  const userLogin = JSON.parse(localStorage.getItem("SHARE_USER"))
 
   const handleSubmitReview = (event) => {
     event.preventDefault();
+    if(comment === ""){
+      toast.error("Please write somethings about this product", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     if (userLogin) {
       const newReview = {
         user: userLogin,
         productItem: singleProduct,
         ratingValue: rating,
         comment: comment
-      }
-
-      dispatch(doReview(newReview));
-      alert("Cmt thành công");
-      dispatch(getListReview(singleProduct.id)).then((response) => {
-        setListReview(response.payload);
+      };
+      dispatch(doReview(newReview)).then((response) => {
+        if (response.type === doReview.fulfilled.toString()) {
+          toast.success("Thanks for review!", {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setComment("");
+          setShowReviewForm(false);
+        } else if (response.type === doReview.rejected.toString()) {
+          console.log(response.payload.message);
+          toast.error(response.payload.message, {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       });
-
     } else {
-      alert("Vui lòng đăng nhập trước khi review!");
-      navigate("/login");
+      toast.error("Please login to review this product!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        onClose: () => {
+          navigate('/login');
+        },
+      })
+    }
+  }
+
+  const handleUpdateReview = async (event) => {
+    event.preventDefault();
+    const updatedReview = {
+      ...selectedReview,
+      comment: comment,
+      ratingValue: rating // sử dụng giá trị của rating hiện tại
+    };
+    console.log(updatedReview);
+    const updateResponse = await dispatch(doUpdateReview(updatedReview));
+    if (updateResponse.type === doUpdateReview.fulfilled.toString()) {
+      toast.success("Updated!", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
     setComment("");
     setShowReviewForm(false);
-    setAverageRating(listReview.reduce(
-      (total, review) => total + review.ratingValue,
-      0
-    ) / listReview.length);
-    console.log(listReview);
-    console.log(averageRating);
-  }
+    console.log("after rating value: ", rating);
+    setEditReview(null);
+  };
 
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [visibleComments, setVisibleComments] = useState(5);
+  const [visibleComments, setVisibleComments] = useState(3);
+  const [editingReview, setEditReview] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
 
   const showMoreComments = () => {
     setVisibleComments(visibleComments + 5);
   };
 
   const hideComments = () => {
-    setVisibleComments(5);
+    setVisibleComments(3);
   };
 
 
+
+  const handleEditReview = (newReview) => {
+    console.log(newReview.id);
+    setShowReviewForm(true);
+    setEditReview(true);
+    setSelectedReview(newReview);
+    setComment(newReview.comment);
+    setRating(newReview.ratingValue);
+    setEditingReviewId(newReview.id);
+    console.log("Current rating value: ", newReview.ratingValue);
+  }
 
 
   return (
@@ -293,7 +418,7 @@ const SingleProduct = () => {
                   key={pro.id}
                   className={`${borderColor === pro.id ? "border border-2 border-danger" : "border border-dark"}`}
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleClickImage(pro.id)}
+                  onClick={() => handleClickImage(pro)}
                 >
                   <img
                     src={`https://res.cloudinary.com/dmjh7imwd/image/upload/${pro.image}`}
@@ -312,14 +437,18 @@ const SingleProduct = () => {
               <div className="border-bottom py-3">
                 <p className="price">{`$${price}`}</p>
                 <div className="d-flex align-items-center gap-10">
-                  <ReactStars
-                    count={5}
-                    size={24}
-                    value={4}
-                    edit={false}
-                    activeColor="#ffd700"
+                  <StarRatings
+                    rating={listReviews && listReviews.length > 0 ? (listReviews.reduce(
+                      (total, review) => total + review.ratingValue,
+                      0
+                    ) / listReviews.length) : 0}
+                    starRatedColor="#ffd700"
+                    starHoverColor="#ffd700"
+                    numberOfStars={5}
+                    starDimension="30px"
+                    name="rating"
                   />
-                  <p className="mb-0 t-review">( 2 Reviews )</p>
+                  <p className="mb-0 t-review">( {listReviews.length} Reviews )</p>
                 </div>
                 <a className="review-btn" href="#review">
                   Write a Review
@@ -337,6 +466,13 @@ const SingleProduct = () => {
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Availablity :</h3>
                   <p className="product-data">{inStock}</p>
+                </div>
+                <div className="d-flex gap-10 align-items-center my-2">
+                  <h3 className="product-heading">SKU :</h3>
+                  <p className="product-data">{sku}</p>
+                </div>
+                <div className="d-flex gap-10 align-items-center my-3">
+
                 </div>
                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                   <h3 className="product-heading">Size :</h3>
@@ -356,8 +492,8 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Color :</h3>
                   <ul className="colors ps-0">
                     {
-                      listColor.map(col => (
-                        <Color key={col} color={col} />
+                      listRelatedProductItems.map(col => (
+                        <Color key={col.id} color={col.color} />
                       ))
                     }
                   </ul>
@@ -390,7 +526,7 @@ const SingleProduct = () => {
                 <div className="d-flex align-items-center gap-15">
                   <div>
                     <Link onClick={handleAddtoWishList}>
-                      <AiFillHeart style={{ color: listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
+                      <AiFillHeart style={{ color: singleProduct && listWishList.some(wi => wi.productItem.id === singleProduct.id) ? "red" : "grey", fontSize: "30px" }} /> Add to Wishlist
                     </Link>
                   </div>
                 </div>
@@ -440,22 +576,22 @@ const SingleProduct = () => {
                   <h4 className="mb-2">Customer Reviews</h4>
                   <div className="d-flex align-items-center gap-10">
                     <StarRatings
-                      rating={listReview && listReview.length > 0 ? (listReview.reduce(
+                      rating={listReviews && listReviews.length > 0 ? (listReviews.reduce(
                         (total, review) => total + review.ratingValue,
                         0
-                      ) / listReview.length) : 0}
+                      ) / listReviews.length) : 0}
                       starRatedColor="#ffd700"
                       starHoverColor="#ffd700"
                       numberOfStars={5}
                       starDimension="30px"
                       name="rating"
                     />
-                    <p className="mb-0">({listReview && listReview.length > 0 ? (parseFloat(averageRating) || "0.0") : "0.0"}) Based on {listReview.length} Reviews</p>
+                    <p className="mb-0">({listReviews && listReviews.length > 0 ? (parseFloat(averageRating) || "0.0") : "0.0"}) Based on {listReviews.length} Reviews</p>
                   </div>
                 </div>
                 {true && (
                   <div>
-                    <button onClick={() => setShowReviewForm(true)} className="text-dark text-decoration-underline">
+                    <button onClick={() => setShowReviewForm(true)} className="button-17">
                       Write a Review
                     </button>
                   </div>
@@ -463,7 +599,7 @@ const SingleProduct = () => {
               </div>
               {showReviewForm && (
                 <div className="review-form py-4">
-                  <h4>Write a Review</h4>
+                  <h4>{editingReview ? 'Edit' : 'Write a'} Review</h4>
                   <div className="d-flex flex-column gap-15">
                     <div>
                       <ReactStars
@@ -488,30 +624,48 @@ const SingleProduct = () => {
                       ></textarea>
                     </div>
                     <div className="d-flex justify-content-end">
-                      <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>
+                      {editingReview ? (<button onClick={handleUpdateReview} className="button border-0">Save Change</button>) : <button onClick={handleSubmitReview} className="button border-0">Submit Review</button>}
                     </div>
                   </div>
                 </div>
               )}
               <div className="reviews mt-4">
                 <div className="reviews mt-4">
-                  {listReview && listReview.length > 0 ? (
-                    listReview.slice(0, visibleComments).map((review) => {
+                  {listReviews && listReviews.length > 0 ? (
+                    listReviews.slice(0, visibleComments).map((review) => {
+                      const isCurrentUserReview = review.user && userLogin && review.user.email === userLogin.email;
                       const createDate = moment.utc(review.createDate);
                       const now = moment();
                       const diffSeconds = now.diff(createDate, 'seconds');
                       const diffMin = Math.floor(diffSeconds / 60);
                       let timeAgo;
-                      if (diffMin < 60) {
-                        timeAgo = `${diffMin} phút trước`;
-                      } else {
+                      if (diffMin < 1) {
+                        timeAgo = `now`;
+                      } else if (diffMin > 60) {
                         const diffHours = Math.floor(diffMin / 60);
-                        timeAgo = `${diffHours} giờ trước`;
+                        if (diffHours > 24) {
+                          const diffDays = Math.floor(diffHours / 24);
+                          if (diffDays > 30) {
+                            const diffMonths = Math.floor(diffDays / 30);
+                            if (diffMonths > 12) {
+                              const diffYears = Math.floor(diffMonths / 12);
+                              timeAgo = `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+                            } else {
+                              timeAgo = `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+                            }
+                          } else {
+                            timeAgo = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+                          }
+                        } else {
+                          timeAgo = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                        }
+                      } else {
+                        timeAgo = `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
                       }
                       return (
                         <div key={review.id} className="review">
                           <div className="d-flex gap-10 justify-content-between align-items-center">
-                            <h6 className="mb-0">{review.user.fullname}</h6>
+                            <h6 className="mb-0">{review.user.fullname}</h6> <span style={{ fontStyle: "italic" }}>{review.edited === true ? "( Edited )" : ""}</span>
                             <span className="d-inline-block ">
                               <ReactStars
                                 count={5}
@@ -522,7 +676,19 @@ const SingleProduct = () => {
                               />
                             </span>
                           </div>
-                          <p className="mt-3 justify-content-between align-items-center">{review.comment}</p>
+                          <p className="mt-3 justify-content-between align-items-center d-flex">{review.comment}
+                            <span className="ml-auto">
+                              {isCurrentUserReview && (
+                                <button
+                                  className="button-16"
+                                  style={{ outline: "none" }}
+                                  onClick={() => handleEditReview(review)}
+                                >
+                                  {review.edited === true ? "" : "( Edit )"}
+                                </button>
+                              )}
+                            </span>
+                          </p>
                           <span style={{ fontSize: "12px", marginTop: "-20px", marginBottom: "10px" }} className="d-flex justify-content-end fst-italic">{timeAgo}</span>
                         </div>
                       )
@@ -530,25 +696,30 @@ const SingleProduct = () => {
                   ) : (
                     <div>Không có bình luận nào về sản phẩm này!</div>
                   )}
-                  {listReview.length > visibleComments ? (
-                    <div>
-                      <button
-                        className="text-dark text-decoration-underline"
-                        onClick={showMoreComments}
-                      >
-                        Show more comments
-                      </button>
-                    </div>
-                  ) : (
-                    <div>
-                      <button
-                        className="text-dark text-decoration-underline"
-                        onClick={hideComments}
-                      >
-                        Hide comments
-                      </button>
-                    </div>
-                  )}
+                  <div>
+                    {listReviews.length > visibleComments ? (
+                      <div>
+                        <button
+                          className="text-dark text-decoration-underline"
+                          onClick={showMoreComments}
+                        >
+                          Show more comments
+                        </button>
+                      </div>
+                    ) : null}
+
+                    {listReviews.length > visibleComments && visibleComments > 5 ? (
+                      <div>
+                        <button
+                          className="text-dark text-decoration-underline"
+                          onClick={hideComments}
+                        >
+                          Hide comments
+                        </button>
+                      </div>
+                    ) : null}
+
+                  </div>
                 </div>
               </div>
             </div>

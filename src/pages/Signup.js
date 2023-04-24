@@ -37,7 +37,7 @@ const Signup = () => {
         console.log(response.payload.message);
         if (response.payload.message === "User registered successfully!") {
 
-          toast.success(`User registered successfully!`, {
+          toast.success(response.payload.message, {
             position: "top-center",
             autoClose: 1000,
             hideProgressBar: false,
@@ -49,6 +49,17 @@ const Signup = () => {
           });
       
           setTimeout(()=>{navigate("/login")}, 1500);
+        }else if(response.payload.message === "Error: Email is already taken!" || response.payload.message === "Error: Phone is already in use!"){
+          toast.error(response.payload.message, {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
       }).catch((error) => {
         console.log(error);
@@ -91,7 +102,7 @@ const Signup = () => {
                   name="phone"
                   {...register("phone", {
                     required: true,
-                    pattern: /^(0)\d{9}$/
+                    pattern: /^((\+84)|0)(9|8|7|3|5)[0-9]{8}$/
                   })}
                   placeholder="Mobile Number"
                 />
