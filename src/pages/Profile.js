@@ -43,7 +43,7 @@ export default function Profile() {
   const [country, setCountry] = useState("");
   const [defa, setDefa] = useState(0);
   const [checkChange, setCheckChange] = useState(false);
-  
+
   //image
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
@@ -64,7 +64,7 @@ export default function Profile() {
       setName(userrr.fullname);
       setEmail(userrr.email);
       setPhone(userrr.phone);
-      
+
       if (userrr.avatar !== null) {
         setImage(
           `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
@@ -97,7 +97,7 @@ export default function Profile() {
     }
   };
 
-  const resetForm = ()=>{
+  const resetForm = () => {
     setIdAd(0);
     setNumber("");
     setLine("");
@@ -106,7 +106,7 @@ export default function Profile() {
     setCountry("");
     setDefa(0);
     setCheckChange(false);
-  }
+  };
 
   const handleNewAddress = () => {
     if (
@@ -157,8 +157,8 @@ export default function Profile() {
   };
 
   const handleChangeNumber = (e) => {
-      setNumber(e.target.value);
-      setCheckChange(true);
+    setNumber(e.target.value);
+    setCheckChange(true);
   };
   const handleChangeLine = (e) => {
     setLine(e.target.value);
@@ -178,12 +178,44 @@ export default function Profile() {
   };
 
   const handleSubmit = (e) => {
-
     if (checkChange) {
-      if (name !== "" && email !== "" && phone !== "" && phone.length === 10) {
+      const pattern = new RegExp(/^((\+84)|0)(9|8|7|3|5)[0-9]{8}$/);
+      const patternEmail = new RegExp(/^[^\s@]+@[^\s@]+\.com+$/i);
+      if (name === "") {
+        toast.error("Check your Fullname!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (email === "" || !patternEmail.test(email) ) {
+        toast.error("Check your Email!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else if (phone === "" || !pattern.test(phone)) {
+        toast.error("Check your Phone!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
         if (changeProImage) {
-
-
           const canvas = editor.getImageScaledToCanvas();
           const image = canvas.toDataURL();
 
@@ -194,12 +226,11 @@ export default function Profile() {
             email: email,
             avatar: image,
           };
-  
-          dispatch(updateUser({user: upUser, checkImage: true}));
+
+          dispatch(updateUser({ user: upUser, checkImage: true }));
           setCheckChange(false);
           setChangeProImage(false);
           console.log("up có hinh");
-         
         } else {
           const upUser = {
             id: userrr.id,
@@ -208,21 +239,20 @@ export default function Profile() {
             email: email,
             avatar: fileImage,
           };
-  
-          dispatch(updateUser({user: upUser, checkImage: false}));
+
+          dispatch(updateUser({ user: upUser, checkImage: false }));
           setCheckChange(false);
           console.log("up khong hinh");
         }
-
-        toast.success('Update User Successed!', {
-          position: 'top-center',
+        toast.success("Update User Successed!", {
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: true,
           progress: undefined,
-          theme: 'light'
+          theme: "light",
         });
       }
     }
@@ -357,6 +387,7 @@ export default function Profile() {
                       className="border-0 w-100"
                       value={email}
                       onChange={handleChangeEmail}
+                      required
                     ></input>
                   </MDBCol>
                 </MDBRow>
@@ -373,6 +404,17 @@ export default function Profile() {
                       value={phone}
                       onChange={handleChangePhone}
                     ></input>
+                  </MDBCol>
+                </MDBRow>
+                <hr/>
+                <MDBRow>
+                  <MDBCol>
+                    <button
+                      className="button float-end border-0"
+                      onClick={handleSubmit}
+                    >
+                      Save Change
+                    </button>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -477,7 +519,7 @@ export default function Profile() {
                             </div>
                           </div>
                           <div className="modal-footer">
-                          <button
+                            <button
                               type="button"
                               className="btn btn-danger"
                               onClick={resetForm}
@@ -680,12 +722,6 @@ export default function Profile() {
                 ))}
               </MDBCardBody>
             </MDBCard>
-            <button
-              className="button float-end border-0"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
           </MDBCol>
         </MDBRow>
       </MDBContainer>

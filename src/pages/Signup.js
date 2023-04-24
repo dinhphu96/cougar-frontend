@@ -102,7 +102,7 @@ const Signup = () => {
                   name="phone"
                   {...register("phone", {
                     required: true,
-                    pattern: /^(0)\d{9}$/
+                    pattern: /^((\+84)|0)(9|8|7|3|5)[0-9]{8}$/
                   })}
                   placeholder="Mobile Number"
                 />
