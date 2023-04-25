@@ -5,7 +5,7 @@ export const doSignup = createAsyncThunk(
     'auth/signup',
     async (form, { rejectWithValue }) => {
       try {
-        const response = await axios.post('http://localhost:8080/api/auth/signup', form);
+        const response = await axios.post('http://localhost:8080/api/v1/auth/signup', form);
         return response.data;
       } catch (error) {
         if (error.response.data) {

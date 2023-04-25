@@ -5,7 +5,7 @@ import axios from "axios";
 export const getListReview = createAsyncThunk(
   "Reviews/get",
   async (productItemId) => {
-    const response = await axios.get(`http://localhost:8080/rest/review/${productItemId}`);
+    const response = await axios.get(`http://localhost:8080/api/v1/review/${productItemId}`);
     return response.data;
   }
 );
@@ -15,7 +15,7 @@ export const doReview = createAsyncThunk(
   async (review, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/rest/review/send",
+        "http://localhost:8080/api/v1/review/send",
         review
       );
       return response.data;
@@ -35,7 +35,7 @@ export const doUpdateReview = createAsyncThunk(
   async (review, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/rest/review/${review.id}`,
+        `http://localhost:8080/api/v1/review/${review.id}`,
         {
           ratingValue: review.ratingValue,
           comment: review.comment

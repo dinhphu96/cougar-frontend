@@ -6,7 +6,7 @@ export const getShopOrderByUserId = createAsyncThunk(
   "Order/get",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:8080/rest/shopOrders/${userId}`
+      `http://localhost:8080/api/v1/shopOrders/${userId}`
     );
     return response.data;
   }
@@ -16,7 +16,7 @@ export const addNewOrder = createAsyncThunk(
   "Order/add",
   async (orderorderDetail) => {
     const response = await axios.post(
-      "http://localhost:8080/rest/shopOrders",
+      "http://localhost:8080/api/v1/shopOrders",
       orderorderDetail
     );
     return response.data;
@@ -28,18 +28,18 @@ export const updateOrder = createAsyncThunk(
   async ([payment, UpdateShopOrder]) => {
     if (payment === null) {
       const response = await axios.put(
-        `http://localhost:8080/rest/shopOrders/${UpdateShopOrder.id}`,
+        `http://localhost:8080/api/v1/shopOrders/${UpdateShopOrder.id}`,
         UpdateShopOrder
       );
       return response.data;
     } else {
       const paymentResponse = await axios.post(
-        "http://localhost:8080/rest/userPaymentMethods",
+        "http://localhost:8080/api/v1/userPaymentMethods",
         payment
       );
       UpdateShopOrder.userPaymentMethod = paymentResponse.data;
       const response = await axios.put(
-        `http://localhost:8080/rest/shopOrders/${UpdateShopOrder.id}`,
+        `http://localhost:8080/api/v1/shopOrders/${UpdateShopOrder.id}`,
         UpdateShopOrder
       );
       return response.data; 
@@ -54,7 +54,7 @@ export const addNewOrderDetail = createAsyncThunk(
   "OrderDetail/add",
   async (orderDetail) => {
     const response = await axios.post(
-      "http://localhost:8080/rest/orderDetails",
+      "http://localhost:8080/api/v1/orderDetails",
       orderDetail
     );
     return response.data;
@@ -65,7 +65,7 @@ export const updateOrderDetail = createAsyncThunk(
   "OrderDetail/update",
   async (OrderDetail) => {
     const response = await axios.put(
-      `http://localhost:8080/rest/orderDetails/${OrderDetail.id}`,
+      `http://localhost:8080/api/v1/orderDetails/${OrderDetail.id}`,
       OrderDetail
     );
     return response.data;
@@ -76,7 +76,7 @@ export const getOrderDetailByShopId = createAsyncThunk(
   "OrderDetail/getListOrderDetail",
   async (shopOrderId) => {
     const response = await axios.get(
-      `http://localhost:8080/rest/orderDetails/${shopOrderId}`
+      `http://localhost:8080/api/v1/orderDetails/${shopOrderId}`
     );
     return response.data;
   }
@@ -85,7 +85,7 @@ export const getOrderDetailByShopId = createAsyncThunk(
 export const deleteOrderDetaiById = createAsyncThunk(
   "OrderDetail/delete",
   async (id) => {
-    await axios.delete(`http://localhost:8080/rest/orderDetails/${id}`);
+    await axios.delete(`http://localhost:8080/api/v1/orderDetails/${id}`);
     return id;
   }
 );
@@ -101,13 +101,13 @@ export const deleteOrderDetaiById = createAsyncThunk(
 export const updateUser = createAsyncThunk("User/update", async (user) => {
   if(user.checkImage){
     const response = await axios.put(
-      `http://localhost:8080/api/users/updateWithAvatar`,
+      `http://localhost:8080/api/v1/users/updateWithAvatar`,
       user.user
     );
     return response.data;
   }else{
     const response = await axios.put(
-      `http://localhost:8080/api/users/update`,
+      `http://localhost:8080/api/v1/users/update`,
       user.user
     );
     return response.data;
@@ -121,7 +121,7 @@ export const getAddressesByUserId = createAsyncThunk(
   "Addess/get",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:8080/rest/addresses/${userId}`
+      `http://localhost:8080/api/v1/addresses/${userId}`
     );
     return response.data;
   }
@@ -131,7 +131,7 @@ export const addNewAddress = createAsyncThunk(
   "Address/add",
   async (address) => {
     const response = await axios.post(
-      "http://localhost:8080/rest/addresses",
+      "http://localhost:8080/api/v1/addresses",
       address
     );
     return response.data;
@@ -142,7 +142,7 @@ export const updateAddress = createAsyncThunk(
   "Address/update",
   async (address) => {
     const response = await axios.put(
-      `http://localhost:8080/rest/addresses/${address.id}`,
+      `http://localhost:8080/api/v1/addresses/${address.id}`,
       address
     );
     return response.data;
@@ -152,7 +152,7 @@ export const updateAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk(
   "Address/delete",
   async (IdAddress) => {
-    await axios.delete(`http://localhost:8080/rest/addresses/${IdAddress}`);
+    await axios.delete(`http://localhost:8080/api/v1/addresses/${IdAddress}`);
     return IdAddress;
   }
 );
@@ -161,7 +161,7 @@ export const setAsDefaultAddress = createAsyncThunk(
   "Addess/setAsDefault",
   async (address) => {
     const response = await axios.put(
-      `http://localhost:8080/rest/addresses/setAsDefault`,
+      `http://localhost:8080/api/v1/addresses/setAsDefault`,
       address
     );
     return response.data;
@@ -175,7 +175,7 @@ export const getDeliveryByUserId = createAsyncThunk(
   "DeliveryMethod/get",
   async () => {
     const response = await axios.get(
-      `http://localhost:8080/rest/deliveryMethods`
+      `http://localhost:8080/api/v1/deliveryMethods`
     );
     return response.data;
   }
@@ -188,7 +188,7 @@ export const getUserPaymenMethodByUserId = createAsyncThunk(
   "UserPaymentMethod/get",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:8080/rest/userPaymentMethods/${userId}`
+      `http://localhost:8080/api/v1/userPaymentMethods/${userId}`
     );
     return response.data;
   }
@@ -198,7 +198,7 @@ export const addNewUserPayment = createAsyncThunk(
   "UserPaymentMethod/add",
   async (payment) => {
     const response = await axios.post(
-      "http://localhost:8080/rest/userPaymentMethods",
+      "http://localhost:8080/api/v1/userPaymentMethods",
       payment
     );
     return response.data;
@@ -208,7 +208,7 @@ export const addNewUserPayment = createAsyncThunk(
 export const getListPaymentType = createAsyncThunk(
   "PaymentType/get",
   async () => {
-    const response = await axios.get(`http://localhost:8080/rest/paymentTypes`);
+    const response = await axios.get(`http://localhost:8080/api/v1/paymentTypes`);
     return response.data;
   }
 );
@@ -217,7 +217,7 @@ export const getListPaymentType = createAsyncThunk(
 
 //listProduct
 export const getProductItem = createAsyncThunk("productItem/get", async () => {
-  const response = await axios.get("http://localhost:8080/rest/productItems");
+  const response = await axios.get("http://localhost:8080/api/v1/productItems");
   return response.data;
 });
 
@@ -229,7 +229,7 @@ export const doLogin = createAsyncThunk(
   async (credentials, thunkAPI) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/signin",
+        "http://localhost:8080/api/v1/auth/signin",
         credentials
       );
       return response.data;
@@ -250,7 +250,7 @@ export const getWishListByUserId = createAsyncThunk(
   "WishList/get",
   async (userId) => {
     const response = await axios.get(
-      `http://localhost:8080/rest/wishLists/${userId}`
+      `http://localhost:8080/api/v1/wishLists/${userId}`
     );
     return response.data;
   }
@@ -260,7 +260,7 @@ export const addWishList = createAsyncThunk(
   "WishList/add",
   async (wishList) => {
     const response = await axios.post(
-      "http://localhost:8080/rest/wishLists",
+      "http://localhost:8080/api/v1/wishLists",
       wishList
     );
     return response.data;
@@ -270,7 +270,7 @@ export const addWishList = createAsyncThunk(
 export const deleteWishListById = createAsyncThunk(
   "WishList/delete",
   async (id) => {
-    await axios.delete(`http://localhost:8080/rest/wishLists/${id}`);
+    await axios.delete(`http://localhost:8080/api/v1/wishLists/${id}`);
     return id;
   }
 );
@@ -280,7 +280,7 @@ export const doChangePassword = createAsyncThunk(
   async (info, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/change-password",
+        "http://localhost:8080/api/v1/auth/change-password",
         info
       );
       return response.data;
@@ -295,11 +295,11 @@ export const doChangePassword = createAsyncThunk(
 );
 
 export const getAllInvoiceByUserId = createAsyncThunk('getAllInvoiceByUserId', async (id) => {
-  const response = await axios.get(`http://localhost:8080/rest/shopOrders/all/${id}`);
+  const response = await axios.get(`http://localhost:8080/api/v1/shopOrders/all/${id}`);
   return response.data;
 });
 
 export const getAllInvoiceDetailByUserId = createAsyncThunk('getAllInvoiceDetailByUserId', async (id) => {
-  const response = await axios.get(`http://localhost:8080/rest/orderDetails/all/${id}`);
+  const response = await axios.get(`http://localhost:8080/api/v1/orderDetails/all/${id}`);
   return response.data;
 });

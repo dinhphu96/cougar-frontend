@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
@@ -29,6 +29,7 @@ import {
 } from "./store/shop_order/api";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import {
+  authenticateSelector,
   getShopOrderSelector, getUserSelector
 } from "./store/shop_order/selectors";
 import { ToastContainer } from "react-toastify";
@@ -40,7 +41,8 @@ import YourOrder from "./pages/YourOrder";
 
 function App() {
   const dispatch = useDispatch();
-
+  const isAuthenticated = useSelector(authenticateSelector);
+  console.log(isAuthenticated);
   useEffect(() => {
     dispatch(getProductItem());
   }, [dispatch])
@@ -50,6 +52,8 @@ function App() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(ShopOrderSlice.actions.getUser(sessionUser));
+      dispatch(getAllInvoiceByUserId(sessionUser.id));
+      dispatch(getAllInvoiceDetailByUserId(sessionUser.id));
     }
   }, [dispatch, sessionUser !== null])
 
@@ -65,6 +69,7 @@ function App() {
   }, [dispatch, user.id]);
   
   const shopOrder = useSelector(getShopOrderSelector);
+  
   useEffect(() => {
     if (shopOrder) {
       dispatch(getOrderDetailByShopId(shopOrder.id));
@@ -78,7 +83,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="yourorder" element={<YourOrder />} />
+            <Route path="yourorder" element={(isAuthenticated === true) ? <YourOrder /> : <Navigate to="/" />} />
             <Route path="login" element={<Login />} />
             <Route path="product" element={<OurStore />} />
             <Route path="product/:id" element={<SingleProduct />} />
@@ -89,7 +94,7 @@ function App() {
             <Route path="forgot-password" element={<Forgotpassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password" element={<Resetpassword />} />
-            <Route path="checkout" element={<Checkout />} />
+            <Route path="checkout" element={(isAuthenticated === true) ? <Checkout /> : <Navigate to="/" />} />
             <Route path="profile" element={<Profile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>

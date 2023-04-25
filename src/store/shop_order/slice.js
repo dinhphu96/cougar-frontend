@@ -42,6 +42,7 @@ const ShopOrderSlice = createSlice({
     invoices: [],
     invoiceDetails: [],
     status: "idle",
+    isAuthenticated: false,
     error: null,
     message: "",
   },
@@ -58,6 +59,7 @@ const ShopOrderSlice = createSlice({
       state.userAddresses = [];
       state.userPaymenMethod = [];
       state.deliverys = [];
+      state.isAuthenticated = false;
     },
 
     getUser: (state, action) => {
@@ -387,6 +389,7 @@ const ShopOrderSlice = createSlice({
       // GET ALL INVOICES
       .addCase(getAllInvoiceByUserId.pending, (state) => {
         state.status = "loading";
+        state.isAuthenticated = true;
       })
       .addCase(getAllInvoiceByUserId.fulfilled, (state, action) => {
         state.invoices = action.payload;
