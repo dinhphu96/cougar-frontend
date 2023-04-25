@@ -154,15 +154,8 @@ const OurStore = () => {
     dispatch(getColorAndSize());
     dispatch(getCategories());
     // Availability
-    if (categories.length) {
       if (headerCategories === "") {
-        categories.map((cate) => {
-          const found = listCheckedCategories.find((s) => s === cate.name);
-          if (!found) {
-            setFilterCategory(cate.name);
-            dispatch(filtersSlice.actions.genderFilterChange(cate.name));
-          }
-        });
+        
       } else {
         categories.map((cate) => {
           const found = listCheckedCategories.find((s) => s === cate.name);
@@ -179,19 +172,7 @@ const OurStore = () => {
           }
         });
       }
-    }
 
-    // inStock
-    const foundIn = listCheckedInStock.find((s) => s === "inStock");
-    const foundOut = listCheckedInStock.find((s) => s === "outStock");
-    if (!foundIn) {
-      setFilterAvailability("inStock");
-      dispatch(filtersSlice.actions.availabilityFilterChange("inStock"));
-    }
-    if (!foundOut) {
-      setFilterAvailability("outStock");
-      dispatch(filtersSlice.actions.availabilityFilterChange("outStock"));
-    }
     // price From
     setFilterPriceFrom(0);
     dispatch(filtersSlice.actions.priceFromFilterChange(0));
@@ -202,25 +183,10 @@ const OurStore = () => {
     setFilterColor("");
     dispatch(filtersSlice.actions.colorFilterClick(""));
     // size
-    if (result.length) {
-      result.map((s) => {
-        const found = listCheckedSize.find((size) => size === s.size);
-        if (!found) {
-          setFilterSize(s.size);
-          dispatch(filtersSlice.actions.sizeFilterChange(s.size));
-        }
-      });
-    }
+    
     // productTag
     if (productTagChoose === "") {
-      if (listSubCate.length) {
-        listSubCate.map((subCate) => {
-          const found = listCheckedProductTag.find((tag) => tag === subCate);
-          if (!found) {
-            dispatch(filtersSlice.actions.productTagsFilterChange(subCate));
-          }
-        });
-      }
+      
     } else {
       if (listSubCate.length) {
         listSubCate.map((subCate) => {
