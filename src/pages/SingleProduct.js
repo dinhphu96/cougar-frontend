@@ -63,8 +63,6 @@ const SingleProduct = () => {
 
   const [borderColor, setBorderColor] = useState(0);
   const [listColor, setListColor] = useState([]);
-  // const [listReview, setListReview] = useState([]);
-
 
   useEffect(() => {
     if (listRelatedProductItems.length) {
@@ -104,7 +102,6 @@ const SingleProduct = () => {
     var inStock = singleProduct.qtyInStock !== 0 ? "In Stock" : "Out of Stock";
   }
 
-  // const [orderedProduct, setorderedProduct] = useState(true); //Write a Review
   const copyToClipboard = (text) => {
     var textField = document.createElement("textarea");
     textField.innerText = text;
