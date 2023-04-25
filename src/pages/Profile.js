@@ -47,14 +47,12 @@ export default function Profile() {
   //image
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
-  const [fileImage, setFileImage] = useState(null);
   const [changeProImage, setChangeProImage] = useState(false);
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
     setCheckChange(true);
     setChangeProImage(true);
-    setFileImage(event.target.files[0]);
   };
 
   useEffect(() => {
@@ -69,7 +67,6 @@ export default function Profile() {
         setImage(
           `https://res.cloudinary.com/dmjh7imwd/image/upload/${userrr.avatar}`
         );
-        setFileImage(userrr.avatar);
       } else {
         setImage(
           "https://res.cloudinary.com/dmjh7imwd/image/upload/v1678190935/CougarStore/149071_s8mfea.png"
