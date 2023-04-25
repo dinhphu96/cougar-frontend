@@ -168,9 +168,7 @@ const Checkout = () => {
   };
 
   const handleChangeNumber = (e) => {
-    if (!isNaN(e.target.value)) {
       setNumber2(e.target.value);
-    }
   };
   const handleChangeLine = (e) => {
     setLine2(e.target.value);

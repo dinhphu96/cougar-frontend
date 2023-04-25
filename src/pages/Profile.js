@@ -224,7 +224,6 @@ export default function Profile() {
             fullname: name,
             phone: phone,
             email: email,
-            avatar: fileImage,
           };
 
           dispatch(updateUser({ user: upUser, checkImage: false }));
