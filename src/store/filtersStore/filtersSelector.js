@@ -14,10 +14,10 @@ export const productTagChooseSelector = (state) => state.filters.productTagChoos
 export const searchSelector = (state) => state.filters.search;
 
 export const colorList = (state) => state.filters.options.filter((todo) =>
-    todo.variation.name === 'color'
+    todo.variation.name === 'Color'
 );
 export const sizeList = (state) => state.filters.options.filter((todo) =>
-    todo.variation.name === 'size'
+    todo.variation.name === 'Size'
 );
 export const categoriesList = (state) => state.filters.categoriesDefault;
 export const subCategoriesList = (state) => state.filters.subCategories;
