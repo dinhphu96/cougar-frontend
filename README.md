@@ -1,46 +1,50 @@
-# Getting Started with Create React App and Redux
+#Project pictures
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+#Home
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/8ccd3ec7-a567-432f-ac27-5f30db9dc7ce)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/2adbc17a-0678-4c20-81b3-02051a7577c4)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/b02c2d70-c2fa-459c-8984-54843ff69116)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/ca810f15-d660-41d8-b2e0-95f76a10e8a0)
 
-## Available Scripts
+#Single product
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/bc81af6a-d722-45db-b4e4-5d4986b2ff56)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/93cee21a-7758-405b-8fc3-e9c2f842b06a)
 
-In the project directory, you can run:
+#Cart
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/451c8857-dc83-481a-80af-15fdb961a460)
 
-### `npm start`
+#Checkout
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/b8b13fa1-f0e0-4fec-a53c-de6c9c156175)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/3321d5dc-3a43-4fd9-af36-0092efa1f54c)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#Your order
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/8d889c44-25d0-40c4-b40a-83bbdef27299)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#Our store
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/da10bd64-d87e-4131-8038-68a0a1145f92)
 
-### `npm test`
+#Edit profile
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/c87975f9-ef46-4d61-b195-3d91c1f437fa)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#Admin
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/11548093-fe76-4268-b506-dcdda99ee94a)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/60c66424-5c5a-46f3-b341-a192d9446b97)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/398b6849-5466-4dfb-8bd1-63fc985f3bb0)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/f1a1a1bb-fc56-40b6-a8a7-09537be443a4)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/9e7055dd-d46c-4b7b-be3b-4b49ed4448cf)
+![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/84e0e234-ae9e-483c-b3a1-073a94355a62)
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
