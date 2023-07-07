@@ -1,4 +1,4 @@
-#Project pictures
+# Project pictures
 
 #Home
 ![image](https://github.com/dinhphu96/cougar-frontend/assets/124566792/8ccd3ec7-a567-432f-ac27-5f30db9dc7ce)
